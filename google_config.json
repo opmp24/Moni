@@ -1,0 +1,13 @@
+{
+  "google_client_id": "TU_CLIENT_ID.apps.googleusercontent.com",
+  "google_client_secret": "TU_CLIENT_SECRET",
+  "authorized_redirect_uris": [
+    "https://tu-app.web.app/auth/google/callback",
+    "http://localhost:3000/auth/google/callback"
+  ],
+  "scopes": [
+    "openid",
+    "profile",
+    "email"
+  ]
+}

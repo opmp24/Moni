@@ -1,0 +1,105 @@
+se quiere desarrollar una aplicacion para llevarlo a cabo se necesita utilizar tsx. react con vite.
+- para guardado de datos se utilizara.
+	es una base de "datos local" por temas de privacidad de los datos enfocandose en eso.
+	
+- para el diseño se utilizara tildwind
+	el diseño se proporcionara con la aplicacion stich
+
+- requerimientos del sitio:
+
+crear una aplicacion con login google, se necesita un archivo de configuracion donde asignar valores de variables de console de google para poder usar la autenticacion de google.
+
+- debe tener estas paginas.
+
+Inicio.
+	Debe mostrar 2 graficos que muestren una comparativa del gasto, presupuesto, compromisos
+Historial
+	Muestra todos los gastos que se han realizado
+	Cada gasto puede ser editado.
+Agregar gasto (+)
+	permite ingresar un nuevo gasto, indicando: nombre. monto, tipo de pago(efectivo, tarjeta, transferencia). categoria (icono categoria y un boton al final de estas para indicar una categoria nueva)
+Aompromisos
+	boton para ingresar un nuevo compromiso.
+	Listado de los compromisos ingresados.
+	Ingresar compromisos indicando:nombre. monto, tipo de pago(efectivo, tarjeta, transferencia). categoria (icono categoria y un boton al final de estas para indicar una categoria nueva)
+	Al ingresar un compromiso este queda en una lista de compromisos
+		
+Ajutes
+	Muestra la informacion basica del login google y un boton para cerrar la sesion.
+	muestra opciones para cambiar el estilo visual (oscuro, claro, y moderno)
+	Permite indicar el presupuesto mensaual
+	Tipo de moneda (clp, arg, dolar, euro) configurable en un archivo para agregar mas si es necesario.
+	Importacion de json, xml o excel, de estado de cuenta para ingresar todos los gastos de una vez del usuario.
+	
+
+
+Configuración de la Aplicación (PWA Gastos Hogar)
+
+Este documento detalla la configuración necesaria para las integraciones y variables del sistema.
+
+1. Google Console Configuration (google_config.json)
+
+Para habilitar la autenticación de Google, se deben configurar las siguientes variables:
+
+{
+  "google_client_id": "TU_CLIENT_ID.apps.googleusercontent.com",
+  "google_client_secret": "TU_CLIENT_SECRET",
+  "authorized_redirect_uris": [
+    "https://tu-app.web.app/auth/google/callback",
+    "http://localhost:3000/auth/google/callback"
+  ],
+  "scopes": [
+    "openid",
+    "profile",
+    "email"
+  ]
+}
+
+2. Configuración de Moneda (currency_config.json)
+
+Lista de monedas soportadas por la aplicación. Se pueden añadir más siguiendo este formato:
+
+{
+  "default_currency": "CLP",
+  "available_currencies": [
+    { "code": "CLP", "symbol": "$", "name": "Peso Chileno" },
+    { "code": "ARS", "symbol": "$", "name": "Peso Argentino" },
+    { "code": "USD", "symbol": "$", "name": "Dólar Estadounidense" },
+    { "code": "EUR", "symbol": "€", "name": "Euro" }
+  ]
+}
+
+3. Configuración de Categorías
+
+Categorías base para gastos y compromisos:
+Vivienda
+Alimentación
+Transporte
+Ocio
+Salud
+Servicios (Luz, Agua, Internet)
+Otros (Permite añadir nuevas mediante el botón "Añadir")
+
+4. Importación de Datos
+
+Formatos soportados para la carga masiva:
+JSON: Estructura de array de objetos con fecha, monto, nombre y categoria.
+XML: Formato estándar de exportación bancaria.
+Excel/CSV: Columnas predefinidas para mapeo automático.
+
+
+
+5 diseño stich 
+
+{
+  "mcpServers": {
+    "stitch": {
+      "serverUrl": "https://stitch.googleapis.com/mcp",
+      "headers": {
+        "X-Goog-Api-Key": "AQ.Ab8RN6JAYLQsHS09j4e6eZ6m-8h_LkuAhH4VUrRxQdGA78lcKw"
+      }
+    }
+  }
+}
+
+https://stitch.withgoogle.com/projects/7596477531274784406

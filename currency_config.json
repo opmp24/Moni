@@ -1,0 +1,9 @@
+{
+  "default_currency": "CLP",
+  "available_currencies": [
+    { "code": "CLP", "symbol": "$", "name": "Peso Chileno" },
+    { "code": "ARS", "symbol": "$", "name": "Peso Argentino" },
+    { "code": "USD", "symbol": "$", "name": "Dólar Estadounidense" },
+    { "code": "EUR", "symbol": "€", "name": "Euro" }
+  ]
+}

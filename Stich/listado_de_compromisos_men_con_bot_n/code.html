@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary-container": "#7c4dff",
+              "on-surface": "#e5e1e4",
+              "error-container": "#93000a",
+              "on-primary-fixed-variant": "#4f00d0",
+              "on-tertiary-fixed": "#410004",
+              "surface-container-highest": "#353437",
+              "on-surface-variant": "#cac3d8",
+              "inverse-primary": "#6833ea",
+              "surface-container-low": "#1b1b1d",
+              "on-tertiary": "#68000c",
+              "on-error-container": "#ffdad6",
+              "on-secondary-fixed-variant": "#00531e",
+              "secondary-fixed": "#69ff87",
+              "surface-dim": "#131315",
+              "surface-variant": "#353437",
+              "on-error": "#690005",
+              "primary-fixed": "#e8deff",
+              "surface": "#131315",
+              "surface-container-lowest": "#0e0e10",
+              "error": "#ffb4ab",
+              "outline-variant": "#494455",
+              "surface-container-high": "#2a2a2c",
+              "primary": "#cdbdff",
+              "on-background": "#e5e1e4",
+              "surface-bright": "#39393b",
+              "on-primary-container": "#fcf6ff",
+              "primary-fixed-dim": "#cdbdff",
+              "secondary": "#40e56c",
+              "surface-tint": "#cdbdff",
+              "inverse-on-surface": "#303032",
+              "tertiary": "#ffb3ae",
+              "secondary-fixed-dim": "#3ce36a",
+              "outline": "#948ea1",
+              "on-tertiary-fixed-variant": "#930015",
+              "tertiary-fixed-dim": "#ffb3ae",
+              "on-secondary-container": "#004d1b",
+              "surface-container": "#201f21",
+              "background": "#131315",
+              "on-secondary-fixed": "#002108",
+              "tertiary-fixed": "#ffdad7",
+              "on-primary": "#370096",
+              "secondary-container": "#02c953",
+              "inverse-surface": "#e5e1e4",
+              "on-primary-fixed": "#20005f",
+              "on-secondary": "#003912",
+              "on-tertiary-container": "#fff6f5",
+              "tertiary-container": "#d53338"
+            },
+            fontFamily: {
+              "headline": ["Plus Jakarta Sans"],
+              "body": ["Manrope"],
+              "label": ["Manrope"]
+            },
+            borderRadius: {"DEFAULT": "1rem", "lg": "1rem", "xl": "1.25rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .pb-safe {
+            padding-bottom: env(safe-area-inset-bottom);
+        }
+        body {
+            background-color: #131315;
+            color: #e5e1e4;
+        }
+    </style>
+<style>
+        body {
+          min-height: max(884px, 100dvh);
+        }
+    </style>
+</head>
+<body class="font-body selection:bg-primary-container selection:text-on-primary-container">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 bg-[#131315]/70 backdrop-blur-xl flex justify-between items-center px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-xl bg-surface-container-high flex items-center justify-center overflow-hidden border border-outline-variant/20">
+<img alt="User profile photo" class="w-full h-full object-cover" data-alt="Close up portrait of a young professional user" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCJwWTir5MqytcTqMP3GObOMO_2vIt3k_UYDyIJns6fF1by35r5mCs6JsGbiU-GwGKpeS3eB-WrR1bpnBzXSGEDNntYIEaJkPU7riUvLGakkqwbDoh5Jws-S8E4sfaQmD7n4LJpRPtLeT66DIjRY8yTuAstZTHJFmHRDYGxD-AX27UVRGTyJHHLVTzc-uc8NNeS7-PvBA5Dlxqsw2_t0CzycyG1DX7Pvo6tYLzx_Hy_aiAJSMZG--GFlbRPvhzgn_OX2xLU2XoZVY8"/>
+</div>
+<h1 class="text-[#cdbdff] font-['Plus_Jakarta_Sans'] font-bold text-xl tracking-tight">Compromisos</h1>
+</div>
+<div class="flex items-center gap-4">
+<button class="text-[#cdbdff]/60 hover:bg-white/5 transition-colors p-2 rounded-xl active:scale-95 duration-200">
+<span class="material-symbols-outlined" data-icon="calendar_month">calendar_month</span>
+</button>
+</div>
+</header>
+<main class="pt-24 pb-32 px-6 max-w-2xl mx-auto space-y-8">
+<!-- Hero Summary Section -->
+<section class="relative overflow-hidden bg-gradient-to-br from-surface-container to-surface-container-low rounded-xl p-8 border border-outline-variant/10">
+<div class="absolute -top-24 -right-24 w-64 h-64 bg-primary-container/10 rounded-full blur-[80px]"></div>
+<div class="relative z-10">
+<p class="font-label text-[10px] uppercase tracking-[0.2em] text-primary/60 mb-2 font-bold">Total por Pagar</p>
+<div class="flex items-baseline gap-2">
+<span class="font-headline text-5xl font-extrabold tracking-tighter text-on-background">$2,450</span>
+<span class="text-on-surface-variant font-medium">.00</span>
+</div>
+<div class="mt-6 flex gap-3">
+<div class="flex items-center gap-2 bg-primary/10 px-3 py-1.5 rounded-lg border border-primary/20">
+<span class="material-symbols-outlined text-sm text-primary" data-icon="schedule">schedule</span>
+<span class="text-xs font-bold text-primary">4 Pendientes</span>
+</div>
+<div class="flex items-center gap-2 bg-tertiary/10 px-3 py-1.5 rounded-lg border border-tertiary/20">
+<span class="material-symbols-outlined text-sm text-tertiary" data-icon="priority_high">priority_high</span>
+<span class="text-xs font-bold text-tertiary">1 Crítico</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Commitments List -->
+<section class="space-y-4">
+<div class="flex justify-between items-center mb-6">
+<h2 class="font-headline text-lg font-bold text-on-background">Pagos Próximos</h2>
+<button class="text-primary text-sm font-bold flex items-center gap-1">
+                Ver Calendario
+                <span class="material-symbols-outlined text-sm" data-icon="chevron_right">chevron_right</span>
+</button>
+</div>
+<!-- Card: Alquiler (Critical) -->
+<div class="group bg-surface-container hover:bg-surface-container-high transition-all duration-300 rounded-xl p-5 flex items-center gap-4 border border-outline-variant/5">
+<div class="w-12 h-12 rounded-xl bg-tertiary/20 flex items-center justify-center text-tertiary shrink-0">
+<span class="material-symbols-outlined text-2xl" data-icon="home_pin">home_pin</span>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex justify-between items-start mb-0.5">
+<h3 class="font-bold text-on-background truncate">Alquiler Octubre</h3>
+<span class="text-on-background font-bold">$1,200</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="text-[10px] font-bold px-1.5 py-0.5 rounded-md bg-tertiary-container/30 text-tertiary">Vence en 2 días</span>
+<span class="text-[10px] text-outline uppercase tracking-wider font-bold">• Mensual</span>
+</div>
+</div>
+<button class="p-2 text-outline hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-xl" data-icon="edit">edit</span>
+</button>
+</div>
+<!-- Card: Internet -->
+<div class="group bg-surface-container hover:bg-surface-container-high transition-all duration-300 rounded-xl p-5 flex items-center gap-4 border border-outline-variant/5">
+<div class="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center text-primary shrink-0">
+<span class="material-symbols-outlined text-2xl" data-icon="wifi">wifi</span>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex justify-between items-start mb-0.5">
+<h3 class="font-bold text-on-background truncate">Internet &amp; Streaming</h3>
+<span class="text-on-background font-bold">$85</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="text-[10px] font-bold px-1.5 py-0.5 rounded-md bg-surface-container-highest text-on-surface-variant">Vence en 5 días</span>
+<span class="text-[10px] text-outline uppercase tracking-wider font-bold">• Automático</span>
+</div>
+</div>
+<button class="p-2 text-outline hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-xl" data-icon="edit">edit</span>
+</button>
+</div>
+<!-- Card: Seguro -->
+<div class="group bg-surface-container hover:bg-surface-container-high transition-all duration-300 rounded-xl p-5 flex items-center gap-4 border border-outline-variant/5">
+<div class="w-12 h-12 rounded-xl bg-secondary-container/10 flex items-center justify-center text-secondary shrink-0">
+<span class="material-symbols-outlined text-2xl" data-icon="health_and_safety">health_and_safety</span>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex justify-between items-start mb-0.5">
+<h3 class="font-bold text-on-background truncate">Seguro Médico</h3>
+<span class="text-on-background font-bold">$450</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="text-[10px] font-bold px-1.5 py-0.5 rounded-md bg-surface-container-highest text-on-surface-variant">Vence en 12 días</span>
+<span class="text-[10px] text-outline uppercase tracking-wider font-bold">• Trimestral</span>
+</div>
+</div>
+<button class="p-2 text-outline hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-xl" data-icon="edit">edit</span>
+</button>
+</div>
+<!-- Card: Gimnasio -->
+<div class="group bg-surface-container hover:bg-surface-container-high transition-all duration-300 rounded-xl p-5 flex items-center gap-4 border border-outline-variant/5">
+<div class="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center text-primary shrink-0">
+<span class="material-symbols-outlined text-2xl" data-icon="fitness_center">fitness_center</span>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex justify-between items-start mb-0.5">
+<h3 class="font-bold text-on-background truncate">Membresía Gym</h3>
+<span class="text-on-background font-bold">$60</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="text-[10px] font-bold px-1.5 py-0.5 rounded-md bg-surface-container-highest text-on-surface-variant">Vence en 15 días</span>
+<span class="text-[10px] text-outline uppercase tracking-wider font-bold">• Mensual</span>
+</div>
+</div>
+<button class="p-2 text-outline hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-xl" data-icon="edit">edit</span>
+</button>
+</div>
+</section>
+<!-- Extra: Paid Status -->
+<section class="mt-12 opacity-60">
+<h2 class="font-headline text-sm font-bold text-outline mb-4">Pagados Recientemente</h2>
+<div class="bg-surface-container-lowest/50 rounded-xl p-4 flex items-center justify-between border border-outline-variant/5">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-secondary" data-icon="check_circle" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<div>
+<p class="text-sm font-bold text-on-surface-variant">Servicio de Electricidad</p>
+<p class="text-[10px] text-outline font-bold uppercase tracking-wider">Pagado el 12 Oct</p>
+</div>
+</div>
+<span class="text-sm font-bold text-secondary">$115.00</span>
+</div>
+</section>
+</main>
+<!-- BottomNavBar using Shared Component Guidelines -->
+<nav class="fixed bottom-0 left-0 w-full flex justify-around items-end px-4 py-3 bg-[#131315]/70 backdrop-blur-2xl rounded-t-[32px] pb-safe z-50 shadow-[0_-8px_30px_rgb(124,77,255,0.1)]">
+<!-- Inicio -->
+<a class="flex flex-col items-center justify-center text-[#494455] px-3 py-1.5 hover:text-[#cdbdff] transition-all active:scale-90 duration-300 ease-out" href="#">
+<span class="material-symbols-outlined">home</span>
+<span class="font-['Manrope'] text-[10px] font-semibold uppercase tracking-widest mt-1">Inicio</span>
+</a>
+<!-- Historial -->
+<a class="flex flex-col items-center justify-center text-[#494455] px-3 py-1.5 hover:text-[#cdbdff] transition-all active:scale-90 duration-300 ease-out" href="#">
+<span class="material-symbols-outlined">history</span>
+<span class="font-['Manrope'] text-[10px] font-semibold uppercase tracking-widest mt-1">Historial</span>
+</a>
+<!-- Central Agregar Gasto -->
+<button class="flex flex-col items-center justify-center -translate-y-4 active:scale-90 transition-all duration-300">
+<div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-primary to-primary-container text-on-primary-container shadow-[0_8px_25px_rgba(124,77,255,0.4)] flex items-center justify-center mb-1">
+<span class="material-symbols-outlined text-3xl">add</span>
+</div>
+<span class="font-['Manrope'] text-[10px] font-semibold uppercase tracking-widest text-[#cdbdff]">Agregar</span>
+</button>
+<!-- Compromisos (Active) -->
+<a class="flex flex-col items-center justify-center text-[#cdbdff] bg-[#7C4DFF]/10 rounded-2xl px-3 py-1.5 active:scale-90 duration-300 ease-out" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">handshake</span>
+<span class="font-['Manrope'] text-[10px] font-semibold uppercase tracking-widest mt-1">Compromisos</span>
+</a>
+<!-- Ajustes -->
+<a class="flex flex-col items-center justify-center text-[#494455] px-3 py-1.5 hover:text-[#cdbdff] transition-all active:scale-90 duration-300 ease-out" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-['Manrope'] text-[10px] font-semibold uppercase tracking-widest mt-1">Ajustes</span>
+</a>
+</nav>
+</body></html>

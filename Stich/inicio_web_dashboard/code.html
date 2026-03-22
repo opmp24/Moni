@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Luminal Home | Premium Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Manrope:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            font-family: 'Manrope', sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+        .headline-font {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+        /* Custom scrollbar for premium feel */
+        ::-webkit-scrollbar {
+            width: 4px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #131315;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #353437;
+            border-radius: 10px;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              colors: {
+                "on-primary": "#370096",
+                "primary": "#cdbdff",
+                "inverse-on-surface": "#303032",
+                "tertiary": "#ffb3ae",
+                "surface-container-high": "#2a2a2c",
+                "surface-tint": "#cdbdff",
+                "outline": "#948ea1",
+                "surface-variant": "#353437",
+                "on-primary-fixed": "#20005f",
+                "primary-fixed": "#e8deff",
+                "on-primary-container": "#fcf6ff",
+                "on-secondary-fixed-variant": "#00531e",
+                "primary-container": "#7c4dff",
+                "on-secondary-fixed": "#002108",
+                "inverse-primary": "#6833ea",
+                "error-container": "#93000a",
+                "tertiary-container": "#d53338",
+                "on-primary-fixed-variant": "#4f00d0",
+                "surface": "#131315",
+                "on-tertiary-fixed": "#410004",
+                "surface-container-highest": "#353437",
+                "background": "#131315",
+                "surface-container-low": "#1b1b1d",
+                "on-background": "#e5e1e4",
+                "on-tertiary-container": "#fff6f5",
+                "secondary-container": "#02c953",
+                "on-surface-variant": "#cac3d8",
+                "on-secondary": "#003912",
+                "inverse-surface": "#e5e1e4",
+                "on-tertiary": "#68000c",
+                "surface-bright": "#39393b",
+                "error": "#ffb4ab",
+                "on-surface": "#e5e1e4",
+                "surface-dim": "#131315",
+                "on-tertiary-fixed-variant": "#930015",
+                "secondary-fixed": "#69ff87",
+                "primary-fixed-dim": "#cdbdff",
+                "outline-variant": "#494455",
+                "surface-container-lowest": "#0e0e10",
+                "surface-container": "#201f21",
+                "tertiary-fixed-dim": "#ffb3ae",
+                "tertiary-fixed": "#ffdad7",
+                "on-secondary-container": "#004d1b",
+                "on-error": "#690005",
+                "secondary-fixed-dim": "#3ce36a",
+                "secondary": "#40e56c",
+                "on-error-container": "#ffdad6"
+              },
+              fontFamily: {
+                "headline": ["Plus Jakarta Sans"],
+                "body": ["Manrope"],
+                "label": ["Manrope"]
+              },
+              borderRadius: {"DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px"},
+            },
+          },
+        }
+      </script>
+</head>
+<body class="bg-background text-on-background min-h-screen flex overflow-hidden">
+<!-- SideNavBar Component -->
+<aside class="h-screen w-64 fixed left-0 top-0 overflow-y-auto bg-[#131315] border-r border-white/5 shadow-2xl shadow-purple-900/20 hidden lg:flex flex-col p-6 space-y-2 z-40">
+<div class="mb-8">
+<h1 class="text-xl font-black text-[#cdbdff] font-headline">Luminal Home</h1>
+<p class="text-xs text-slate-500 uppercase tracking-widest mt-1">Premium Management</p>
+</div>
+<nav class="flex-1 space-y-1">
+<a class="flex items-center gap-3 bg-[#7C4DFF]/10 text-[#cdbdff] rounded-2xl px-4 py-3 border-l-4 border-[#7C4DFF] font-medium text-sm transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="home">home</span>
+                Inicio
+            </a>
+<a class="flex items-center gap-3 text-slate-400 px-4 py-3 hover:bg-white/5 rounded-2xl hover:translate-x-1 transition-all duration-200 font-medium text-sm" href="#">
+<span class="material-symbols-outlined" data-icon="history">history</span>
+                Historial
+            </a>
+<a class="flex items-center gap-3 text-slate-400 px-4 py-3 hover:bg-white/5 rounded-2xl hover:translate-x-1 transition-all duration-200 font-medium text-sm" href="#">
+<span class="material-symbols-outlined" data-icon="add_circle">add_circle</span>
+                Agregar
+            </a>
+<a class="flex items-center gap-3 text-slate-400 px-4 py-3 hover:bg-white/5 rounded-2xl hover:translate-x-1 transition-all duration-200 font-medium text-sm" href="#">
+<span class="material-symbols-outlined" data-icon="handshake">handshake</span>
+                Compromisos
+            </a>
+<a class="flex items-center gap-3 text-slate-400 px-4 py-3 hover:bg-white/5 rounded-2xl hover:translate-x-1 transition-all duration-200 font-medium text-sm" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+                Ajustes
+            </a>
+</nav>
+<div class="mt-auto pt-6">
+<div class="bg-surface-container rounded-lg p-4 flex items-center gap-3 border border-white/5">
+<div class="w-10 h-10 rounded-full bg-primary-container flex items-center justify-center text-on-primary-container">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+</div>
+<div class="overflow-hidden">
+<p class="text-sm font-bold truncate">Alex Rivera</p>
+<p class="text-[10px] text-slate-500 truncate">Premium Member</p>
+</div>
+</div>
+<button class="w-full mt-4 py-3 px-4 bg-gradient-to-br from-[#cdbdff] to-[#7C4DFF] text-on-primary font-bold rounded-2xl active:opacity-80 transition-all text-sm flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-sm" data-icon="bolt">bolt</span>
+                Quick Action
+            </button>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="flex-1 lg:ml-64 overflow-y-auto relative min-h-screen">
+<!-- TopAppBar (Simplified Desktop) -->
+<header class="sticky top-0 z-30 bg-[#131315]/70 backdrop-blur-xl px-8 py-6 flex justify-between items-center max-w-[1440px] mx-auto">
+<div class="flex flex-col">
+<h2 class="text-3xl font-extrabold font-headline tracking-tight text-on-surface">Panel de Control</h2>
+<p class="text-sm text-on-surface-variant">Resumen financiero de Agosto 2024</p>
+</div>
+<div class="flex items-center gap-4">
+<div class="hidden md:flex items-center bg-surface-container rounded-full px-4 py-2 border border-white/5">
+<span class="material-symbols-outlined text-outline text-lg" data-icon="search">search</span>
+<input class="bg-transparent border-none focus:ring-0 text-sm w-48 text-on-surface-variant" placeholder="Buscar movimientos..." type="text"/>
+</div>
+<button class="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center text-on-surface hover:bg-surface-bright transition-colors">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+</div>
+</header>
+<div class="px-8 pb-12 max-w-[1440px] mx-auto grid grid-cols-12 gap-6">
+<!-- Left Column: Primary Data -->
+<div class="col-span-12 xl:col-span-8 space-y-6">
+<!-- Bento Hero: Budget Gauge & Quick Stats -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<!-- Main Gauge Card -->
+<div class="md:col-span-2 bg-surface-container rounded-lg p-8 relative overflow-hidden flex flex-col justify-between min-h-[320px] shadow-[0_8px_32px_0_rgba(124,77,255,0.08)]">
+<div class="relative z-10">
+<span class="text-xs font-bold text-primary uppercase tracking-widest">Presupuesto Disponible</span>
+<div class="mt-2 flex items-baseline gap-2">
+<span class="text-5xl font-extrabold font-headline text-on-primary-container">$4,280.00</span>
+<span class="text-secondary text-sm font-bold flex items-center">
+<span class="material-symbols-outlined text-xs" data-icon="trending_up">trending_up</span>
+                                    12%
+                                </span>
+</div>
+</div>
+<!-- Gauge Visual Simulation -->
+<div class="absolute right-[-40px] top-[-20px] w-64 h-64 opacity-20">
+<svg class="w-full h-full transform rotate-[-90deg]" viewbox="0 0 100 100">
+<circle class="text-surface-container-highest" cx="50" cy="50" fill="transparent" r="40" stroke="currentColor" stroke-width="8"></circle>
+<circle class="text-primary-container" cx="50" cy="50" fill="transparent" r="40" stroke="currentColor" stroke-dasharray="251.2" stroke-dashoffset="60" stroke-width="8"></circle>
+</svg>
+</div>
+<div class="grid grid-cols-2 gap-4 mt-8 pt-6 border-t border-white/5">
+<div>
+<p class="text-xs text-on-surface-variant mb-1">Total Planificado</p>
+<p class="text-xl font-bold font-headline">$12,500.00</p>
+</div>
+<div>
+<p class="text-xs text-on-surface-variant mb-1">Días Restantes</p>
+<p class="text-xl font-bold font-headline">12 Días</p>
+</div>
+</div>
+<!-- Glow effect -->
+<div class="absolute -bottom-24 -left-24 w-64 h-64 bg-primary/10 rounded-full blur-[80px]"></div>
+</div>
+<!-- Mini Metric Card 1 -->
+<div class="bg-surface-container-low rounded-lg p-6 flex flex-col justify-between border border-white/5">
+<div class="w-12 h-12 rounded-2xl bg-secondary/10 flex items-center justify-center text-secondary mb-4">
+<span class="material-symbols-outlined" data-icon="account_balance_wallet">account_balance_wallet</span>
+</div>
+<div>
+<p class="text-xs text-on-surface-variant">Ahorro Mensual</p>
+<h3 class="text-2xl font-bold font-headline text-secondary">$1,450.00</h3>
+</div>
+<div class="mt-4 h-1.5 w-full bg-surface-container-highest rounded-full overflow-hidden">
+<div class="h-full bg-secondary w-[85%] rounded-full shadow-[0_0_10px_rgba(2,201,83,0.5)]"></div>
+</div>
+</div>
+</div>
+<!-- Comparison Chart Section -->
+<div class="bg-surface-container rounded-lg p-8 border border-white/5">
+<div class="flex justify-between items-end mb-10">
+<div>
+<h3 class="text-xl font-bold font-headline">Análisis de Ejecución</h3>
+<p class="text-sm text-on-surface-variant">Plan vs Gastado vs Compromisos</p>
+</div>
+<div class="flex gap-4">
+<div class="flex items-center gap-2">
+<div class="w-3 h-3 rounded-full bg-primary-container"></div>
+<span class="text-xs text-on-surface-variant">Plan</span>
+</div>
+<div class="flex items-center gap-2">
+<div class="w-3 h-3 rounded-full bg-tertiary"></div>
+<span class="text-xs text-on-surface-variant">Gastado</span>
+</div>
+</div>
+</div>
+<!-- Bar Chart Simulation -->
+<div class="flex items-end justify-between h-48 gap-4 px-4">
+<div class="flex-1 flex flex-col items-center gap-2 group">
+<div class="w-full flex justify-center gap-1 h-full items-end">
+<div class="w-4 bg-primary-container rounded-t-full h-[80%] opacity-80 group-hover:opacity-100 transition-all"></div>
+<div class="w-4 bg-tertiary rounded-t-full h-[65%] group-hover:opacity-100 transition-all"></div>
+<div class="w-4 bg-surface-container-highest rounded-t-full h-[10%]"></div>
+</div>
+<span class="text-[10px] text-on-surface-variant uppercase font-bold">Vivienda</span>
+</div>
+<div class="flex-1 flex flex-col items-center gap-2 group">
+<div class="w-full flex justify-center gap-1 h-full items-end">
+<div class="w-4 bg-primary-container rounded-t-full h-[60%] opacity-80"></div>
+<div class="w-4 bg-tertiary rounded-t-full h-[75%] shadow-[0_0_15px_rgba(255,179,174,0.3)]"></div>
+<div class="w-4 bg-surface-container-highest rounded-t-full h-[5%]"></div>
+</div>
+<span class="text-[10px] text-on-surface-variant uppercase font-bold">Ocio</span>
+</div>
+<div class="flex-1 flex flex-col items-center gap-2 group">
+<div class="w-full flex justify-center gap-1 h-full items-end">
+<div class="w-4 bg-primary-container rounded-t-full h-[95%] opacity-80"></div>
+<div class="w-4 bg-tertiary rounded-t-full h-[40%]"></div>
+<div class="w-4 bg-surface-container-highest rounded-t-full h-[15%]"></div>
+</div>
+<span class="text-[10px] text-on-surface-variant uppercase font-bold">Servicios</span>
+</div>
+<div class="flex-1 flex flex-col items-center gap-2 group">
+<div class="w-full flex justify-center gap-1 h-full items-end">
+<div class="w-4 bg-primary-container rounded-t-full h-[70%] opacity-80"></div>
+<div class="w-4 bg-tertiary rounded-t-full h-[30%]"></div>
+<div class="w-4 bg-surface-container-highest rounded-t-full h-[40%]"></div>
+</div>
+<span class="text-[10px] text-on-surface-variant uppercase font-bold">Auto</span>
+</div>
+<div class="flex-1 flex flex-col items-center gap-2 group">
+<div class="w-full flex justify-center gap-1 h-full items-end">
+<div class="w-4 bg-primary-container rounded-t-full h-[50%] opacity-80"></div>
+<div class="w-4 bg-tertiary rounded-t-full h-[45%]"></div>
+<div class="w-4 bg-surface-container-highest rounded-t-full h-[5%]"></div>
+</div>
+<span class="text-[10px] text-on-surface-variant uppercase font-bold">Otros</span>
+</div>
+</div>
+</div>
+<!-- Recent Activity Bento -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div class="bg-surface-container rounded-lg p-6 border border-white/5">
+<div class="flex justify-between items-center mb-6">
+<h4 class="font-bold font-headline">Gastos Pendientes</h4>
+<button class="text-xs text-primary font-bold hover:underline">Ver todo</button>
+</div>
+<div class="space-y-4">
+<div class="flex items-center gap-4 group">
+<div class="w-12 h-12 rounded-xl bg-surface-container-highest flex items-center justify-center text-tertiary">
+<span class="material-symbols-outlined" data-icon="shopping_cart">shopping_cart</span>
+</div>
+<div class="flex-1">
+<p class="text-sm font-bold">Supermercado Quincenal</p>
+<p class="text-xs text-on-surface-variant">Por confirmar</p>
+</div>
+<span class="font-bold text-on-surface">-$185.00</span>
+</div>
+<div class="flex items-center gap-4 group">
+<div class="w-12 h-12 rounded-xl bg-surface-container-highest flex items-center justify-center text-primary">
+<span class="material-symbols-outlined" data-icon="local_gas_station">local_gas_station</span>
+</div>
+<div class="flex-1">
+<p class="text-sm font-bold">Gasolina Principal</p>
+<p class="text-xs text-on-surface-variant">Programado</p>
+</div>
+<span class="font-bold text-on-surface">-$60.00</span>
+</div>
+</div>
+</div>
+<div class="bg-surface-container-low rounded-lg p-6 flex flex-col items-center justify-center text-center border border-dashed border-outline-variant">
+<div class="w-16 h-16 rounded-full bg-surface-container flex items-center justify-center mb-4">
+<span class="material-symbols-outlined text-outline text-3xl" data-icon="add_chart">add_chart</span>
+</div>
+<p class="text-sm font-bold">Añadir Categoría</p>
+<p class="text-xs text-on-surface-variant px-4 mt-1">Crea un nuevo objetivo de ahorro o gasto planificado</p>
+</div>
+</div>
+</div>
+<!-- Right Column: Contextual Actions & List -->
+<div class="col-span-12 xl:col-span-4 space-y-6">
+<!-- Upcoming Payments Card -->
+<div class="bg-surface-container rounded-lg p-6 border border-white/5 sticky top-28">
+<div class="flex items-center justify-between mb-8">
+<h4 class="font-bold font-headline">Próximos Pagos</h4>
+<div class="px-2 py-1 bg-tertiary-container/20 text-tertiary text-[10px] font-bold rounded uppercase tracking-tighter">Crítico (3)</div>
+</div>
+<div class="space-y-6">
+<!-- Item 1 -->
+<div class="relative pl-6 before:absolute before:left-0 before:top-0 before:bottom-0 before:w-[2px] before:bg-tertiary">
+<div class="flex justify-between items-start mb-1">
+<p class="text-sm font-bold">Alquiler Loft</p>
+<span class="text-xs font-bold">$2,100</span>
+</div>
+<p class="text-xs text-on-surface-variant mb-3">Vence en 2 días</p>
+<button class="w-full py-2 bg-surface-bright rounded-lg text-xs font-bold hover:bg-white/10 transition-colors">Pagar Ahora</button>
+</div>
+<!-- Item 2 -->
+<div class="relative pl-6 before:absolute before:left-0 before:top-0 before:bottom-0 before:w-[2px] before:bg-primary">
+<div class="flex justify-between items-start mb-1">
+<p class="text-sm font-bold">Suscripción Creative Cloud</p>
+<span class="text-xs font-bold">$54.99</span>
+</div>
+<p class="text-xs text-on-surface-variant mb-3">Vence en 5 días</p>
+<div class="flex gap-2">
+<span class="px-2 py-1 bg-surface-container-highest rounded text-[10px] text-on-surface-variant">Auto-pago activado</span>
+</div>
+</div>
+<!-- Item 3 -->
+<div class="relative pl-6 before:absolute before:left-0 before:top-0 before:bottom-0 before:w-[2px] before:bg-outline-variant">
+<div class="flex justify-between items-start mb-1">
+<p class="text-sm font-bold">Seguro Médico</p>
+<span class="text-xs font-bold">$340.00</span>
+</div>
+<p class="text-xs text-on-surface-variant mb-3">Vence en 14 días</p>
+</div>
+</div>
+<div class="mt-10 pt-6 border-t border-white/5">
+<div class="flex items-center gap-4 mb-4">
+<img alt="Bank Logo" class="w-10 h-10 rounded-lg object-cover" data-alt="Abstract finance banking icon pattern" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBGJntisQmEc_Ak2hqf4cMgttzVcNegzNet6eduf54oM4gXS_fctoeRWfRnkcFqroRM8mQoFl-RHXPL2ILg2m_ba6Vzbn3xPdY_vtZ27n-UrIAkz47ZCtOL8JBEw3jIT1dyLqBI4nSRpU-E3H-LaGW2AkQ8zPbT3FbX7-Kw4Cro7G73mYS2EhCKxhZ5xvbepnw2bBUln4kDSbeWkZMnGjg-S3QQoFZVFbGoBgfEXJwacDAhxhuNq6pzHb5eAKLSqRs5_XbM1EHXKCQ"/>
+<div>
+<p class="text-xs text-on-surface-variant">Banco Conectado</p>
+<p class="text-sm font-bold">Luminal Global Platinum</p>
+</div>
+</div>
+<button class="w-full flex items-center justify-center gap-2 text-xs font-bold text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-sm" data-icon="sync">sync</span>
+                            Actualizar sincronización
+                        </button>
+</div>
+</div>
+<!-- Compromisos / Contracts Quick View -->
+<div class="bg-gradient-to-br from-surface-container to-surface-container-low rounded-lg p-6 border border-white/5">
+<h4 class="font-bold font-headline mb-4 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-lg" data-icon="handshake">handshake</span>
+                        Mis Compromisos
+                    </h4>
+<div class="space-y-3">
+<div class="p-3 bg-white/5 rounded-xl border border-white/5 hover:border-primary/30 transition-colors cursor-pointer group">
+<div class="flex justify-between items-center">
+<span class="text-xs font-bold group-hover:text-primary transition-colors">Contrato Arrendamiento</span>
+<span class="material-symbols-outlined text-sm" data-icon="open_in_new">open_in_new</span>
+</div>
+<p class="text-[10px] text-on-surface-variant mt-1">Expira: Dic 2024</p>
+</div>
+<div class="p-3 bg-white/5 rounded-xl border border-white/5 hover:border-primary/30 transition-colors cursor-pointer group">
+<div class="flex justify-between items-center">
+<span class="text-xs font-bold group-hover:text-primary transition-colors">Póliza de Vida Premium</span>
+<span class="material-symbols-outlined text-sm" data-icon="open_in_new">open_in_new</span>
+</div>
+<p class="text-[10px] text-on-surface-variant mt-1">Expira: Ago 2025</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Floating Action Button - Contextual for Home -->
+<button class="fixed bottom-8 right-8 w-14 h-14 bg-gradient-to-br from-primary to-primary-container rounded-full shadow-[0_10px_30px_rgba(124,77,255,0.4)] flex items-center justify-center text-on-primary hover:scale-110 active:scale-95 transition-all z-50">
+<span class="material-symbols-outlined text-2xl" data-icon="add" style="font-variation-settings: 'FILL' 0, 'wght' 600;">add</span>
+</button>
+</body></html>

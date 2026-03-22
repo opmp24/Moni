@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Manrope:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "on-primary": "#370096",
+              "primary": "#cdbdff",
+              "inverse-on-surface": "#303032",
+              "tertiary": "#ffb3ae",
+              "surface-container-high": "#2a2a2c",
+              "surface-tint": "#cdbdff",
+              "outline": "#948ea1",
+              "surface-variant": "#353437",
+              "on-primary-fixed": "#20005f",
+              "primary-fixed": "#e8deff",
+              "on-primary-container": "#fcf6ff",
+              "on-secondary-fixed-variant": "#00531e",
+              "primary-container": "#7c4dff",
+              "on-secondary-fixed": "#002108",
+              "inverse-primary": "#6833ea",
+              "error-container": "#93000a",
+              "tertiary-container": "#d53338",
+              "on-primary-fixed-variant": "#4f00d0",
+              "surface": "#131315",
+              "on-tertiary-fixed": "#410004",
+              "surface-container-highest": "#353437",
+              "background": "#131315",
+              "surface-container-low": "#1b1b1d",
+              "on-background": "#e5e1e4",
+              "on-tertiary-container": "#fff6f5",
+              "secondary-container": "#02c953",
+              "on-surface-variant": "#cac3d8",
+              "on-secondary": "#003912",
+              "inverse-surface": "#e5e1e4",
+              "on-tertiary": "#68000c",
+              "surface-bright": "#39393b",
+              "error": "#ffb4ab",
+              "on-surface": "#e5e1e4",
+              "surface-dim": "#131315",
+              "on-tertiary-fixed-variant": "#930015",
+              "secondary-fixed": "#69ff87",
+              "primary-fixed-dim": "#cdbdff",
+              "outline-variant": "#494455",
+              "surface-container-lowest": "#0e0e10",
+              "surface-container": "#201f21",
+              "tertiary-fixed-dim": "#ffb3ae",
+              "tertiary-fixed": "#ffdad7",
+              "on-secondary-container": "#004d1b",
+              "on-error": "#690005",
+              "secondary-fixed-dim": "#3ce36a",
+              "secondary": "#40e56c",
+              "on-error-container": "#ffdad6"
+            },
+            fontFamily: {
+              "headline": ["Plus Jakarta Sans"],
+              "body": ["Manrope"],
+              "label": ["Manrope"]
+            },
+            borderRadius: {"DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body min-h-screen flex">
+<!-- SideNavBar Anchor -->
+<aside class="hidden lg:flex flex-col p-6 space-y-2 bg-[#131315] h-screen w-64 fixed left-0 top-0 overflow-y-auto border-r border-white/5 shadow-2xl shadow-purple-900/20 z-50">
+<div class="text-xl font-black text-[#cdbdff] mb-8 font-headline">Luminal Home</div>
+<nav class="flex-1 space-y-2">
+<a class="flex items-center gap-3 text-slate-400 px-4 py-3 hover:bg-white/5 rounded-2xl hover:translate-x-1 transition-all duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="home">home</span>
+<span class="font-medium">Inicio</span>
+</a>
+<a class="flex items-center gap-3 text-slate-400 px-4 py-3 hover:bg-white/5 rounded-2xl hover:translate-x-1 transition-all duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="history">history</span>
+<span class="font-medium">Historial</span>
+</a>
+<a class="flex items-center gap-3 bg-[#7C4DFF]/10 text-[#cdbdff] rounded-2xl px-4 py-3 border-l-4 border-[#7C4DFF] translate-x-1" href="#">
+<span class="material-symbols-outlined" data-icon="add_circle" style="font-variation-settings: 'FILL' 1;">add_circle</span>
+<span class="font-medium">Agregar</span>
+</a>
+<a class="flex items-center gap-3 text-slate-400 px-4 py-3 hover:bg-white/5 rounded-2xl hover:translate-x-1 transition-all duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="handshake">handshake</span>
+<span class="font-medium">Compromisos</span>
+</a>
+<a class="flex items-center gap-3 text-slate-400 px-4 py-3 hover:bg-white/5 rounded-2xl hover:translate-x-1 transition-all duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="font-medium">Ajustes</span>
+</a>
+</nav>
+<div class="mt-auto pt-6 border-t border-white/5">
+<div class="flex items-center gap-3 px-2">
+<div class="w-10 h-10 rounded-full bg-surface-container-highest overflow-hidden">
+<img alt="Profile" class="w-full h-full object-cover" data-alt="User profile avatar close up photo" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA-dZSFSUdkK2hZBv99ZSNI478bQCj-TKZfkgmgszIOUBDZ1N6k56NsV10F6B9qAPByKCgqVPkhrYblzSYTEQuz6UTFqpDVI0OLr3OUaGOYh33iM16YFnEXxHRAsL_hsTCoTcPOi-otJD3NQ_AjBUcsRO-Pio6FUK8EaOFAmSAhoJUh5kWLyfRNFrGg_LT0fBBypCuTDPzG59SlgdOscpNJYqlI51-r1gZadzg-VEpwlYEvHaEsX01qx3Ux-10DtICm64QT52sc1h8"/>
+</div>
+<div>
+<div class="text-sm font-bold text-on-surface">Alex Rivera</div>
+<div class="text-xs text-slate-500">Premium Plan</div>
+</div>
+</div>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="flex-1 lg:ml-64 p-8 flex flex-col items-center justify-center min-h-screen relative overflow-hidden">
+<!-- Abstract Background Glows -->
+<div class="absolute top-[-10%] right-[-10%] w-[500px] h-[500px] bg-primary-container/10 blur-[120px] rounded-full pointer-events-none"></div>
+<div class="absolute bottom-[-10%] left-[-10%] w-[500px] h-[500px] bg-secondary-container/5 blur-[120px] rounded-full pointer-events-none"></div>
+<!-- Form Card Container -->
+<div class="w-full max-w-2xl bg-surface-container-low rounded-xl p-8 shadow-2xl relative z-10">
+<!-- Header Tabs -->
+<div class="flex justify-center mb-10 gap-4">
+<button class="px-6 py-2.5 rounded-full bg-primary-container text-on-primary-container font-bold text-sm transition-all active:scale-95 shadow-lg shadow-primary-container/20">
+                    Nuevo Gasto
+                </button>
+<button class="px-6 py-2.5 rounded-full bg-surface-container text-on-surface-variant font-semibold text-sm hover:bg-surface-bright transition-all active:scale-95">
+                    Nuevo Compromiso
+                </button>
+</div>
+<form class="space-y-8">
+<!-- Amount Display -->
+<div class="text-center space-y-2">
+<label class="text-xs font-bold uppercase tracking-widest text-outline">Monto Total</label>
+<div class="relative flex items-center justify-center">
+<span class="text-4xl font-headline font-bold text-primary mr-2">$</span>
+<input class="bg-transparent border-none text-6xl font-headline font-extrabold text-on-surface focus:ring-0 w-full max-w-[300px] text-center placeholder:text-surface-variant" placeholder="0.00" type="number"/>
+</div>
+</div>
+<!-- Description -->
+<div class="space-y-3">
+<label class="text-sm font-semibold text-on-surface-variant ml-2">Descripción</label>
+<input class="w-full bg-surface-container-lowest border-none rounded-lg p-4 text-on-surface focus:ring-2 focus:ring-primary/20 transition-all placeholder:text-outline/50" placeholder="¿En qué gastaste?" type="text"/>
+</div>
+<!-- Payment Method -->
+<div class="space-y-3">
+<label class="text-sm font-semibold text-on-surface-variant ml-2">Método de Pago</label>
+<div class="grid grid-cols-3 gap-4">
+<button class="flex flex-col items-center justify-center p-4 bg-primary-container text-on-primary-container rounded-lg border border-primary/20 transition-all shadow-md" type="button">
+<span class="material-symbols-outlined text-2xl mb-2" data-icon="credit_card">credit_card</span>
+<span class="text-xs font-bold">Tarjeta</span>
+</button>
+<button class="flex flex-col items-center justify-center p-4 bg-surface-container-lowest text-on-surface-variant rounded-lg hover:bg-surface-variant transition-all" type="button">
+<span class="material-symbols-outlined text-2xl mb-2" data-icon="payments">payments</span>
+<span class="text-xs font-bold">Efectivo</span>
+</button>
+<button class="flex flex-col items-center justify-center p-4 bg-surface-container-lowest text-on-surface-variant rounded-lg hover:bg-surface-variant transition-all" type="button">
+<span class="material-symbols-outlined text-2xl mb-2" data-icon="account_balance">account_balance</span>
+<span class="text-xs font-bold">Transferencia</span>
+</button>
+</div>
+</div>
+<!-- Two Column Layout: Date & Color -->
+<div class="grid grid-cols-2 gap-6">
+<div class="space-y-3">
+<label class="text-sm font-semibold text-on-surface-variant ml-2">Fecha</label>
+<div class="relative">
+<input class="w-full bg-surface-container-lowest border-none rounded-lg p-4 text-on-surface focus:ring-2 focus:ring-primary/20 transition-all appearance-none" type="date"/>
+<span class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-outline pointer-events-none" data-icon="calendar_today">calendar_today</span>
+</div>
+</div>
+<div class="space-y-3">
+<label class="text-sm font-semibold text-on-surface-variant ml-2">Color del Compromiso</label>
+<div class="flex items-center gap-3 h-[56px] px-2 bg-surface-container-lowest rounded-lg">
+<button class="w-8 h-8 rounded-full bg-[#7C4DFF] border-2 border-white ring-2 ring-primary/20" type="button"></button>
+<button class="w-8 h-8 rounded-full bg-[#00C853] hover:scale-110 transition-transform" type="button"></button>
+<button class="w-8 h-8 rounded-full bg-[#ffb3ae] hover:scale-110 transition-transform" type="button"></button>
+<button class="w-8 h-8 rounded-full bg-[#FFD600] hover:scale-110 transition-transform" type="button"></button>
+<button class="w-8 h-8 rounded-full bg-[#00B0FF] hover:scale-110 transition-transform" type="button"></button>
+</div>
+</div>
+</div>
+<!-- Category Grid -->
+<div class="space-y-3">
+<label class="text-sm font-semibold text-on-surface-variant ml-2">Categoría</label>
+<div class="grid grid-cols-4 gap-3">
+<button class="flex flex-col items-center gap-2 p-3 bg-surface-container-lowest rounded-lg hover:bg-surface-variant group transition-all" type="button">
+<div class="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center group-hover:bg-primary-container/20">
+<span class="material-symbols-outlined text-xl" data-icon="shopping_cart">shopping_cart</span>
+</div>
+<span class="text-[10px] font-bold uppercase tracking-tighter">Compras</span>
+</button>
+<button class="flex flex-col items-center gap-2 p-3 bg-surface-container-lowest rounded-lg hover:bg-surface-variant group transition-all" type="button">
+<div class="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center group-hover:bg-primary-container/20">
+<span class="material-symbols-outlined text-xl" data-icon="restaurant">restaurant</span>
+</div>
+<span class="text-[10px] font-bold uppercase tracking-tighter">Comida</span>
+</button>
+<button class="flex flex-col items-center gap-2 p-3 bg-surface-container-lowest rounded-lg hover:bg-surface-variant group transition-all" type="button">
+<div class="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center group-hover:bg-primary-container/20">
+<span class="material-symbols-outlined text-xl" data-icon="directions_car">directions_car</span>
+</div>
+<span class="text-[10px] font-bold uppercase tracking-tighter">Transporte</span>
+</button>
+<button class="flex flex-col items-center gap-2 p-3 bg-surface-container-lowest rounded-lg border-2 border-dashed border-outline/20 hover:border-primary/50 transition-all" type="button">
+<div class="w-10 h-10 rounded-full bg-transparent flex items-center justify-center">
+<span class="material-symbols-outlined text-xl text-outline" data-icon="more_horiz">more_horiz</span>
+</div>
+<span class="text-[10px] font-bold uppercase tracking-tighter text-outline">Ver más</span>
+</button>
+</div>
+</div>
+<!-- Submit Action -->
+<div class="pt-6">
+<button class="w-full py-5 rounded-lg bg-gradient-to-r from-primary-container to-inverse-primary text-on-primary-container font-headline font-extrabold text-lg shadow-xl shadow-primary-container/30 hover:shadow-primary-container/50 hover:-translate-y-0.5 active:scale-[0.98] transition-all" type="submit">
+                        Guardar Transacción
+                    </button>
+<button class="w-full mt-4 py-3 text-sm font-bold text-outline hover:text-on-surface transition-colors" type="button">
+                        Cancelar
+                    </button>
+</div>
+</form>
+</div>
+<!-- Decorative Info Card (Bento Style) -->
+<div class="mt-12 w-full max-w-2xl grid grid-cols-2 gap-4">
+<div class="bg-surface-container/40 backdrop-blur-md p-4 rounded-lg flex items-center gap-4 border border-white/5">
+<div class="w-12 h-12 rounded-full bg-secondary-container/20 flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined" data-icon="auto_awesome">auto_awesome</span>
+</div>
+<div>
+<div class="text-xs font-bold text-outline uppercase tracking-wider">Presupuesto Restante</div>
+<div class="text-xl font-headline font-bold text-on-surface">$2,450.00</div>
+</div>
+</div>
+<div class="bg-surface-container/40 backdrop-blur-md p-4 rounded-lg flex items-center gap-4 border border-white/5">
+<div class="w-12 h-12 rounded-full bg-tertiary-container/20 flex items-center justify-center text-tertiary">
+<span class="material-symbols-outlined" data-icon="trending_down">trending_down</span>
+</div>
+<div>
+<div class="text-xs font-bold text-outline uppercase tracking-wider">Gasto Mensual</div>
+<div class="text-xl font-headline font-bold text-on-surface">$842.15</div>
+</div>
+</div>
+</div>
+</main>
+</body></html>

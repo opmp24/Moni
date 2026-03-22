@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Historial de Gastos - Luminal Home</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Manrope:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "surface-dim": "#131315",
+              "secondary-fixed-dim": "#3ce36a",
+              "on-secondary-fixed": "#002108",
+              "on-background": "#e5e1e4",
+              "tertiary": "#ffb3ae",
+              "primary-fixed-dim": "#cdbdff",
+              "on-primary-fixed-variant": "#4f00d0",
+              "on-error-container": "#ffdad6",
+              "on-primary-fixed": "#20005f",
+              "primary-container": "#7c4dff",
+              "on-tertiary": "#68000c",
+              "on-surface-variant": "#cac3d8",
+              "outline": "#948ea1",
+              "inverse-on-surface": "#303032",
+              "secondary-fixed": "#69ff87",
+              "on-surface": "#e5e1e4",
+              "tertiary-fixed-dim": "#ffb3ae",
+              "outline-variant": "#494455",
+              "on-primary": "#370096",
+              "error": "#ffb4ab",
+              "on-tertiary-container": "#fff6f5",
+              "on-primary-container": "#fcf6ff",
+              "tertiary-fixed": "#ffdad7",
+              "surface-container-highest": "#353437",
+              "tertiary-container": "#d53338",
+              "surface-variant": "#353437",
+              "on-secondary": "#003912",
+              "surface": "#131315",
+              "surface-container-high": "#2a2a2c",
+              "surface-container-lowest": "#0e0e10",
+              "primary-fixed": "#e8deff",
+              "error-container": "#93000a",
+              "surface-container": "#201f21",
+              "primary": "#cdbdff",
+              "inverse-surface": "#e5e1e4",
+              "inverse-primary": "#6833ea",
+              "surface-container-low": "#1b1b1d",
+              "on-tertiary-fixed-variant": "#930015",
+              "on-tertiary-fixed": "#410004",
+              "secondary": "#40e56c",
+              "surface-bright": "#39393b",
+              "on-secondary-container": "#004d1b",
+              "secondary-container": "#02c953",
+              "on-error": "#690005",
+              "on-secondary-fixed-variant": "#00531e",
+              "surface-tint": "#cdbdff",
+              "background": "#131315"
+            },
+            fontFamily: {
+              "headline": ["Plus Jakarta Sans"],
+              "body": ["Manrope"],
+              "label": ["Manrope"]
+            },
+            borderRadius: {"DEFAULT": "1rem", "lg": "1rem", "xl": "1rem", "full": "1rem"},
+          },
+        },
+      }
+    </script>
+<style>
+      .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      }
+      body {
+        background-color: #131315;
+        color: #e5e1e4;
+      }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head>
+<body class="font-body selection:bg-primary-container selection:text-on-primary-container">
+<!-- Top App Bar -->
+<header class="bg-[#131315] dark:bg-[#131315] flex justify-between items-center px-6 py-4 w-full docked full-width top-0 sticky z-50">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-xl overflow-hidden border-2 border-primary-container">
+<img alt="Avatar" class="w-full h-full object-cover" data-alt="Portrait of a professional user profile" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB2tG_c3VrbWVawwHRXuLbBMoA71V46s_JT8BbsJezK-xl7YZi2Y60h5x5xCl3IlsKkkXbWv59hxKfVuMTACkShgTbaCOeb0wzUvFvQOxdmNlhrF1q5wIadwssGueWAo3PIiRMkW6JOOfdIZZ1SwU1fFG6MoQtA5Es5pIFj1uSNw6oe9BxuBQdwtcla2E-mq1eKxpMpiMTPk9tPy3VjaH7ihyWiUbqi7-ESbMIHetOI6Kx7ZFUKUw9TXIK0_tap6_KSdSO1NU8vMiY"/>
+</div>
+<h1 class="font-plus-jakarta-sans font-bold text-xl text-[#cdbdff] dark:text-[#cdbdff]">Luminal Home</h1>
+</div>
+<div class="flex gap-4">
+<button class="hover:opacity-80 transition-opacity active:scale-95 text-gray-500">
+<span class="material-symbols-outlined">search</span>
+</button>
+<button class="hover:opacity-80 transition-opacity active:scale-95 text-gray-500">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+</div>
+</header>
+<main class="px-6 pb-32 pt-4 max-w-2xl mx-auto">
+<!-- Summary Section / Bento Header -->
+<section class="mb-8">
+<p class="font-label text-xs uppercase tracking-[0.2em] text-outline mb-2">Resumen Mensual</p>
+<div class="bg-surface-container-low rounded-xl p-6 relative overflow-hidden">
+<div class="relative z-10">
+<h2 class="font-headline text-4xl font-extrabold text-primary mb-1">$4,250.00</h2>
+<p class="text-on-surface-variant text-sm font-medium">Gastos totales en Octubre</p>
+</div>
+<!-- Abstract Glow Decoration -->
+<div class="absolute -right-10 -top-10 w-40 h-40 bg-primary/10 blur-[60px] rounded-xl"></div>
+</div>
+</section>
+<!-- Filters / Categories -->
+<div class="flex gap-3 mb-6 overflow-x-auto pb-2 no-scrollbar">
+<button class="bg-primary-container text-on-primary-container px-6 py-2 rounded-xl text-sm font-bold flex-shrink-0">Todos</button>
+<button class="bg-surface-container-high text-on-surface-variant px-6 py-2 rounded-xl text-sm font-medium flex-shrink-0">Hogar</button>
+<button class="bg-surface-container-high text-on-surface-variant px-6 py-2 rounded-xl text-sm font-medium flex-shrink-0">Comida</button>
+<button class="bg-surface-container-high text-on-surface-variant px-6 py-2 rounded-xl text-sm font-medium flex-shrink-0">Ocio</button>
+</div>
+<!-- History List -->
+<div class="space-y-4">
+<h3 class="font-headline text-lg font-bold text-on-surface px-1">Recientes</h3>
+<!-- Expense Item 1 -->
+<div class="bg-surface-container rounded-xl p-5 flex items-center justify-between group hover:bg-surface-container-high transition-colors">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-xl bg-tertiary-container/20 flex items-center justify-center text-tertiary">
+<span class="material-symbols-outlined">shopping_bag</span>
+</div>
+<div>
+<h4 class="font-headline font-bold text-on-surface">Supermercado Central</h4>
+<div class="flex items-center gap-2 mt-0.5">
+<span class="text-xs text-outline font-medium">14 Oct, 2023</span>
+<span class="w-1 h-1 rounded-full bg-outline-variant"></span>
+<span class="text-xs text-outline font-medium">Alimentos</span>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<span class="font-headline font-bold text-tertiary">-$125.50</span>
+<button class="w-8 h-8 rounded-lg flex items-center justify-center text-outline hover:text-primary hover:bg-primary/10 transition-all">
+<span class="material-symbols-outlined text-xl">edit_square</span>
+</button>
+</div>
+</div>
+<!-- Expense Item 2 -->
+<div class="bg-surface-container rounded-xl p-5 flex items-center justify-between group hover:bg-surface-container-high transition-colors">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-xl bg-primary-container/20 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">electric_bolt</span>
+</div>
+<div>
+<h4 class="font-headline font-bold text-on-surface">Servicio Eléctrico</h4>
+<div class="flex items-center gap-2 mt-0.5">
+<span class="text-xs text-outline font-medium">12 Oct, 2023</span>
+<span class="w-1 h-1 rounded-full bg-outline-variant"></span>
+<span class="text-xs text-outline font-medium">Servicios</span>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<span class="font-headline font-bold text-tertiary">-$84.20</span>
+<button class="w-8 h-8 rounded-lg flex items-center justify-center text-outline hover:text-primary hover:bg-primary/10 transition-all">
+<span class="material-symbols-outlined text-xl">edit_square</span>
+</button>
+</div>
+</div>
+<!-- Expense Item 3 -->
+<div class="bg-surface-container rounded-xl p-5 flex items-center justify-between group hover:bg-surface-container-high transition-colors">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-xl bg-secondary-container/20 flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined">movie</span>
+</div>
+<div>
+<h4 class="font-headline font-bold text-on-surface">Suscripción Premium</h4>
+<div class="flex items-center gap-2 mt-0.5">
+<span class="text-xs text-outline font-medium">10 Oct, 2023</span>
+<span class="w-1 h-1 rounded-full bg-outline-variant"></span>
+<span class="text-xs text-outline font-medium">Entretenimiento</span>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<span class="font-headline font-bold text-tertiary">-$15.99</span>
+<button class="w-8 h-8 rounded-lg flex items-center justify-center text-outline hover:text-primary hover:bg-primary/10 transition-all">
+<span class="material-symbols-outlined text-xl">edit_square</span>
+</button>
+</div>
+</div>
+<h3 class="font-headline text-lg font-bold text-on-surface px-1 pt-4">Anteriores</h3>
+<!-- Expense Item 4 -->
+<div class="bg-surface-container rounded-xl p-5 flex items-center justify-between group hover:bg-surface-container-high transition-colors">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-xl bg-surface-container-highest flex items-center justify-center text-on-surface-variant">
+<span class="material-symbols-outlined">directions_car</span>
+</div>
+<div>
+<h4 class="font-headline font-bold text-on-surface">Combustible Shell</h4>
+<div class="flex items-center gap-2 mt-0.5">
+<span class="text-xs text-outline font-medium">08 Oct, 2023</span>
+<span class="w-1 h-1 rounded-full bg-outline-variant"></span>
+<span class="text-xs text-outline font-medium">Transporte</span>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<span class="font-headline font-bold text-tertiary">-$62.00</span>
+<button class="w-8 h-8 rounded-lg flex items-center justify-center text-outline hover:text-primary hover:bg-primary/10 transition-all">
+<span class="material-symbols-outlined text-xl">edit_square</span>
+</button>
+</div>
+</div>
+<!-- Expense Item 5 -->
+<div class="bg-surface-container rounded-xl p-5 flex items-center justify-between group hover:bg-surface-container-high transition-colors">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-xl bg-tertiary-container/20 flex items-center justify-center text-tertiary">
+<span class="material-symbols-outlined">restaurant</span>
+</div>
+<div>
+<h4 class="font-headline font-bold text-on-surface">Cena Terraza</h4>
+<div class="flex items-center gap-2 mt-0.5">
+<span class="text-xs text-outline font-medium">05 Oct, 2023</span>
+<span class="w-1 h-1 rounded-full bg-outline-variant"></span>
+<span class="text-xs text-outline font-medium">Comida</span>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<span class="font-headline font-bold text-tertiary">-$210.00</span>
+<button class="w-8 h-8 rounded-lg flex items-center justify-center text-outline hover:text-primary hover:bg-primary/10 transition-all">
+<span class="material-symbols-outlined text-xl">edit_square</span>
+</button>
+</div>
+</div>
+</div>
+</main>
+<!-- Bottom Navigation Bar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 pb-6 pt-3 bg-[#1c1c1e]/70 backdrop-blur-xl rounded-t-2xl shadow-[0_-10px_40px_rgba(124,77,255,0.08)]">
+<a class="flex flex-col items-center justify-center text-gray-400 opacity-60 px-3 py-1.5 hover:text-[#cdbdff] hover:opacity-100 transition-all" href="#">
+<span class="material-symbols-outlined mb-1">home</span>
+<span class="font-manrope text-[10px] uppercase tracking-widest font-semibold">Inicio</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-[#7C4DFF]/20 text-[#cdbdff] rounded-xl px-3 py-1.5 transition-all duration-300" href="#">
+<span class="material-symbols-outlined mb-1" style="font-variation-settings: 'FILL' 1;">history</span>
+<span class="font-manrope text-[10px] uppercase tracking-widest font-semibold">Historial</span>
+</a>
+<a class="flex flex-col items-center justify-center text-gray-400 opacity-60 px-3 py-1.5 hover:text-[#cdbdff] hover:opacity-100 transition-all" href="#">
+<div class="bg-primary p-2 rounded-xl -mt-8 shadow-lg shadow-primary/30 active:scale-90 transition-transform">
+<span class="material-symbols-outlined text-on-primary">add</span>
+</div>
+<span class="font-manrope text-[10px] uppercase tracking-widest font-semibold mt-1">Agregar</span>
+</a>
+<a class="flex flex-col items-center justify-center text-gray-400 opacity-60 px-3 py-1.5 hover:text-[#cdbdff] hover:opacity-100 transition-all" href="#">
+<span class="material-symbols-outlined mb-1">handshake</span>
+<span class="font-manrope text-[10px] uppercase tracking-widest font-semibold">Compromisos</span>
+</a>
+<a class="flex flex-col items-center justify-center text-gray-400 opacity-60 px-3 py-1.5 hover:text-[#cdbdff] hover:opacity-100 transition-all" href="#">
+<span class="material-symbols-outlined mb-1">settings</span>
+<span class="font-manrope text-[10px] uppercase tracking-widest font-semibold">Ajustes</span>
+</a>
+</nav>
+</body></html>

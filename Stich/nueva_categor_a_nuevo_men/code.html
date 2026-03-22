@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "on-primary": "#370096",
+              "on-primary-fixed-variant": "#4f00d0",
+              "surface": "#131315",
+              "tertiary-container": "#d53338",
+              "surface-container-lowest": "#0e0e10",
+              "surface-dim": "#131315",
+              "secondary-fixed": "#69ff87",
+              "on-tertiary-fixed": "#410004",
+              "surface-variant": "#353437",
+              "outline-variant": "#494455",
+              "inverse-on-surface": "#303032",
+              "surface-bright": "#39393b",
+              "primary": "#cdbdff",
+              "on-secondary": "#003912",
+              "on-secondary-fixed-variant": "#00531e",
+              "primary-fixed-dim": "#cdbdff",
+              "on-background": "#e5e1e4",
+              "background": "#131315",
+              "tertiary-fixed-dim": "#ffb3ae",
+              "primary-fixed": "#e8deff",
+              "inverse-primary": "#6833ea",
+              "on-error-container": "#ffdad6",
+              "on-secondary-container": "#004d1b",
+              "on-error": "#690005",
+              "error-container": "#93000a",
+              "error": "#ffb4ab",
+              "surface-container": "#201f21",
+              "tertiary-fixed": "#ffdad7",
+              "on-tertiary": "#68000c",
+              "secondary-fixed-dim": "#3ce36a",
+              "on-secondary-fixed": "#002108",
+              "outline": "#948ea1",
+              "on-surface": "#e5e1e4",
+              "surface-tint": "#cdbdff",
+              "surface-container-highest": "#353437",
+              "surface-container-low": "#1b1b1d",
+              "secondary-container": "#02c953",
+              "on-primary-container": "#fcf6ff",
+              "inverse-surface": "#e5e1e4",
+              "surface-container-high": "#2a2a2c",
+              "on-surface-variant": "#cac3d8",
+              "tertiary": "#ffb3ae",
+              "secondary": "#40e56c",
+              "primary-container": "#7c4dff",
+              "on-tertiary-container": "#fff6f5",
+              "on-primary-fixed": "#20005f",
+              "on-tertiary-fixed-variant": "#930015"
+            },
+            fontFamily: {
+              "headline": ["Plus Jakarta Sans"],
+              "body": ["Manrope"],
+              "label": ["Manrope"]
+            },
+            borderRadius: {
+              "DEFAULT": "0.75rem", // 12px
+              "lg": "1rem",         // 16px
+              "xl": "1.25rem",      // 20px
+              "full": "9999px"
+            },
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #353437;
+            border-radius: 10px;
+        }
+        body {
+            min-height: max(884px, 100dvh);
+        }
+        /* Custom styles for the icon reveal */
+        .icon-grid-expand {
+            max-height: 180px;
+            overflow: hidden;
+            transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .icon-grid-expand.expanded {
+            max-height: 800px;
+        }
+    </style>
+</head>
+<body class="bg-surface text-on-surface font-body selection:bg-primary-container selection:text-white min-h-screen pb-40">
+<!-- TopAppBar -->
+<header class="bg-[#131315] w-full top-0 sticky z-50 flex justify-between items-center px-6 py-4">
+<div class="flex items-center gap-4">
+<button class="text-[#cdbdff] hover:bg-white/5 transition-colors p-2 rounded-lg active:scale-95 duration-200">
+<span class="material-symbols-outlined">menu</span>
+</button>
+<h1 class="font-['Plus_Jakarta_Sans'] font-bold text-xl tracking-tight text-[#cdbdff]">Gestión de Hogar</h1>
+</div>
+<div class="w-10 h-10 rounded-lg overflow-hidden border-2 border-primary-container/30">
+<img alt="Profile" class="w-full h-full object-cover" data-alt="Profile picture of the home administrator" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCKK1WgR_fn5sjnDL1fmh6PrK4E9lqi3YVqWJbHZfZCyW2npKMhBNaRNj9_CCVBtuNKlDCLAsprpnuP0FT0SEEmr0Qu8mZlFj9JrPUDlPMETubayfk7RJ8P7XFqrhWkoOUGPJU9MAj663JuHLENGOe6D09KVgJpv1qmDl-A0KhbZw9PbbxI4zeAF9LEute_DKUcW5Y9LKB4q4so7ptmWSppld2FcOaTJy_ncoZcoq6eKL2rSSMmHu9ZfWF1misenPCp-nA6QZDjtOY"/>
+</div>
+</header>
+<main class="max-w-xl mx-auto px-6 pt-8 space-y-8">
+<!-- Editorial Header Section -->
+<section class="space-y-2">
+<span class="font-label text-primary text-[10px] uppercase tracking-widest font-bold">Configuración</span>
+<h2 class="font-headline text-4xl font-extrabold tracking-tight text-white">Nueva Categoría</h2>
+<p class="text-on-surface-variant font-body">Personaliza un nuevo segmento para tus finanzas del hogar.</p>
+</section>
+<!-- Main Form Card -->
+<div class="bg-surface-container p-8 rounded-lg space-y-10 relative overflow-hidden">
+<!-- Subtle Glow Background Decoration -->
+<div class="absolute -top-24 -right-24 w-48 h-48 bg-primary/5 blur-[80px] rounded-full"></div>
+<!-- Name Input Field -->
+<div class="space-y-3">
+<label class="font-label text-xs uppercase tracking-widest font-bold text-on-surface-variant ml-1">Nombre de la Categoría</label>
+<div class="relative group">
+<input class="w-full bg-surface-container-lowest border-none rounded-lg py-5 px-6 text-on-surface placeholder:text-on-surface-variant/40 focus:ring-2 focus:ring-primary-container/50 transition-all font-headline text-lg font-semibold" placeholder="Ej: Supermercado" type="text"/>
+<div class="absolute inset-0 rounded-lg pointer-events-none border border-white/5 group-focus-within:border-primary/20 transition-colors"></div>
+</div>
+</div>
+<!-- Icon Selector Grid -->
+<div class="space-y-4">
+<div class="flex items-center justify-between ml-1">
+<label class="font-label text-xs uppercase tracking-widest font-bold text-on-surface-variant">Seleccionar Icono</label>
+</div>
+<div class="icon-grid-expand space-y-3" id="icon-container">
+<div class="grid grid-cols-4 sm:grid-cols-5 gap-3">
+<!-- Initial Icons (Top 10) -->
+<button class="aspect-square bg-gradient-to-br from-primary to-primary-container text-on-primary-container rounded-lg flex items-center justify-center shadow-lg shadow-primary-container/20 active:scale-90 duration-200 transition-transform">
+<span class="material-symbols-outlined text-3xl" style="font-variation-settings: 'FILL' 1;">home</span>
+</button>
+<button class="aspect-square bg-surface-container-low text-on-surface-variant/70 rounded-lg flex items-center justify-center hover:bg-surface-bright transition-colors active:scale-90 duration-200">
+<span class="material-symbols-outlined text-3xl">restaurant</span>
+</button>
+<button class="aspect-square bg-surface-container-low text-on-surface-variant/70 rounded-lg flex items-center justify-center hover:bg-surface-bright transition-colors active:scale-90 duration-200">
+<span class="material-symbols-outlined text-3xl">directions_car</span>
+</button>
+<button class="aspect-square bg-surface-container-low text-on-surface-variant/70 rounded-lg flex items-center justify-center hover:bg-surface-bright transition-colors active:scale-90 duration-200">
+<span class="material-symbols-outlined text-3xl">health_and_safety</span>
+</button>
+<button class="aspect-square bg-surface-container-low text-on-surface-variant/70 rounded-lg flex items-center justify-center hover:bg-surface-bright transition-colors active:scale-90 duration-200">
+<span class="material-symbols-outlined text-3xl">shopping_cart</span>
+</button>
+<button class="aspect-square bg-surface-container-low text-on-surface-variant/70 rounded-lg flex items-center justify-center hover:bg-surface-bright transition-colors active:scale-90 duration-200">
+<span class="material-symbols-outlined text-3xl">pets</span>
+</button>
+<button class="aspect-square bg-surface-container-low text-on-surface-variant/70 rounded-lg flex items-center justify-center hover:bg-surface-bright transition-colors active:scale-90 duration-200">
+<span class="material-symbols-outlined text-3xl">school</span>
+</button>
+<button class="aspect-square bg-surface-container-low text-on-surface-variant/70 rounded-lg flex items-center justify-center hover:bg-surface-bright transition-colors active:scale-90 duration-200">
+<span class="material-symbols-outlined text-3xl">fitness_center</span>
+</button>
+<button class="aspect-square bg-surface-container-low text-on-surface-variant/70 rounded-lg flex items-center justify-center hover:bg-surface-bright transition-colors active:scale-90 duration-200">
+<span class="material-symbols-outlined text-3xl">flight</span>
+</button>
+<button class="aspect-square bg-surface-container-low text-on-surface-variant/70 rounded-lg flex items-center justify-center hover:bg-surface-bright transition-colors active:scale-90 duration-200">
+<span class="material-symbols-outlined text-3xl">movie</span>
+</button>
+<!-- Extra Icons (Revealed on click) -->
+<button class="aspect-square bg-surface-container-low text-on-surface-variant/70 rounded-lg flex items-center justify-center hover:bg-surface-bright transition-colors active:scale-90 duration-200">
+<span class="material-symbols-outlined text-3xl">bolt</span>
+</button>
+<button class="aspect-square bg-surface-container-low text-on-surface-variant/70 rounded-lg flex items-center justify-center hover:bg-surface-bright transition-colors active:scale-90 duration-200">
+<span class="material-symbols-outlined text-3xl">water_drop</span>
+</button>
+<button class="aspect-square bg-surface-container-low text-on-surface-variant/70 rounded-lg flex items-center justify-center hover:bg-surface-bright transition-colors active:scale-90 duration-200">
+<span class="material-symbols-outlined text-3xl">wifi</span>
+</button>
+<button class="aspect-square bg-surface-container-low text-on-surface-variant/70 rounded-lg flex items-center justify-center hover:bg-surface-bright transition-colors active:scale-90 duration-200">
+<span class="material-symbols-outlined text-3xl">smartphone</span>
+</button>
+<button class="aspect-square bg-surface-container-low text-on-surface-variant/70 rounded-lg flex items-center justify-center hover:bg-surface-bright transition-colors active:scale-90 duration-200">
+<span class="material-symbols-outlined text-3xl">savings</span>
+</button>
+<button class="aspect-square bg-surface-container-low text-on-surface-variant/70 rounded-lg flex items-center justify-center hover:bg-surface-bright transition-colors active:scale-90 duration-200">
+<span class="material-symbols-outlined text-3xl">account_balance</span>
+</button>
+<button class="aspect-square bg-surface-container-low text-on-surface-variant/70 rounded-lg flex items-center justify-center hover:bg-surface-bright transition-colors active:scale-90 duration-200">
+<span class="material-symbols-outlined text-3xl">child_care</span>
+</button>
+<button class="aspect-square bg-surface-container-low text-on-surface-variant/70 rounded-lg flex items-center justify-center hover:bg-surface-bright transition-colors active:scale-90 duration-200">
+<span class="material-symbols-outlined text-3xl">work</span>
+</button>
+<button class="aspect-square bg-surface-container-low text-on-surface-variant/70 rounded-lg flex items-center justify-center hover:bg-surface-bright transition-colors active:scale-90 duration-200">
+<span class="material-symbols-outlined text-3xl">stroller</span>
+</button>
+<button class="aspect-square bg-surface-container-low text-on-surface-variant/70 rounded-lg flex items-center justify-center hover:bg-surface-bright transition-colors active:scale-90 duration-200">
+<span class="material-symbols-outlined text-3xl">local_laundry_service</span>
+</button>
+<button class="aspect-square bg-surface-container-low text-on-surface-variant/70 rounded-lg flex items-center justify-center hover:bg-surface-bright transition-colors active:scale-90 duration-200">
+<span class="material-symbols-outlined text-3xl">cleaning_services</span>
+</button>
+<button class="aspect-square bg-surface-container-low text-on-surface-variant/70 rounded-lg flex items-center justify-center hover:bg-surface-bright transition-colors active:scale-90 duration-200">
+<span class="material-symbols-outlined text-3xl">receipt_long</span>
+</button>
+<button class="aspect-square bg-surface-container-low text-on-surface-variant/70 rounded-lg flex items-center justify-center hover:bg-surface-bright transition-colors active:scale-90 duration-200">
+<span class="material-symbols-outlined text-3xl">coffee</span>
+</button>
+<button class="aspect-square bg-surface-container-low text-on-surface-variant/70 rounded-lg flex items-center justify-center hover:bg-surface-bright transition-colors active:scale-90 duration-200">
+<span class="material-symbols-outlined text-3xl">celebration</span>
+</button>
+<button class="aspect-square bg-surface-container-low text-on-surface-variant/70 rounded-lg flex items-center justify-center hover:bg-surface-bright transition-colors active:scale-90 duration-200">
+<span class="material-symbols-outlined text-3xl">redeem</span>
+</button>
+</div>
+</div>
+<!-- Show More Button -->
+<button class="w-full py-2 flex items-center justify-center gap-2 text-primary hover:text-primary-fixed-dim transition-colors group" onclick="document.getElementById('icon-container').classList.toggle('expanded'); this.querySelector('.arrow').classList.toggle('rotate-180'); this.querySelector('.label-text').textContent = document.getElementById('icon-container').classList.contains('expanded') ? 'Ver menos' : 'Ver más iconos';">
+<span class="label-text font-label text-[10px] uppercase tracking-widest font-extrabold">Ver más iconos</span>
+<span class="material-symbols-outlined arrow transition-transform duration-300 text-lg">expand_more</span>
+</button>
+</div>
+<!-- Color Palette Selector -->
+<div class="space-y-4">
+<label class="font-label text-xs uppercase tracking-widest font-bold text-on-surface-variant ml-1">Color Distintivo</label>
+<div class="flex flex-wrap gap-4 items-center justify-start">
+<button class="w-10 h-10 rounded-lg bg-primary ring-4 ring-primary/20 ring-offset-4 ring-offset-surface-container active:scale-90 duration-200"></button>
+<button class="w-10 h-10 rounded-lg bg-secondary hover:ring-2 hover:ring-secondary/40 active:scale-90 duration-200"></button>
+<button class="w-10 h-10 rounded-lg bg-tertiary hover:ring-2 hover:ring-tertiary/40 active:scale-90 duration-200"></button>
+<button class="w-10 h-10 rounded-lg bg-secondary-container hover:ring-2 hover:ring-secondary-container/40 active:scale-90 duration-200"></button>
+<button class="w-10 h-10 rounded-lg bg-tertiary-container hover:ring-2 hover:ring-tertiary-container/40 active:scale-90 duration-200"></button>
+<button class="w-10 h-10 rounded-lg bg-error hover:ring-2 hover:ring-error/40 active:scale-90 duration-200"></button>
+<button class="w-10 h-10 rounded-lg bg-sky-400 hover:ring-2 hover:ring-sky-400/40 active:scale-90 duration-200"></button>
+<button class="w-10 h-10 rounded-lg bg-amber-400 hover:ring-2 hover:ring-amber-400/40 active:scale-90 duration-200"></button>
+</div>
+</div>
+</div>
+<!-- Big Action Button -->
+<div class="pt-4">
+<button class="w-full bg-gradient-to-br from-[#cdbdff] to-[#7C4DFF] text-on-primary py-6 rounded-lg font-headline text-xl font-extrabold tracking-tight shadow-[0_20px_40px_rgba(124,77,255,0.3)] active:scale-95 duration-200 transition-all flex items-center justify-center gap-3">
+<span class="material-symbols-outlined">save</span>
+                Guardar Categoría
+            </button>
+<p class="text-center mt-6 text-on-surface-variant/50 text-sm font-label uppercase tracking-widest">Se añadirá a tu lista de presupuestos mensuales</p>
+</div>
+</main>
+<!-- BottomNavBar with FAB -->
+<nav class="fixed bottom-0 w-full z-50 flex justify-around items-center px-4 pb-8 pt-4 bg-[#1c1c1e]/70 backdrop-blur-xl rounded-t-[32px] shadow-[0_-10px_40px_rgba(124,77,255,0.08)]">
+<!-- Inicio -->
+<a class="flex flex-col items-center justify-center text-[#494455] hover:text-[#cdbdff] transition-colors scale-90 duration-150 active:scale-100" href="#">
+<span class="material-symbols-outlined mb-1">home</span>
+<span class="font-['Plus_Jakarta_Sans'] text-[10px] font-bold uppercase tracking-widest">Inicio</span>
+</a>
+<!-- Historial -->
+<a class="flex flex-col items-center justify-center text-[#494455] hover:text-[#cdbdff] transition-colors scale-90 duration-150 active:scale-100" href="#">
+<span class="material-symbols-outlined mb-1">history</span>
+<span class="font-['Plus_Jakarta_Sans'] text-[10px] font-bold uppercase tracking-widest">Historial</span>
+</a>
+<!-- FAB Center (Add) -->
+<button class="flex items-center justify-center bg-gradient-to-br from-[#cdbdff] to-[#7C4DFF] text-white rounded-full w-14 h-14 shadow-lg shadow-primary-container/40 -mt-12 scale-100 active:scale-110 transition-transform duration-200 border-4 border-surface">
+<span class="material-symbols-outlined text-3xl" style="font-variation-settings: 'FILL' 1;">add</span>
+</button>
+<!-- Compromisos -->
+<a class="flex flex-col items-center justify-center text-[#494455] hover:text-[#cdbdff] transition-colors scale-90 duration-150 active:scale-100" href="#">
+<span class="material-symbols-outlined mb-1">account_balance_wallet</span>
+<span class="font-['Plus_Jakarta_Sans'] text-[10px] font-bold uppercase tracking-widest">Compromisos</span>
+</a>
+<!-- Ajustes -->
+<a class="flex flex-col items-center justify-center text-[#cdbdff] bg-[#7C4DFF]/20 rounded-full px-4 py-1 scale-90 duration-150 active:scale-100" href="#">
+<span class="material-symbols-outlined mb-1">settings</span>
+<span class="font-['Plus_Jakarta_Sans'] text-[10px] font-bold uppercase tracking-widest">Ajustes</span>
+</a>
+</nav>
+</body></html>

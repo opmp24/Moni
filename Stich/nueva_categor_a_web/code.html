@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Manrope:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "on-primary": "#370096",
+              "primary": "#cdbdff",
+              "inverse-on-surface": "#303032",
+              "tertiary": "#ffb3ae",
+              "surface-container-high": "#2a2a2c",
+              "surface-tint": "#cdbdff",
+              "outline": "#948ea1",
+              "surface-variant": "#353437",
+              "on-primary-fixed": "#20005f",
+              "primary-fixed": "#e8deff",
+              "on-primary-container": "#fcf6ff",
+              "on-secondary-fixed-variant": "#00531e",
+              "primary-container": "#7c4dff",
+              "on-secondary-fixed": "#002108",
+              "inverse-primary": "#6833ea",
+              "error-container": "#93000a",
+              "tertiary-container": "#d53338",
+              "on-primary-fixed-variant": "#4f00d0",
+              "surface": "#131315",
+              "on-tertiary-fixed": "#410004",
+              "surface-container-highest": "#353437",
+              "background": "#131315",
+              "surface-container-low": "#1b1b1d",
+              "on-background": "#e5e1e4",
+              "on-tertiary-container": "#fff6f5",
+              "secondary-container": "#02c953",
+              "on-surface-variant": "#cac3d8",
+              "on-secondary": "#003912",
+              "inverse-surface": "#e5e1e4",
+              "on-tertiary": "#68000c",
+              "surface-bright": "#39393b",
+              "error": "#ffb4ab",
+              "on-surface": "#e5e1e4",
+              "surface-dim": "#131315",
+              "on-tertiary-fixed-variant": "#930015",
+              "secondary-fixed": "#69ff87",
+              "primary-fixed-dim": "#cdbdff",
+              "outline-variant": "#494455",
+              "surface-container-lowest": "#0e0e10",
+              "surface-container": "#201f21",
+              "tertiary-fixed-dim": "#ffb3ae",
+              "tertiary-fixed": "#ffdad7",
+              "on-secondary-container": "#004d1b",
+              "on-error": "#690005",
+              "secondary-fixed-dim": "#3ce36a",
+              "secondary": "#40e56c",
+              "on-error-container": "#ffdad6"
+            },
+            fontFamily: {
+              "headline": ["Plus Jakarta Sans"],
+              "body": ["Manrope"],
+              "label": ["Manrope"]
+            },
+            borderRadius: {"DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+      .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      }
+      .glass-card {
+        background: linear-gradient(135deg, rgba(32, 31, 33, 0.7) 0%, rgba(27, 27, 29, 0.5) 100%);
+        backdrop-filter: blur(20px);
+      }
+      .custom-scrollbar::-webkit-scrollbar { width: 4px; }
+      .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+      .custom-scrollbar::-webkit-scrollbar-thumb { background: #494455; border-radius: 10px; }
+    </style>
+</head>
+<body class="bg-surface text-on-surface font-body selection:bg-primary-container selection:text-white min-h-screen">
+<!-- Sidebar Navigation Shell -->
+<aside class="h-screen w-64 fixed left-0 top-0 overflow-y-auto bg-[#131315] border-r border-white/5 shadow-2xl shadow-purple-900/20 hidden lg:flex flex-col p-6 space-y-2 z-40">
+<div class="text-xl font-black text-[#cdbdff] mb-8 font-headline">Luminal Home</div>
+<nav class="flex-1 space-y-2">
+<a class="flex items-center gap-3 text-slate-400 px-4 py-3 hover:bg-white/5 rounded-2xl transition-transform duration-200 hover:translate-x-1" href="#">
+<span class="material-symbols-outlined" data-icon="home">home</span>
+<span class="font-['Plus_Jakarta_Sans'] text-sm font-medium">Inicio</span>
+</a>
+<a class="flex items-center gap-3 text-slate-400 px-4 py-3 hover:bg-white/5 rounded-2xl transition-transform duration-200 hover:translate-x-1" href="#">
+<span class="material-symbols-outlined" data-icon="history">history</span>
+<span class="font-['Plus_Jakarta_Sans'] text-sm font-medium">Historial</span>
+</a>
+<!-- Active State: Agregar -->
+<a class="flex items-center gap-3 bg-[#7C4DFF]/10 text-[#cdbdff] rounded-2xl px-4 py-3 border-l-4 border-[#7C4DFF] transition-transform duration-200 hover:translate-x-1" href="#">
+<span class="material-symbols-outlined" data-icon="add_circle">add_circle</span>
+<span class="font-['Plus_Jakarta_Sans'] text-sm font-medium">Agregar</span>
+</a>
+<a class="flex items-center gap-3 text-slate-400 px-4 py-3 hover:bg-white/5 rounded-2xl transition-transform duration-200 hover:translate-x-1" href="#">
+<span class="material-symbols-outlined" data-icon="handshake">handshake</span>
+<span class="font-['Plus_Jakarta_Sans'] text-sm font-medium">Compromisos</span>
+</a>
+<a class="flex items-center gap-3 text-slate-400 px-4 py-3 hover:bg-white/5 rounded-2xl transition-transform duration-200 hover:translate-x-1" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="font-['Plus_Jakarta_Sans'] text-sm font-medium">Ajustes</span>
+</a>
+</nav>
+<div class="pt-6 mt-6 border-t border-white/5">
+<div class="flex items-center gap-3 px-4">
+<div class="w-10 h-10 rounded-full bg-surface-container-high overflow-hidden border border-outline-variant/20">
+<img class="w-full h-full object-cover" data-alt="User profile avatar looking confident" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDH6w-ylDpOxh5UJrqPRbr4WQCoTZrkYGyYtqcf8x2sE4zzaZQ1IJy6EjC_dSxFjZDKfyobxW17yBKcDqOxwtTLB9C8gHsmgkQUGOLSGyHz9m8UNc9A4fLPGwJL0I0Dlz7QOFVbf4SpmZxSwWlNlEuo1981q9Pqg8K-AssDRbSGxKWg4F8OBNzwv1gJ-Isf63HM4_fsFEifGnj3JJGEMj0X8f96F-7h3Qfc-scBpy2tXPvYZNSdpbMSxJ1AIfr71MyeF_C7FI8wAis"/>
+</div>
+<div>
+<div class="text-sm font-bold font-headline text-on-surface">Alex Rivera</div>
+<div class="text-[10px] uppercase tracking-widest text-outline">Premium Management</div>
+</div>
+</div>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="lg:pl-64 min-h-screen flex items-center justify-center p-8 relative overflow-hidden">
+<!-- Background Accents -->
+<div class="absolute top-[-10%] right-[-5%] w-[500px] h-[500px] bg-primary-container/10 blur-[120px] rounded-full pointer-events-none"></div>
+<div class="absolute bottom-[-10%] left-[10%] w-[400px] h-[400px] bg-tertiary-container/5 blur-[100px] rounded-full pointer-events-none"></div>
+<div class="w-full max-w-2xl z-10">
+<!-- Header Section -->
+<div class="mb-10 text-center">
+<h1 class="text-4xl lg:text-5xl font-extrabold font-headline tracking-tight text-white mb-3">Nueva Categoría</h1>
+<p class="text-outline font-body text-lg">Personaliza tu gestión con un toque editorial</p>
+</div>
+<!-- Form Card -->
+<div class="glass-card rounded-xl p-10 shadow-[0_32px_64px_-12px_rgba(0,0,0,0.5)] border border-white/5">
+<form class="space-y-10">
+<!-- Name Input -->
+<div class="space-y-3">
+<label class="block text-sm font-bold font-headline text-primary tracking-widest uppercase px-1">Nombre de la Categoría</label>
+<input class="w-full bg-surface-container-lowest border-0 rounded-lg px-6 py-5 text-xl font-headline text-white placeholder:text-outline/40 focus:ring-2 focus:ring-primary/50 transition-all outline-none" placeholder="Ej: Suscripciones Premium" type="text"/>
+</div>
+<!-- Icon Selector -->
+<div class="space-y-4">
+<div class="flex justify-between items-end px-1">
+<label class="block text-sm font-bold font-headline text-primary tracking-widest uppercase">Seleccionar Icono</label>
+<span class="text-xs text-outline font-medium">120+ disponibles</span>
+</div>
+<div class="grid grid-cols-6 gap-4 p-6 bg-surface-container-low rounded-lg border border-white/5">
+<button class="aspect-square flex items-center justify-center rounded-2xl bg-primary-container text-white shadow-lg shadow-primary-container/20 ring-2 ring-primary" type="button">
+<span class="material-symbols-outlined" data-icon="payments">payments</span>
+</button>
+<button class="aspect-square flex items-center justify-center rounded-2xl bg-surface-container hover:bg-surface-bright text-on-surface-variant transition-all" type="button">
+<span class="material-symbols-outlined" data-icon="shopping_bag">shopping_bag</span>
+</button>
+<button class="aspect-square flex items-center justify-center rounded-2xl bg-surface-container hover:bg-surface-bright text-on-surface-variant transition-all" type="button">
+<span class="material-symbols-outlined" data-icon="restaurant">restaurant</span>
+</button>
+<button class="aspect-square flex items-center justify-center rounded-2xl bg-surface-container hover:bg-surface-bright text-on-surface-variant transition-all" type="button">
+<span class="material-symbols-outlined" data-icon="directions_car">directions_car</span>
+</button>
+<button class="aspect-square flex items-center justify-center rounded-2xl bg-surface-container hover:bg-surface-bright text-on-surface-variant transition-all" type="button">
+<span class="material-symbols-outlined" data-icon="home">home</span>
+</button>
+<button class="aspect-square flex items-center justify-center rounded-2xl bg-surface-variant/30 border border-dashed border-outline-variant hover:border-primary group transition-all" type="button">
+<span class="material-symbols-outlined text-outline group-hover:text-primary" data-icon="arrow_forward">arrow_forward</span>
+</button>
+</div>
+</div>
+<!-- Color Picker -->
+<div class="space-y-4">
+<label class="block text-sm font-bold font-headline text-primary tracking-widest uppercase px-1">Color Distintivo</label>
+<div class="flex items-center gap-4 p-4 bg-surface-container-low rounded-lg border border-white/5 overflow-x-auto custom-scrollbar">
+<button class="w-10 h-10 shrink-0 rounded-full bg-primary ring-offset-4 ring-offset-surface-container ring-2 ring-primary transition-all" type="button"></button>
+<button class="w-10 h-10 shrink-0 rounded-full bg-[#02c953] hover:scale-110 transition-transform" type="button"></button>
+<button class="w-10 h-10 shrink-0 rounded-full bg-[#ffb3ae] hover:scale-110 transition-transform" type="button"></button>
+<button class="w-10 h-10 shrink-0 rounded-full bg-[#FFD600] hover:scale-110 transition-transform" type="button"></button>
+<button class="w-10 h-10 shrink-0 rounded-full bg-[#00B0FF] hover:scale-110 transition-transform" type="button"></button>
+<button class="w-10 h-10 shrink-0 rounded-full bg-[#AA00FF] hover:scale-110 transition-transform" type="button"></button>
+<button class="w-10 h-10 shrink-0 rounded-full bg-[#FF6D00] hover:scale-110 transition-transform" type="button"></button>
+<div class="h-8 w-[1px] bg-outline-variant/30 mx-2 shrink-0"></div>
+<button class="w-10 h-10 shrink-0 rounded-full flex items-center justify-center border border-outline-variant hover:border-primary transition-all group" type="button">
+<span class="material-symbols-outlined text-xs text-outline group-hover:text-primary" data-icon="palette">palette</span>
+</button>
+</div>
+</div>
+<!-- Actions -->
+<div class="pt-6 flex gap-4">
+<button class="flex-1 py-5 rounded-lg border border-outline-variant/30 font-headline font-bold text-on-surface-variant hover:bg-white/5 transition-all active:scale-[0.98]" type="button">
+                            Cancelar
+                        </button>
+<button class="flex-[2] py-5 rounded-lg bg-gradient-to-br from-primary to-primary-container font-headline font-bold text-on-primary shadow-xl shadow-primary-container/20 hover:brightness-110 transition-all active:scale-[0.98]" type="submit">
+                            Crear Categoría
+                        </button>
+</div>
+</form>
+</div>
+<!-- Contextual Tip -->
+<div class="mt-8 flex items-center justify-center gap-3 text-outline/60">
+<span class="material-symbols-outlined text-sm" data-icon="info">info</span>
+<p class="text-xs font-medium tracking-wide">Las categorías ayudan a organizar tus presupuestos mensuales automáticamente.</p>
+</div>
+</div>
+</main>
+<!-- Bottom Nav for Mobile - Suppressed as per Task (focused on Desktop Add) -->
+<div class="md:hidden fixed bottom-6 left-1/2 -translate-x-1/2 w-[90%] bg-surface-container/70 backdrop-blur-xl rounded-full p-4 flex justify-around items-center shadow-2xl border border-white/5 z-50">
+<span class="material-symbols-outlined text-outline" data-icon="home">home</span>
+<span class="material-symbols-outlined text-outline" data-icon="history">history</span>
+<div class="w-12 h-12 bg-primary-container rounded-full flex items-center justify-center text-white shadow-lg -mt-10 border-4 border-surface">
+<span class="material-symbols-outlined" data-icon="add">add</span>
+</div>
+<span class="material-symbols-outlined text-outline" data-icon="handshake">handshake</span>
+<span class="material-symbols-outlined text-outline" data-icon="settings">settings</span>
+</div>
+</body></html>

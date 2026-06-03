@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react"
+import { useState, useEffect, useCallback } from "react"
 import { supabase } from "@/lib/supabase"
 import type { Gasto, Categoria } from "@/types"
 
@@ -6,21 +6,35 @@ export function useGastos() {
   const [gastos, setGastos] = useState<Gasto[]>([])
   const [loading, setLoading] = useState(true)
 
+  const fetchGastos = useCallback(async () => {
+    if (!supabase) return
+    const { data, error } = await supabase
+      .from("gastos")
+      .select("*")
+      .order("fecha", { ascending: false })
+    if (!error && data) setGastos(data as Gasto[])
+    setLoading(false)
+  }, [])
+
   useEffect(() => {
     if (!supabase) {
       setLoading(false)
       return
     }
 
-    supabase
-      .from("gastos")
-      .select("*")
-      .order("fecha", { ascending: false })
-      .then(({ data, error }) => {
-        if (!error && data) setGastos(data as Gasto[])
-        setLoading(false)
-      })
-  }, [])
+    fetchGastos()
+
+    const channel = supabase
+      .channel("gastos-realtime")
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "gastos" },
+        () => fetchGastos(),
+      )
+      .subscribe()
+
+    return () => { supabase?.removeChannel(channel) }
+  }, [fetchGastos])
 
   const gastosDelMes = gastos.filter((g) => {
     const ahora = new Date()

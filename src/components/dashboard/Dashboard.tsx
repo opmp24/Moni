@@ -8,6 +8,7 @@ import { BarChart } from "@/components/dashboard/BarChart"
 import { BudgetProgress } from "@/components/dashboard/BudgetProgress"
 import { ExpenseList } from "@/components/ExpenseList"
 import { useGastos } from "@/hooks/useGastos"
+import { CATEGORIA_COLORS, type Categoria } from "@/types"
 import { formatCurrency } from "@/lib/utils"
 
 export function Dashboard() {
@@ -52,7 +53,15 @@ export function Dashboard() {
               <TrendingUp className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <p className="text-2xl font-bold">{topCategoria?.categoria ?? "—"}</p>
+              <div className="flex items-center gap-2">
+                {topCategoria && (
+                  <span
+                    className="h-3 w-3 rounded-full"
+                    style={{ backgroundColor: CATEGORIA_COLORS[topCategoria.categoria as Categoria] }}
+                  />
+                )}
+                <p className="text-2xl font-bold">{topCategoria?.categoria ?? "—"}</p>
+              </div>
               <p className="text-xs text-muted-foreground">
                 {topCategoria ? formatCurrency(topCategoria.monto) : "Sin datos"}
               </p>

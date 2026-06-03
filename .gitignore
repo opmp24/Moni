@@ -32,3 +32,9 @@ opencode.js
 opencode.json
 skills-lock.json
 
+# Supabase
+supabase/.temp/
+
+# Environment
+.env
+

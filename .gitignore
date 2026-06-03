@@ -24,6 +24,9 @@ dist-ssr
 *.sw?
 *.tsbuildinfo
 
+# Vite
+.vite/
+
 # Agent/IDE config
 .agents/
 .codegraph/

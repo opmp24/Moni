@@ -53,6 +53,9 @@ CREATE POLICY "Users can delete own gastos"
   ON gastos FOR DELETE
   USING (auth.uid() = user_id);
 
+-- Política temporal: permitir lectura anónima (mientras no haya auth implementada)
+CREATE POLICY "Allow anon read" ON gastos FOR SELECT USING (true);
+
 -- Policies para telegram_links
 CREATE POLICY "Users can view own telegram link"
   ON user_telegram_links FOR SELECT

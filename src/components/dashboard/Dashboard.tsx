@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useState, useEffect, useRef } from "react"
 import { TrendingUp, Receipt, Loader2 } from "lucide-react"
 import { GearSix, ArrowUpRight, ArrowDownRight, Wallet } from "@phosphor-icons/react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -19,9 +19,11 @@ import { SettingsPopup } from "@/components/SettingsPopup"
 import { useGastos } from "@/hooks/useGastos"
 import { useIngresos } from "@/hooks/useIngresos"
 import { usePresupuestos } from "@/hooks/usePresupuestos"
+import { useCategorias } from "@/hooks/useCategorias"
 import { useAuth } from "@/lib/auth"
-import { CATEGORIA_COLORS } from "@/types"
 import { formatCurrency } from "@/lib/utils"
+import { WeekChart } from "@/components/dashboard/WeekChart"
+import gsap from "gsap"
 
 export function Dashboard() {
   const [tab, setTab] = useState("resumen")
@@ -34,10 +36,21 @@ export function Dashboard() {
   const { gastos, gastosDelMes, totalGastosMes, categorias, topCategoria, gastosPorMes, loading: loadingGastos, refetch: refetchGastos } = useGastos()
   const { ingresos, totalIngresosMes, loading: loadingIngresos, refetch: refetchIngresos } = useIngresos()
   const { presupuestos, loading: loadingPresupuestos, refetch: refetchPresupuestos } = usePresupuestos()
+  const { getColor } = useCategorias()
+  const cardsRef = useRef<HTMLDivElement>(null)
 
   const loading = loadingGastos || loadingIngresos || loadingPresupuestos
   const balance = totalIngresosMes - totalGastosMes
   const transaccionesTotales = gastos.length + ingresos.length
+
+  useEffect(() => {
+    if (!cardsRef.current || loading) return
+    const cards = cardsRef.current.querySelectorAll<HTMLElement>(".dashboard-card")
+    gsap.fromTo(cards,
+      { y: 24, opacity: 0 },
+      { y: 0, opacity: 1, duration: 0.5, stagger: 0.08, ease: "power2.out" }
+    )
+  }, [loading])
 
   const presupuestosConGasto = presupuestos.map((p) => {
     const gastado = gastosDelMes
@@ -59,9 +72,20 @@ export function Dashboard() {
       <div className="fixed inset-0 bg-[radial-gradient(ellipse_80%_50%_at_50%_-20%,rgba(255,214,0,0.08),transparent)] pointer-events-none" />
       <div className="relative z-10 mx-auto max-w-6xl space-y-6 p-4 md:p-6 lg:p-8">
         <header className="flex items-center justify-between">
-          <div>
-            <h1 className="text-2xl font-bold tracking-tight text-zinc-100">PerJaus</h1>
-            <p className="text-sm text-zinc-500">{user?.email}</p>
+          <div className="flex items-center gap-3">
+            {user?.user_metadata?.avatar_url && (
+              <img
+                src={user.user_metadata.avatar_url}
+                alt="Avatar"
+                className="h-10 w-10 rounded-full border border-zinc-700"
+              />
+            )}
+            <div>
+              <h1 className="text-2xl font-bold tracking-tight text-zinc-100">PerJaus</h1>
+              <p className="text-sm text-zinc-500">
+                {user?.user_metadata?.full_name ?? user?.email}
+              </p>
+            </div>
           </div>
           <div className="flex items-center gap-2">
             <AddExpenseDialog open={expenseOpen} onOpenChange={setExpenseOpen} onSaved={refetchGastos} />
@@ -71,9 +95,9 @@ export function Dashboard() {
               size="icon"
               onClick={() => setSettingsOpen(true)}
               title="Configuración"
-              className="border-zinc-800 text-zinc-400 hover:bg-zinc-800 hover:text-zinc-100"
+              className="h-10 w-10 border-zinc-700 text-zinc-300 hover:border-yellow-500/50 hover:bg-zinc-800 hover:text-yellow-400"
             >
-              <GearSix className="h-4 w-4" weight="bold" />
+              <GearSix className="h-5 w-5" weight="bold" />
             </Button>
           </div>
         </header>
@@ -81,7 +105,7 @@ export function Dashboard() {
         <TelegramLink />
 
         <div className="grid gap-4 md:grid-cols-3">
-          <Card className="border-zinc-800 bg-zinc-900/50">
+          <Card className="dashboard-card border-zinc-800 bg-zinc-900/50 transition-all duration-300 hover:border-yellow-500/30 hover:shadow-[0_0_20px_rgba(255,214,0,0.12)]">
             <CardHeader className="flex flex-row items-center justify-between pb-2">
               <CardTitle className="text-sm font-medium text-zinc-400">Balance del mes</CardTitle>
               <Wallet className="h-4 w-4 text-zinc-600" weight="bold" />
@@ -105,7 +129,7 @@ export function Dashboard() {
               </div>
             </CardContent>
           </Card>
-          <Card className="border-zinc-800 bg-zinc-900/50">
+          <Card className="dashboard-card border-zinc-800 bg-zinc-900/50 transition-all duration-300 hover:border-yellow-500/30 hover:shadow-[0_0_20px_rgba(255,214,0,0.12)]">
             <CardHeader className="flex flex-row items-center justify-between pb-2">
               <CardTitle className="text-sm font-medium text-zinc-400">Top categoría</CardTitle>
               <TrendingUp className="h-4 w-4 text-zinc-600" />
@@ -115,7 +139,7 @@ export function Dashboard() {
                 {topCategoria && (
                   <span
                     className="h-3 w-3 rounded-full"
-                    style={{ backgroundColor: CATEGORIA_COLORS[topCategoria.categoria] ?? "#6B7280" }}
+                    style={{ backgroundColor: getColor(topCategoria.categoria) }}
                   />
                 )}
                 <p className="text-2xl font-bold text-zinc-100">{topCategoria?.categoria ?? "—"}</p>
@@ -125,13 +149,15 @@ export function Dashboard() {
               </p>
             </CardContent>
           </Card>
-          <Card className="border-zinc-800 bg-zinc-900/50">
+          <Card className="dashboard-card border-zinc-800 bg-zinc-900/50 transition-all duration-300 hover:border-yellow-500/30 hover:shadow-[0_0_20px_rgba(255,214,0,0.12)]">
             <CardHeader className="flex flex-row items-center justify-between pb-2">
               <CardTitle className="text-sm font-medium text-zinc-400">Transacciones</CardTitle>
               <Receipt className="h-4 w-4 text-zinc-600" />
             </CardHeader>
             <CardContent>
               <p className="text-2xl font-bold text-zinc-100">{transaccionesTotales}</p>
+              <p className="mb-1 mt-2 text-[10px] text-zinc-500">Últimos 7 días</p>
+              <WeekChart gastos={gastos} />
             </CardContent>
           </Card>
         </div>
@@ -150,7 +176,7 @@ export function Dashboard() {
           </TabsList>
           <TabsContent value="resumen" className="space-y-4">
             <div className="grid gap-4 md:grid-cols-3">
-              <Card className="border-zinc-800 bg-zinc-900/50">
+              <Card className="border-zinc-800 bg-zinc-900/50 transition-all duration-300 hover:border-yellow-500/30 hover:shadow-[0_0_20px_rgba(255,214,0,0.12)]">
                 <CardHeader>
                   <CardTitle className="text-sm text-zinc-400">Por categoría</CardTitle>
                 </CardHeader>
@@ -158,7 +184,7 @@ export function Dashboard() {
                   <DonutChart data={categorias} />
                 </CardContent>
               </Card>
-              <Card className="border-zinc-800 bg-zinc-900/50">
+              <Card className="border-zinc-800 bg-zinc-900/50 transition-all duration-300 hover:border-yellow-500/30 hover:shadow-[0_0_20px_rgba(255,214,0,0.12)]">
                 <CardHeader>
                   <CardTitle className="text-sm text-zinc-400">Evolución mensual</CardTitle>
                 </CardHeader>
@@ -166,7 +192,7 @@ export function Dashboard() {
                   <BarChart data={gastosPorMes} />
                 </CardContent>
               </Card>
-              <Card className="border-zinc-800 bg-zinc-900/50">
+              <Card className="border-zinc-800 bg-zinc-900/50 transition-all duration-300 hover:border-yellow-500/30 hover:shadow-[0_0_20px_rgba(255,214,0,0.12)]">
                 <CardHeader className="flex flex-row items-center justify-between">
                   <CardTitle className="text-sm text-zinc-400">Presupuesto vs real</CardTitle>
                   <BudgetSettings open={budgetOpen} onOpenChange={setBudgetOpen} onSaved={refetchPresupuestos} />

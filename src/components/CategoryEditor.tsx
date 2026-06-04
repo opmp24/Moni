@@ -81,7 +81,7 @@ export function CategoryEditor({ open: controlledOpen, onOpenChange }: CategoryE
   return (
     <>
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent className="border-zinc-800 bg-zinc-950 text-zinc-100 sm:max-w-md">
+        <DialogContent className="border-zinc-800 bg-zinc-950 text-zinc-100 sm:max-w-lg">
           <DialogHeader>
             <DialogTitle className="text-zinc-100">Categorías</DialogTitle>
             <DialogDescription className="sr-only">
@@ -149,7 +149,7 @@ export function CategoryEditor({ open: controlledOpen, onOpenChange }: CategoryE
       </Dialog>
 
       <Dialog open={showAddDialog} onOpenChange={(v) => { setShowAddDialog(v); if (!v) resetForm() }}>
-        <DialogContent className="border-zinc-800 bg-zinc-950 text-zinc-100 sm:max-w-sm">
+        <DialogContent className="border-zinc-800 bg-zinc-950 text-zinc-100 sm:max-w-md">
           <DialogHeader>
             <DialogTitle className="text-zinc-100">Nueva categoría</DialogTitle>
             <DialogDescription className="sr-only">
@@ -207,7 +207,7 @@ export function CategoryEditor({ open: controlledOpen, onOpenChange }: CategoryE
 function ColorPicker({ value, onChange, small }: { value: string; onChange: (v: string) => void; small: boolean }) {
   const size = small ? "h-5 w-5" : "h-7 w-7"
   return (
-    <div className="flex flex-wrap gap-1">
+    <div className="flex flex-nowrap gap-1 overflow-x-auto pb-1">
       {COLORES_DISPONIBLES.map((color) => (
         <button
           key={color}

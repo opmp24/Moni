@@ -1,5 +1,5 @@
 import { useState, useMemo } from "react"
-import { Trash, Funnel, X, CaretLeft, CaretRight } from "@phosphor-icons/react"
+import { Trash, Funnel, X, CaretLeft, CaretRight, Check } from "@phosphor-icons/react"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import {
@@ -21,6 +21,8 @@ interface ExpenseListProps {
 export function ExpenseList({ expenses }: ExpenseListProps) {
   const { categoriasGasto, getColor } = useCategorias()
   const [deleting, setDeleting] = useState<string | null>(null)
+  const [editingCategoria, setEditingCategoria] = useState<string | null>(null)
+  const [savingCat, setSavingCat] = useState<string | null>(null)
   const [filtroCategoria, setFiltroCategoria] = useState<string>("todas")
   const [fechaDesde, setFechaDesde] = useState("")
   const [fechaHasta, setFechaHasta] = useState("")
@@ -136,13 +138,59 @@ export function ExpenseList({ expenses }: ExpenseListProps) {
                   <td className="py-3 pr-4 text-zinc-500">{formatDate(gasto.fecha)}</td>
                   <td className="py-3 pr-4 font-medium text-zinc-200">{gasto.concepto}</td>
                   <td className="py-3 pr-4">
-                    <Badge
-                      variant="outline"
-                      className="border-0 text-white"
-                      style={{ backgroundColor: getColor(gasto.categoria) }}
-                    >
-                      {gasto.categoria}
-                    </Badge>
+                    {editingCategoria === gasto.id ? (
+                      <div className="flex items-center gap-1">
+                        <Select
+                          value={gasto.categoria}
+                          onValueChange={async (nuevaCat) => {
+                            setSavingCat(gasto.id)
+                            await supabase!.from("gastos").update({ categoria: nuevaCat }).eq("id", gasto.id)
+                            setSavingCat(null)
+                            setEditingCategoria(null)
+                          }}
+                        >
+                          <SelectTrigger className="h-7 w-[140px] border-zinc-700 bg-zinc-800 text-xs text-zinc-200">
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent className="border-zinc-700 bg-zinc-900 text-zinc-200">
+                            {categoriasGasto.map((cat) => (
+                              <SelectItem key={cat.nombre} value={cat.nombre} className="text-xs focus:bg-zinc-800 focus:text-zinc-100">
+                                {cat.nombre}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                        <button
+                          onClick={() => setEditingCategoria(null)}
+                          className="rounded p-0.5 text-zinc-500 hover:text-zinc-300"
+                        >
+                          <X className="h-3 w-3" weight="bold" />
+                        </button>
+                      </div>
+                    ) : (
+                      <button
+                        onClick={() => setEditingCategoria(gasto.id)}
+                        className="group relative"
+                        title="Cambiar categoría"
+                      >
+                        <Badge
+                          variant="outline"
+                          className="border-0 pr-2 text-white transition-all group-hover:pr-7"
+                          style={{ backgroundColor: savingCat === gasto.id ? "#6B7280" : getColor(gasto.categoria) }}
+                        >
+                          {savingCat === gasto.id ? (
+                            <span className="inline-block h-3 w-3 animate-spin rounded-full border border-white border-t-transparent" />
+                          ) : (
+                            gasto.categoria
+                          )}
+                        </Badge>
+                        {savingCat !== gasto.id && (
+                          <span className="absolute right-1 top-1/2 -translate-y-1/2 text-[10px] text-white/60 opacity-0 transition-opacity group-hover:opacity-100">
+                            <Check className="h-3 w-3" weight="bold" />
+                          </span>
+                        )}
+                      </button>
+                    )}
                   </td>
                   <td className="py-3 pl-4 text-right font-semibold text-zinc-100">
                     {formatCurrency(gasto.monto)}

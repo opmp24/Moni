@@ -1,5 +1,5 @@
 import { Progress } from "@/components/ui/progress"
-import { CATEGORIA_COLORS } from "@/types"
+import { useCategorias } from "@/hooks/useCategorias"
 import { formatCurrency } from "@/lib/utils"
 
 interface BudgetProgressProps {
@@ -7,6 +7,7 @@ interface BudgetProgressProps {
 }
 
 export function BudgetProgress({ data }: BudgetProgressProps) {
+  const { getColor } = useCategorias()
   if (data.length === 0) {
     return (
       <div className="flex flex-col items-center gap-2 py-6 text-center">
@@ -23,7 +24,7 @@ export function BudgetProgress({ data }: BudgetProgressProps) {
       {data.map((d) => {
         const porcentaje = Math.min((d.gastado / d.presupuesto) * 100, 100)
         const isOver = d.gastado > d.presupuesto
-        const color = CATEGORIA_COLORS[d.categoria] ?? "#6B7280"
+        const color = getColor(d.categoria)
         return (
           <div key={d.categoria} className="space-y-1.5">
             <div className="flex items-center justify-between text-sm">

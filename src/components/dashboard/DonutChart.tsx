@@ -1,10 +1,11 @@
-import { CATEGORIA_COLORS } from "@/types"
+import { useCategorias } from "@/hooks/useCategorias"
 
 interface DonutChartProps {
   data: { categoria: string; monto: number }[]
 }
 
 export function DonutChart({ data }: DonutChartProps) {
+  const { getColor } = useCategorias()
   const total = data.reduce((sum, d) => sum + d.monto, 0)
   if (total === 0) return <p className="py-4 text-center text-sm text-zinc-600">Sin datos</p>
 
@@ -32,7 +33,7 @@ export function DonutChart({ data }: DonutChartProps) {
               cy={center}
               r={radius}
               fill="none"
-              stroke={CATEGORIA_COLORS[d.categoria] ?? "#6B7280"}
+              stroke={getColor(d.categoria)}
               strokeWidth={strokeWidth}
               strokeDasharray={`${length} ${circumference - length}`}
               strokeDashoffset={-offset}
@@ -46,7 +47,7 @@ export function DonutChart({ data }: DonutChartProps) {
           <div key={d.categoria} className="flex items-center gap-2 text-xs">
             <span
               className="h-2.5 w-2.5 shrink-0 rounded-full"
-              style={{ backgroundColor: CATEGORIA_COLORS[d.categoria] ?? "#6B7280" }}
+              style={{ backgroundColor: getColor(d.categoria) }}
             />
             <span className="text-zinc-400">{d.categoria}</span>
             <span className="font-medium text-zinc-200">

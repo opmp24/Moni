@@ -14,7 +14,7 @@ const GEMINI_API_KEY = Deno.env.get("GEMINI_API_KEY")!
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!
 const SUPABASE_SERVICE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
 
-const CATEGORIAS = ["Alimentación", "Transporte", "Vivienda", "Salud", "Entretenimiento", "Ingresos", "Otros"] as const
+const CATEGORIAS_PREDEFINIDAS = ["Alimentación", "Transporte", "Vivienda", "Salud", "Entretenimiento", "Ingresos", "Otros"]
 
 const genAI = new GoogleGenerativeAI(GEMINI_API_KEY)
 const model = genAI.getGenerativeModel({
@@ -22,16 +22,23 @@ const model = genAI.getGenerativeModel({
   generationConfig: { responseMimeType: "application/json" },
 })
 
-const SYSTEM_PROMPT = `Eres un asistente financiero. Extrae la siguiente información del mensaje del usuario:
-- monto: número entero (el valor numérico)
-- concepto: string (descripción corta, capitalizada)
-- categoria: string (estrictamente uno de: 'Alimentación', 'Transporte', 'Vivienda', 'Salud', 'Entretenimiento', 'Ingresos', 'Otros')
-- tipo: string ('gasto' o 'ingreso')
+function construirPrompt(categorias: string[]): string {
+  const cats = JSON.stringify(categorias)
+  return `Eres un asistente financiero. El usuario tiene estas categorías disponibles: ${cats}
 
-Si el mensaje habla de sueldo, salario, pago recibido, transferencia recibida, ingreso, remuneración: categoria 'Ingresos', tipo 'ingreso'.
-Para cualquier gasto: tipo 'gasto'.
+Extrae la siguiente información del mensaje del usuario:
+- monto: número entero (solo el valor numérico, sin separadores)
+- concepto: string (descripción corta, capitalizada, sin el monto)
+- categoria: string (estrictamente una de las categorías listadas arriba)
+- tipo: string ("gasto" o "ingreso")
 
-Responde ÚNICAMENTE con un JSON con esos cuatro campos. Si no puedes identificar, responde {"error": "No pude identificar"}.`
+REGLAS:
+- Si el mensaje habla de sueldo, salario, pago recibido, transferencia recibida, ingreso, remuneración: categoria debe ser "Ingresos", tipo "ingreso".
+- Para cualquier gasto: tipo "gasto", elige la categoría más adecuada de la lista.
+- Si hay múltiples items (separados por +, y, &), responde con un ARRAY JSON.
+
+Responde ÚNICAMENTE con un JSON con esos cuatro campos. Si no puedes identificar, responde {"error": "No pude identificar el gasto"}.`
+}
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -249,15 +256,6 @@ serve(async (req) => {
       const categoria = match[1].trim()
       const monto = parseInt(match[2], 10)
 
-      if (!CATEGORIAS.includes(categoria as typeof CATEGORIAS[number])) {
-        await sendTelegramMessage(chatId,
-          `❌ Categoría inválida. Categorías: ${CATEGORIAS.filter(c => c !== "Ingresos").join(", ")}`
-        )
-        return new Response(JSON.stringify({ ok: false, error: "Invalid category" }), {
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
-        })
-      }
-
       const ahora = new Date()
       const mesStart = `${ahora.getFullYear()}-${String(ahora.getMonth() + 1).padStart(2, "0")}-01`
 
@@ -273,6 +271,21 @@ serve(async (req) => {
           + "Usa: _/vinculate CODIGO_"
         )
         return new Response(JSON.stringify({ ok: false, error: "Not linked" }), {
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        })
+      }
+
+      const { data: cats } = await supabase
+        .from("categorias")
+        .select("nombre")
+        .eq("user_id", link.user_id)
+      const categoriasDisponibles = [...new Set([...CATEGORIAS_PREDEFINIDAS, ...(cats?.map(c => c.nombre) ?? [])])]
+
+      if (!categoriasDisponibles.includes(categoria)) {
+        await sendTelegramMessage(chatId,
+          `❌ Categoría inválida. Categorías: ${categoriasDisponibles.filter(c => c !== "Ingresos").join(", ")}`
+        )
+        return new Response(JSON.stringify({ ok: false, error: "Invalid category" }), {
           headers: { ...corsHeaders, "Content-Type": "application/json" },
         })
       }
@@ -308,13 +321,38 @@ serve(async (req) => {
       })
     }
 
+    const { data: link } = await supabase
+      .from("user_telegram_links")
+      .select("user_id")
+      .eq("telegram_chat_id", String(chatId))
+      .maybeSingle()
+
+    if (!link) {
+      await sendTelegramMessage(chatId,
+        "🔗 *Primero vincula tu chat con tu cuenta web.*\n\n"
+        + "Desde el Dashboard de PerJaus genera un código en \"Conectar Telegram\"\n"
+        + "y luego envía:\n"
+        + "_/vinculate CODIGO_"
+      )
+      return new Response(JSON.stringify({ ok: false, error: "Not linked" }), {
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      })
+    }
+
+    const { data: cats } = await supabase
+      .from("categorias")
+      .select("nombre")
+      .eq("user_id", link.user_id)
+    const categoriasUsuario = [...new Set([...CATEGORIAS_PREDEFINIDAS, ...(cats?.map(c => c.nombre) ?? [])])]
+
     let monto: number
     let concepto: string
     let categoria: string
     let tipo: string
 
     try {
-      const result = await model.generateContent(`${SYSTEM_PROMPT}\n\nMensaje: ${text}`)
+      const prompt = construirPrompt(categoriasUsuario)
+      const result = await model.generateContent(`${prompt}\n\nMensaje: ${text}`)
       const responseText = result.response.text()
       const parsed = JSON.parse(responseText)
 
@@ -341,26 +379,8 @@ serve(async (req) => {
       tipo = fallback.tipo
     }
 
-    if (!CATEGORIAS.includes(categoria as typeof CATEGORIAS[number])) {
+    if (!categoriasUsuario.includes(categoria)) {
       categoria = "Otros"
-    }
-
-    const { data: link } = await supabase
-      .from("user_telegram_links")
-      .select("user_id")
-      .eq("telegram_chat_id", String(chatId))
-      .maybeSingle()
-
-    if (!link) {
-      await sendTelegramMessage(chatId,
-        "🔗 *Primero vincula tu chat con tu cuenta web.*\n\n"
-        + "Desde el Dashboard de PerJaus genera un código en \"Conectar Telegram\"\n"
-        + "y luego envía:\n"
-        + "_/vinculate CODIGO_"
-      )
-      return new Response(JSON.stringify({ ok: false, error: "Not linked" }), {
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      })
     }
 
     const tabla = tipo === "ingreso" ? "ingresos" : "gastos"

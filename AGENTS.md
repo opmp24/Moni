@@ -1,0 +1,75 @@
+# PerJaus — Guía para el Agente
+
+## Importante: Siempre responder en español. El usuario habla español, todas las respuestas deben ser en español.
+
+## Stack
+
+## Stack
+- **Frontend**: React 19 + TypeScript + Vite + Tailwind CSS
+- **UI**: shadcn/ui (Radix primitives) + Phosphor Icons + Lucide React
+- **Backend**: Supabase (PostgreSQL, Auth, Realtime, Edge Functions)
+- **PWA**: vite-plugin-pwa
+- **Despliegue**: Netlify (auto-deploy desde `main`)
+- **Bots**: Telegram (@PerJausBot) + Gemini AI
+
+## Comandos
+- `npm run dev` — servidor local
+- `npm run build` — typecheck + build
+- `npm run lint` — ESLint
+- `npm run preview` — preview build local
+
+## Proyecto: Personal Finance PWA
+
+### Repos
+- GitHub: `github.com/opmp24/Moni`
+- Rama `main` → Netlify auto-deploy
+- Rama `development` → trabajo activo
+- URL: `perjaus.netlify.app`
+
+### Supabase
+- Proyecto: `yfdwtfricvquakrtarey`
+- Tablas con Realtime: `gastos`, `presupuestos`, `categorias`, `ingresos`
+- Auth: Google OAuth habilitado (Client ID: `351795914656-cepr4dv8rahikbkfpq9rmivad3ef63v2.apps.googleusercontent.com`)
+- Auth config: `site_url = http://localhost:5173`, `uri_allow_list` incluye `localhost` y `perjaus.netlify.app`
+- Edge Function: `telegram-webhook` (URL: `/functions/v1/telegram-webhook`)
+
+### Telegram
+- Bot: `@PerJausBot`
+- Token y GEMINI_API_KEY en secrets de Edge Function
+- Función: el usuario envía mensajes tipo "gasté 500 en comida" → Gemini parsea → inserta en DB
+
+### Estructura de tablas
+- `gastos` — id, user_id, monto, categoria, descripcion, fecha, created_at
+- `ingresos` — id, user_id, monto, categoria, descripcion, fecha, created_at
+- `presupuestos` — id, user_id, categoria, monto, created_at
+- `categorias` — id, user_id, nombre, icono, color, created_at
+
+### Convenios de código
+- `Categoria` es tipo `string` (no enum). Categorías predefinidas en `CATEGORIAS_PREDEFINIDAS`, categorías custom en tabla `categorias`
+- Hook `useCategorias()` expone: `categorias`, `addCategoria`, `updateCategoria`, `deleteCategoria`, `getIcon`, `getColor`, `loading`
+- Los hooks `useGastos`, `useIngresos`, `usePresupuestos` exponen `refetch()`
+- Realtime channels usan `useId()` para nombres únicos (evita "cannot add postgres_changes callbacks")
+- Diálogos con formularios usan prop `onSaved` para refetch post-guardado
+
+### Features implementados
+- CRUD gastos/ingresos/presupuestos con Realtime
+- Categorías custom (24 iconos Phosphor, 12 colores)
+- Protección 3 niveles al borrar categoría: check gastos → presupuesto > 0 bloquea → presupuesto = 0 auto-borra
+- Dashboard con DonutChart, BudgetProgress, BarChart mensual
+- SettingsPopup con: Presupuesto, Categorías, Gasto, Ingreso + Cerrar sesión
+- Google OAuth login
+- PWA instalable
+- Telegram bot con IA (Gemini) para registrar gastos
+
+### Pendientes
+1. Botón de ajustes más grande
+2. Dashboard con más gráficas + animaciones (GSAP o CSS)
+3. Brillo hover amarillo en tarjetas del dashboard
+4. Mostrar nombre y foto de Google en la UI
+5. Gráfica donut en landing con datos reales
+6. Editar categoría de gasto inline desde ExpenseList
+7. CategoryEditor más ancho (ColorPicker en una línea)
+8. Mejorar parsing del bot de Telegram (prompt de Gemini)
+9. Poner VITE_SUPABASE_URL y VITE_SUPABASE_ANON_KEY en Netlify dashboard
+10. Telegram webhook: categorías dinámicas (no hardcoded)
+11. DonutChart/BudgetProgress: usar `useCategorias().getColor()` en vez de `CATEGORIA_COLORS` directo

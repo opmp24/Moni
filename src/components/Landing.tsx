@@ -326,9 +326,18 @@ function DashboardPreview() {
     { label: "Alimentación", value: 45, color: "#FFD600" },
     { label: "Transporte", value: 20, color: "#FF6B35" },
     { label: "Vivienda", value: 15, color: "#004E98" },
-    { label: "Otros", value: 20, color: "#6B7280" },
+    { label: "Entretenimiento", value: 12, color: "#9B59B6" },
+    { label: "Otros", value: 8, color: "#6B7280" },
   ]
   const maxBar = Math.max(...bars.map(b => b.value))
+
+  const donutSize = 140
+  const donutCenter = donutSize / 2
+  const donutRadius = 55
+  const donutStroke = 26
+  const donutCirc = 2 * Math.PI * donutRadius
+  const total = categories.reduce((s, c) => s + c.value, 0)
+  let cumulative = 0
 
   return (
     <div className="rounded-2xl border border-zinc-800 bg-zinc-900/60 p-5 shadow-2xl shadow-yellow-400/5 backdrop-blur-sm">
@@ -373,19 +382,40 @@ function DashboardPreview() {
       </div>
 
       <div>
-        <p className="mb-2 text-xs font-medium text-zinc-400">Por categoría</p>
-        <div className="flex h-2 overflow-hidden rounded-full">
-          {categories.map((c) => (
-            <div key={c.label} style={{ width: `${c.value}%`, backgroundColor: c.color }} />
-          ))}
-        </div>
-        <div className="mt-2 flex flex-wrap gap-x-3 gap-y-1">
-          {categories.map((c) => (
-            <div key={c.label} className="flex items-center gap-1">
-              <span className="h-1.5 w-1.5 rounded-full" style={{ backgroundColor: c.color }} />
-              <span className="text-[10px] text-zinc-500">{c.label}</span>
-            </div>
-          ))}
+        <p className="mb-3 text-xs font-medium text-zinc-400">Por categoría</p>
+        <div className="flex flex-col items-center gap-4">
+          <svg width={donutSize} height={donutSize} viewBox={`0 0 ${donutSize} ${donutSize}`} className="-rotate-90">
+            <circle cx={donutCenter} cy={donutCenter} r={donutRadius} fill="none" stroke="rgb(39 39 42)" strokeWidth={donutStroke} />
+            {categories.map((c) => {
+              const percent = c.value / total
+              const offset = cumulative * donutCirc
+              const length = percent * donutCirc
+              cumulative += percent
+              return (
+                <circle
+                  key={c.label}
+                  cx={donutCenter}
+                  cy={donutCenter}
+                  r={donutRadius}
+                  fill="none"
+                  stroke={c.color}
+                  strokeWidth={donutStroke}
+                  strokeDasharray={`${length} ${donutCirc - length}`}
+                  strokeDashoffset={-offset}
+                  strokeLinecap="butt"
+                />
+              )
+            })}
+          </svg>
+          <div className="flex flex-wrap justify-center gap-x-3 gap-y-1">
+            {categories.map((c) => (
+              <div key={c.label} className="flex items-center gap-1">
+                <span className="h-1.5 w-1.5 rounded-full" style={{ backgroundColor: c.color }} />
+                <span className="text-[10px] text-zinc-400">{c.label}</span>
+                <span className="text-[10px] text-zinc-500">{c.value}%</span>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </div>

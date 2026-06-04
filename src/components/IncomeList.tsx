@@ -10,7 +10,8 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { supabase } from "@/lib/supabase"
-import { CATEGORIA_COLORS, CATEGORIAS, type Ingreso } from "@/types"
+import { useCategorias } from "@/hooks/useCategorias"
+import type { Ingreso } from "@/types"
 import { formatCurrency, formatDate } from "@/lib/utils"
 
 interface IncomeListProps {
@@ -18,6 +19,7 @@ interface IncomeListProps {
 }
 
 export function IncomeList({ ingresos }: IncomeListProps) {
+  const { categoriasList, getColor } = useCategorias()
   const [deleting, setDeleting] = useState<string | null>(null)
   const [filtroCategoria, setFiltroCategoria] = useState<string>("todas")
   const [fechaDesde, setFechaDesde] = useState("")
@@ -76,9 +78,9 @@ export function IncomeList({ ingresos }: IncomeListProps) {
           </SelectTrigger>
           <SelectContent className="border-zinc-800 bg-zinc-900 text-zinc-300">
             <SelectItem value="todas" className="text-xs focus:bg-zinc-800 focus:text-zinc-100">Todas</SelectItem>
-            {CATEGORIAS.map((cat) => (
-              <SelectItem key={cat} value={cat} className="text-xs focus:bg-zinc-800 focus:text-zinc-100">
-                {cat}
+            {categoriasList.map((cat) => (
+              <SelectItem key={cat.nombre} value={cat.nombre} className="text-xs focus:bg-zinc-800 focus:text-zinc-100">
+                {cat.nombre}
               </SelectItem>
             ))}
           </SelectContent>
@@ -137,7 +139,7 @@ export function IncomeList({ ingresos }: IncomeListProps) {
                     <Badge
                       variant="outline"
                       className="border-0 text-white"
-                      style={{ backgroundColor: CATEGORIA_COLORS[ingreso.categoria] }}
+                      style={{ backgroundColor: getColor(ingreso.categoria) }}
                     >
                       {ingreso.categoria}
                     </Badge>

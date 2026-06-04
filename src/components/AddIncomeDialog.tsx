@@ -5,9 +5,17 @@ import { Button } from "@/components/ui/button"
 import { supabase } from "@/lib/supabase"
 import { useAuth } from "@/lib/auth"
 
-export function AddIncomeDialog() {
+interface AddIncomeDialogProps {
+  open?: boolean
+  onOpenChange?: (open: boolean) => void
+  onSaved?: () => void
+}
+
+export function AddIncomeDialog({ open: controlledOpen, onOpenChange, onSaved }: AddIncomeDialogProps) {
   const { user } = useAuth()
-  const [open, setOpen] = useState(false)
+  const [internalOpen, setInternalOpen] = useState(false)
+  const open = controlledOpen ?? internalOpen
+  const setOpen = onOpenChange ?? setInternalOpen
   const [loading, setLoading] = useState(false)
   const [monto, setMonto] = useState("")
   const [concepto, setConcepto] = useState("")
@@ -44,12 +52,13 @@ export function AddIncomeDialog() {
     setMonto("")
     setConcepto("")
     setFecha(new Date().toISOString().split("T")[0])
+    onSaved?.()
     setOpen(false)
   }
 
-  const handleOpenChange = (open: boolean) => {
-    setOpen(open)
-    if (!open) setErrorMsg("")
+  const handleOpenChange = (newOpen: boolean) => {
+    setOpen(newOpen)
+    if (!newOpen) setErrorMsg("")
   }
 
   return (

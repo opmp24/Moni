@@ -5,19 +5,27 @@ import { Button } from "@/components/ui/button"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { supabase } from "@/lib/supabase"
 import { useAuth } from "@/lib/auth"
-import { CATEGORIAS, type Categoria } from "@/types"
+import { useCategorias } from "@/hooks/useCategorias"
+import type { Categoria } from "@/types"
 
-export function AddExpenseDialog() {
+interface AddExpenseDialogProps {
+  open?: boolean
+  onOpenChange?: (open: boolean) => void
+  onSaved?: () => void
+}
+
+export function AddExpenseDialog({ open: controlledOpen, onOpenChange, onSaved }: AddExpenseDialogProps) {
   const { user } = useAuth()
-  const [open, setOpen] = useState(false)
+  const { categoriasGasto } = useCategorias()
+  const [internalOpen, setInternalOpen] = useState(false)
+  const open = controlledOpen ?? internalOpen
+  const setOpen = onOpenChange ?? setInternalOpen
   const [loading, setLoading] = useState(false)
   const [monto, setMonto] = useState("")
   const [concepto, setConcepto] = useState("")
   const [categoria, setCategoria] = useState<Categoria>("Otros")
   const [fecha, setFecha] = useState(() => new Date().toISOString().split("T")[0])
   const [errorMsg, setErrorMsg] = useState("")
-
-  const categoriasDisponibles = CATEGORIAS.filter((c) => c !== "Ingresos")
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault()
@@ -50,12 +58,13 @@ export function AddExpenseDialog() {
     setConcepto("")
     setCategoria("Otros")
     setFecha(new Date().toISOString().split("T")[0])
+    onSaved?.()
     setOpen(false)
   }
 
-  const handleOpenChange = (open: boolean) => {
-    setOpen(open)
-    if (!open) setErrorMsg("")
+  const handleOpenChange = (newOpen: boolean) => {
+    setOpen(newOpen)
+    if (!newOpen) setErrorMsg("")
   }
 
   return (
@@ -107,8 +116,8 @@ export function AddExpenseDialog() {
                 <SelectValue />
               </SelectTrigger>
               <SelectContent className="border-zinc-700 bg-zinc-900 text-zinc-100">
-                {categoriasDisponibles.map((cat) => (
-                  <SelectItem key={cat} value={cat} className="focus:bg-zinc-800 focus:text-zinc-100">{cat}</SelectItem>
+                {categoriasGasto.map((cat) => (
+                  <SelectItem key={cat.nombre} value={cat.nombre} className="focus:bg-zinc-800 focus:text-zinc-100">{cat.nombre}</SelectItem>
                 ))}
               </SelectContent>
             </Select>

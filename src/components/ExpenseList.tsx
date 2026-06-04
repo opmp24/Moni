@@ -10,7 +10,8 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { supabase } from "@/lib/supabase"
-import { CATEGORIA_COLORS, CATEGORIAS, type Gasto } from "@/types"
+import { useCategorias } from "@/hooks/useCategorias"
+import type { Gasto } from "@/types"
 import { formatCurrency, formatDate } from "@/lib/utils"
 
 interface ExpenseListProps {
@@ -18,6 +19,7 @@ interface ExpenseListProps {
 }
 
 export function ExpenseList({ expenses }: ExpenseListProps) {
+  const { categoriasGasto, getColor } = useCategorias()
   const [deleting, setDeleting] = useState<string | null>(null)
   const [filtroCategoria, setFiltroCategoria] = useState<string>("todas")
   const [fechaDesde, setFechaDesde] = useState("")
@@ -76,9 +78,9 @@ export function ExpenseList({ expenses }: ExpenseListProps) {
           </SelectTrigger>
           <SelectContent className="border-zinc-800 bg-zinc-900 text-zinc-300">
             <SelectItem value="todas" className="text-xs focus:bg-zinc-800 focus:text-zinc-100">Todas</SelectItem>
-            {CATEGORIAS.filter((c) => c !== "Ingresos").map((cat) => (
-              <SelectItem key={cat} value={cat} className="text-xs focus:bg-zinc-800 focus:text-zinc-100">
-                {cat}
+            {categoriasGasto.map((cat) => (
+              <SelectItem key={cat.nombre} value={cat.nombre} className="text-xs focus:bg-zinc-800 focus:text-zinc-100">
+                {cat.nombre}
               </SelectItem>
             ))}
           </SelectContent>
@@ -137,7 +139,7 @@ export function ExpenseList({ expenses }: ExpenseListProps) {
                     <Badge
                       variant="outline"
                       className="border-0 text-white"
-                      style={{ backgroundColor: CATEGORIA_COLORS[gasto.categoria] }}
+                      style={{ backgroundColor: getColor(gasto.categoria) }}
                     >
                       {gasto.categoria}
                     </Badge>

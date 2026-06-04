@@ -1,7 +1,7 @@
-import { CATEGORIA_COLORS, type Categoria } from "@/types"
+import { CATEGORIA_COLORS } from "@/types"
 
 interface DonutChartProps {
-  data: { categoria: Categoria; monto: number }[]
+  data: { categoria: string; monto: number }[]
 }
 
 export function DonutChart({ data }: DonutChartProps) {
@@ -32,7 +32,7 @@ export function DonutChart({ data }: DonutChartProps) {
               cy={center}
               r={radius}
               fill="none"
-              stroke={CATEGORIA_COLORS[d.categoria]}
+              stroke={CATEGORIA_COLORS[d.categoria] ?? "#6B7280"}
               strokeWidth={strokeWidth}
               strokeDasharray={`${length} ${circumference - length}`}
               strokeDashoffset={-offset}
@@ -46,7 +46,7 @@ export function DonutChart({ data }: DonutChartProps) {
           <div key={d.categoria} className="flex items-center gap-2 text-xs">
             <span
               className="h-2.5 w-2.5 shrink-0 rounded-full"
-              style={{ backgroundColor: CATEGORIA_COLORS[d.categoria] }}
+              style={{ backgroundColor: CATEGORIA_COLORS[d.categoria] ?? "#6B7280" }}
             />
             <span className="text-zinc-400">{d.categoria}</span>
             <span className="font-medium text-zinc-200">

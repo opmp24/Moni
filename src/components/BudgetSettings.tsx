@@ -11,11 +11,21 @@ import {
 } from "@/components/ui/dialog"
 import { supabase } from "@/lib/supabase"
 import { useAuth } from "@/lib/auth"
-import { CATEGORIA_COLORS, CATEGORIAS, type Categoria, type Presupuesto } from "@/types"
+import { useCategorias } from "@/hooks/useCategorias"
+import type { Presupuesto, Categoria } from "@/types"
 
-export function BudgetSettings() {
+interface BudgetSettingsProps {
+  open?: boolean
+  onOpenChange?: (open: boolean) => void
+  onSaved?: () => void
+}
+
+export function BudgetSettings({ open: controlledOpen, onOpenChange, onSaved }: BudgetSettingsProps) {
   const { user } = useAuth()
-  const [open, setOpen] = useState(false)
+  const { categoriasGasto, getColor } = useCategorias()
+  const [internalOpen, setInternalOpen] = useState(false)
+  const open = controlledOpen ?? internalOpen
+  const setOpen = onOpenChange ?? setInternalOpen
   const [presupuestos, setPresupuestos] = useState<Presupuesto[]>([])
   const [loading, setLoading] = useState(false)
   const [saving, setSaving] = useState(false)
@@ -89,6 +99,7 @@ export function BudgetSettings() {
     }
 
     setSaving(false)
+    await onSaved?.()
     setOpen(false)
   }
 
@@ -114,19 +125,19 @@ export function BudgetSettings() {
           </div>
         ) : (
           <div className="space-y-3">
-            {CATEGORIAS.filter((c) => c !== "Ingresos").map((cat) => (
-              <div key={cat} className="flex items-center gap-3">
+            {categoriasGasto.map((cat) => (
+              <div key={cat.nombre} className="flex items-center gap-3">
                 <span
                   className="h-3 w-3 shrink-0 rounded-full"
-                  style={{ backgroundColor: CATEGORIA_COLORS[cat] }}
+                  style={{ backgroundColor: getColor(cat.nombre) }}
                 />
-                <label className="flex-1 text-sm text-zinc-300">{cat}</label>
+                <label className="flex-1 text-sm text-zinc-300">{cat.nombre}</label>
                 <div className="relative">
                   <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-xs text-zinc-500">$</span>
                   <input
                     type="text"
-                    value={obtenerMonto(cat).toLocaleString("es-CL")}
-                    onChange={(e) => handleChange(cat, e.target.value)}
+                    value={obtenerMonto(cat.nombre).toLocaleString("es-CL")}
+                    onChange={(e) => handleChange(cat.nombre, e.target.value)}
                     className="h-9 w-36 rounded-md border border-zinc-800 bg-zinc-900 pl-6 pr-3 text-right text-sm text-zinc-200 [color-scheme:dark]"
                   />
                 </div>

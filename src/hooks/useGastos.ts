@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from "react"
 import { supabase } from "@/lib/supabase"
-import type { Gasto, Categoria } from "@/types"
+import type { Gasto } from "@/types"
 
 export function useGastos() {
   const [gastos, setGastos] = useState<Gasto[]>([])
@@ -42,8 +42,8 @@ export function useGastos() {
   const gastosDelMes = gastos.filter((g) => new Date(g.fecha) >= monthStart)
   const totalGastosMes = gastosDelMes.reduce((s, g) => s + Number(g.monto), 0)
 
-  const categorias: { categoria: Categoria; monto: number }[] = []
-  const catMap = new Map<Categoria, number>()
+  const categorias: { categoria: string; monto: number }[] = []
+  const catMap = new Map<string, number>()
   for (const g of gastosDelMes) {
     catMap.set(g.categoria, (catMap.get(g.categoria) ?? 0) + Number(g.monto))
   }
@@ -82,5 +82,6 @@ export function useGastos() {
     topCategoria,
     gastosPorMes,
     loading,
+    refetch: fetchGastos,
   }
 }

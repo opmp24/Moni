@@ -1,6 +1,6 @@
 import { useState } from "react"
 import { TrendingUp, Receipt, Loader2 } from "lucide-react"
-import { SignOut, ArrowUpRight, ArrowDownRight, Wallet } from "@phosphor-icons/react"
+import { GearSix, ArrowUpRight, ArrowDownRight, Wallet } from "@phosphor-icons/react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
@@ -13,19 +13,27 @@ import { AddExpenseDialog } from "@/components/AddExpenseDialog"
 import { AddIncomeDialog } from "@/components/AddIncomeDialog"
 import { TelegramLink } from "@/components/TelegramLink"
 import { BudgetSettings } from "@/components/BudgetSettings"
+import { CategoryEditor } from "@/components/CategoryEditor"
+import { ErrorBoundary } from "@/components/ErrorBoundary"
+import { SettingsPopup } from "@/components/SettingsPopup"
 import { useGastos } from "@/hooks/useGastos"
 import { useIngresos } from "@/hooks/useIngresos"
 import { usePresupuestos } from "@/hooks/usePresupuestos"
 import { useAuth } from "@/lib/auth"
-import { CATEGORIA_COLORS, type Categoria } from "@/types"
+import { CATEGORIA_COLORS } from "@/types"
 import { formatCurrency } from "@/lib/utils"
 
 export function Dashboard() {
   const [tab, setTab] = useState("resumen")
+  const [settingsOpen, setSettingsOpen] = useState(false)
+  const [budgetOpen, setBudgetOpen] = useState(false)
+  const [categoryEditorOpen, setCategoryEditorOpen] = useState(false)
+  const [expenseOpen, setExpenseOpen] = useState(false)
+  const [incomeOpen, setIncomeOpen] = useState(false)
   const { user, signOut } = useAuth()
-  const { gastos, gastosDelMes, totalGastosMes, categorias, topCategoria, gastosPorMes, loading: loadingGastos } = useGastos()
-  const { ingresos, totalIngresosMes, loading: loadingIngresos } = useIngresos()
-  const { presupuestos, loading: loadingPresupuestos } = usePresupuestos()
+  const { gastos, gastosDelMes, totalGastosMes, categorias, topCategoria, gastosPorMes, loading: loadingGastos, refetch: refetchGastos } = useGastos()
+  const { ingresos, totalIngresosMes, loading: loadingIngresos, refetch: refetchIngresos } = useIngresos()
+  const { presupuestos, loading: loadingPresupuestos, refetch: refetchPresupuestos } = usePresupuestos()
 
   const loading = loadingGastos || loadingIngresos || loadingPresupuestos
   const balance = totalIngresosMes - totalGastosMes
@@ -56,16 +64,16 @@ export function Dashboard() {
             <p className="text-sm text-zinc-500">{user?.email}</p>
           </div>
           <div className="flex items-center gap-2">
-            <AddExpenseDialog />
-            <AddIncomeDialog />
+            <AddExpenseDialog open={expenseOpen} onOpenChange={setExpenseOpen} onSaved={refetchGastos} />
+            <AddIncomeDialog open={incomeOpen} onOpenChange={setIncomeOpen} onSaved={refetchIngresos} />
             <Button
               variant="outline"
               size="icon"
-              onClick={signOut}
-              title="Cerrar sesión"
+              onClick={() => setSettingsOpen(true)}
+              title="Configuración"
               className="border-zinc-800 text-zinc-400 hover:bg-zinc-800 hover:text-zinc-100"
             >
-              <SignOut className="h-4 w-4" />
+              <GearSix className="h-4 w-4" weight="bold" />
             </Button>
           </div>
         </header>
@@ -107,7 +115,7 @@ export function Dashboard() {
                 {topCategoria && (
                   <span
                     className="h-3 w-3 rounded-full"
-                    style={{ backgroundColor: CATEGORIA_COLORS[topCategoria.categoria as Categoria] }}
+                    style={{ backgroundColor: CATEGORIA_COLORS[topCategoria.categoria] ?? "#6B7280" }}
                   />
                 )}
                 <p className="text-2xl font-bold text-zinc-100">{topCategoria?.categoria ?? "—"}</p>
@@ -161,7 +169,7 @@ export function Dashboard() {
               <Card className="border-zinc-800 bg-zinc-900/50">
                 <CardHeader className="flex flex-row items-center justify-between">
                   <CardTitle className="text-sm text-zinc-400">Presupuesto vs real</CardTitle>
-                  <BudgetSettings />
+                  <BudgetSettings open={budgetOpen} onOpenChange={setBudgetOpen} onSaved={refetchPresupuestos} />
                 </CardHeader>
                 <CardContent>
                   <BudgetProgress data={presupuestosConGasto} />
@@ -191,6 +199,20 @@ export function Dashboard() {
           </TabsContent>
         </Tabs>
       </div>
+
+      <SettingsPopup
+        open={settingsOpen}
+        onOpenChange={setSettingsOpen}
+        onPresupuestos={() => setBudgetOpen(true)}
+        onCategorias={() => setCategoryEditorOpen(true)}
+        onGasto={() => setExpenseOpen(true)}
+        onIngreso={() => setIncomeOpen(true)}
+        onCerrarSesion={signOut}
+      />
+
+      <ErrorBoundary>
+        <CategoryEditor open={categoryEditorOpen} onOpenChange={setCategoryEditorOpen} />
+      </ErrorBoundary>
     </div>
   )
 }

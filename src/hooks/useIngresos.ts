@@ -47,5 +47,6 @@ export function useIngresos() {
     ingresosDelMes,
     totalIngresosMes,
     loading,
+    refetch: fetchIngresos,
   }
 }

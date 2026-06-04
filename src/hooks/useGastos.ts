@@ -36,16 +36,11 @@ export function useGastos() {
     return () => { supabase?.removeChannel(channel) }
   }, [fetchGastos])
 
-  const gastosDelMes = gastos.filter((g) => {
-    const ahora = new Date()
-    const fechaGasto = new Date(g.fecha)
-    return (
-      fechaGasto.getMonth() === ahora.getMonth() &&
-      fechaGasto.getFullYear() === ahora.getFullYear()
-    )
-  })
+  const ahora = new Date()
+  const monthStart = new Date(ahora.getFullYear(), ahora.getMonth(), 1)
 
-  const totalMes = gastosDelMes.reduce((s, g) => s + Number(g.monto), 0)
+  const gastosDelMes = gastos.filter((g) => new Date(g.fecha) >= monthStart)
+  const totalGastosMes = gastosDelMes.reduce((s, g) => s + Number(g.monto), 0)
 
   const categorias: { categoria: Categoria; monto: number }[] = []
   const catMap = new Map<Categoria, number>()
@@ -70,7 +65,6 @@ export function useGastos() {
     mesMap.set(key, (mesMap.get(key) ?? 0) + Number(g.monto))
   }
 
-  const ahora = new Date()
   for (let i = 5; i >= 0; i--) {
     const d = new Date(ahora.getFullYear(), ahora.getMonth() - i, 1)
     const key = `${d.getFullYear()}-${d.getMonth()}`
@@ -80,27 +74,13 @@ export function useGastos() {
     })
   }
 
-  const presupuestos: { categoria: string; gastado: number; presupuesto: number }[] = [
-    { categoria: "Alimentación", gastado: 0, presupuesto: 200000 },
-    { categoria: "Transporte", gastado: 0, presupuesto: 80000 },
-    { categoria: "Vivienda", gastado: 0, presupuesto: 300000 },
-    { categoria: "Salud", gastado: 0, presupuesto: 60000 },
-    { categoria: "Entretenimiento", gastado: 0, presupuesto: 50000 },
-    { categoria: "Otros", gastado: 0, presupuesto: 50000 },
-  ]
-  for (const g of gastosDelMes) {
-    const item = presupuestos.find((p) => p.categoria === g.categoria)
-    if (item) item.gastado += Number(g.monto)
-  }
-
   return {
     gastos,
     gastosDelMes,
-    totalMes,
+    totalGastosMes,
     categorias,
     topCategoria,
     gastosPorMes,
-    presupuestos,
     loading,
   }
 }

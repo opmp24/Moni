@@ -1,5 +1,6 @@
 import { useState } from "react"
-import { Wallet, TrendingUp, Receipt, Plus, Loader2 } from "lucide-react"
+import { TrendingUp, Receipt, Loader2 } from "lucide-react"
+import { SignOut, ArrowUpRight, ArrowDownRight, Wallet } from "@phosphor-icons/react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
@@ -7,50 +8,99 @@ import { DonutChart } from "@/components/dashboard/DonutChart"
 import { BarChart } from "@/components/dashboard/BarChart"
 import { BudgetProgress } from "@/components/dashboard/BudgetProgress"
 import { ExpenseList } from "@/components/ExpenseList"
+import { IncomeList } from "@/components/IncomeList"
+import { AddExpenseDialog } from "@/components/AddExpenseDialog"
+import { AddIncomeDialog } from "@/components/AddIncomeDialog"
+import { TelegramLink } from "@/components/TelegramLink"
+import { BudgetSettings } from "@/components/BudgetSettings"
 import { useGastos } from "@/hooks/useGastos"
+import { useIngresos } from "@/hooks/useIngresos"
+import { usePresupuestos } from "@/hooks/usePresupuestos"
+import { useAuth } from "@/lib/auth"
 import { CATEGORIA_COLORS, type Categoria } from "@/types"
 import { formatCurrency } from "@/lib/utils"
 
 export function Dashboard() {
   const [tab, setTab] = useState("resumen")
-  const { gastos, totalMes, categorias, topCategoria, gastosPorMes, presupuestos, loading } = useGastos()
+  const { user, signOut } = useAuth()
+  const { gastos, gastosDelMes, totalGastosMes, categorias, topCategoria, gastosPorMes, loading: loadingGastos } = useGastos()
+  const { ingresos, totalIngresosMes, loading: loadingIngresos } = useIngresos()
+  const { presupuestos, loading: loadingPresupuestos } = usePresupuestos()
+
+  const loading = loadingGastos || loadingIngresos || loadingPresupuestos
+  const balance = totalIngresosMes - totalGastosMes
+  const transaccionesTotales = gastos.length + ingresos.length
+
+  const presupuestosConGasto = presupuestos.map((p) => {
+    const gastado = gastosDelMes
+      .filter((g) => g.categoria === p.categoria)
+      .reduce((s, g) => s + Number(g.monto), 0)
+    return { categoria: p.categoria, gastado, presupuesto: p.monto }
+  })
 
   if (loading) {
     return (
-      <div className="flex min-h-screen items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      <div className="flex min-h-screen items-center justify-center bg-zinc-950">
+        <Loader2 className="h-8 w-8 animate-spin text-yellow-400" />
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen bg-background p-4 md:p-6 lg:p-8">
-      <div className="mx-auto max-w-6xl space-y-6">
+    <div className="min-h-screen bg-zinc-950">
+      <div className="fixed inset-0 bg-[radial-gradient(ellipse_80%_50%_at_50%_-20%,rgba(255,214,0,0.08),transparent)] pointer-events-none" />
+      <div className="relative z-10 mx-auto max-w-6xl space-y-6 p-4 md:p-6 lg:p-8">
         <header className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-bold tracking-tight">PerJaus</h1>
-            <p className="text-sm text-muted-foreground">Control de finanzas personales</p>
+            <h1 className="text-2xl font-bold tracking-tight text-zinc-100">PerJaus</h1>
+            <p className="text-sm text-zinc-500">{user?.email}</p>
           </div>
-          <Button>
-            <Plus className="mr-1 h-4 w-4" />
-            Nuevo gasto
-          </Button>
+          <div className="flex items-center gap-2">
+            <AddExpenseDialog />
+            <AddIncomeDialog />
+            <Button
+              variant="outline"
+              size="icon"
+              onClick={signOut}
+              title="Cerrar sesión"
+              className="border-zinc-800 text-zinc-400 hover:bg-zinc-800 hover:text-zinc-100"
+            >
+              <SignOut className="h-4 w-4" />
+            </Button>
+          </div>
         </header>
 
+        <TelegramLink />
+
         <div className="grid gap-4 md:grid-cols-3">
-          <Card>
+          <Card className="border-zinc-800 bg-zinc-900/50">
             <CardHeader className="flex flex-row items-center justify-between pb-2">
-              <CardTitle className="text-sm font-medium">Total del mes</CardTitle>
-              <Wallet className="h-4 w-4 text-muted-foreground" />
+              <CardTitle className="text-sm font-medium text-zinc-400">Balance del mes</CardTitle>
+              <Wallet className="h-4 w-4 text-zinc-600" weight="bold" />
             </CardHeader>
             <CardContent>
-              <p className="text-2xl font-bold">{formatCurrency(totalMes)}</p>
+              <p className={`text-2xl font-bold ${balance >= 0 ? "text-emerald-400" : "text-red-400"}`}>
+                {formatCurrency(Math.abs(balance))}
+                <span className="ml-1 text-sm">{balance >= 0 ? "a favor" : "en contra"}</span>
+              </p>
+              <div className="mt-2 flex items-center gap-3 text-xs">
+                <div className="flex items-center gap-1">
+                  <ArrowUpRight className="h-3 w-3 text-emerald-500" weight="bold" />
+                  <span className="text-zinc-500">Ingresos</span>
+                  <span className="font-medium text-emerald-400">{formatCurrency(totalIngresosMes)}</span>
+                </div>
+                <div className="flex items-center gap-1">
+                  <ArrowDownRight className="h-3 w-3 text-red-500" weight="bold" />
+                  <span className="text-zinc-500">Gastos</span>
+                  <span className="font-medium text-zinc-200">{formatCurrency(totalGastosMes)}</span>
+                </div>
+              </div>
             </CardContent>
           </Card>
-          <Card>
+          <Card className="border-zinc-800 bg-zinc-900/50">
             <CardHeader className="flex flex-row items-center justify-between pb-2">
-              <CardTitle className="text-sm font-medium">Top categoría</CardTitle>
-              <TrendingUp className="h-4 w-4 text-muted-foreground" />
+              <CardTitle className="text-sm font-medium text-zinc-400">Top categoría</CardTitle>
+              <TrendingUp className="h-4 w-4 text-zinc-600" />
             </CardHeader>
             <CardContent>
               <div className="flex items-center gap-2">
@@ -60,64 +110,82 @@ export function Dashboard() {
                     style={{ backgroundColor: CATEGORIA_COLORS[topCategoria.categoria as Categoria] }}
                   />
                 )}
-                <p className="text-2xl font-bold">{topCategoria?.categoria ?? "—"}</p>
+                <p className="text-2xl font-bold text-zinc-100">{topCategoria?.categoria ?? "—"}</p>
               </div>
-              <p className="text-xs text-muted-foreground">
+              <p className="text-xs text-zinc-500">
                 {topCategoria ? formatCurrency(topCategoria.monto) : "Sin datos"}
               </p>
             </CardContent>
           </Card>
-          <Card>
+          <Card className="border-zinc-800 bg-zinc-900/50">
             <CardHeader className="flex flex-row items-center justify-between pb-2">
-              <CardTitle className="text-sm font-medium">Transacciones</CardTitle>
-              <Receipt className="h-4 w-4 text-muted-foreground" />
+              <CardTitle className="text-sm font-medium text-zinc-400">Transacciones</CardTitle>
+              <Receipt className="h-4 w-4 text-zinc-600" />
             </CardHeader>
             <CardContent>
-              <p className="text-2xl font-bold">{gastos.length}</p>
+              <p className="text-2xl font-bold text-zinc-100">{transaccionesTotales}</p>
             </CardContent>
           </Card>
         </div>
 
         <Tabs value={tab} onValueChange={setTab}>
-          <TabsList>
-            <TabsTrigger value="resumen">Resumen</TabsTrigger>
-            <TabsTrigger value="detalle">Detalle</TabsTrigger>
+          <TabsList className="border-zinc-800 bg-zinc-900">
+            <TabsTrigger value="resumen" className="text-zinc-400 data-[state=active]:bg-zinc-800 data-[state=active]:text-zinc-100">
+              Resumen
+            </TabsTrigger>
+            <TabsTrigger value="gastos" className="text-zinc-400 data-[state=active]:bg-zinc-800 data-[state=active]:text-zinc-100">
+              Gastos
+            </TabsTrigger>
+            <TabsTrigger value="ingresos" className="text-zinc-400 data-[state=active]:bg-zinc-800 data-[state=active]:text-zinc-100">
+              Ingresos
+            </TabsTrigger>
           </TabsList>
           <TabsContent value="resumen" className="space-y-4">
             <div className="grid gap-4 md:grid-cols-3">
-              <Card>
+              <Card className="border-zinc-800 bg-zinc-900/50">
                 <CardHeader>
-                  <CardTitle className="text-sm">Por categoría</CardTitle>
+                  <CardTitle className="text-sm text-zinc-400">Por categoría</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <DonutChart data={categorias} />
                 </CardContent>
               </Card>
-              <Card>
+              <Card className="border-zinc-800 bg-zinc-900/50">
                 <CardHeader>
-                  <CardTitle className="text-sm">Evolución mensual</CardTitle>
+                  <CardTitle className="text-sm text-zinc-400">Evolución mensual</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <BarChart data={gastosPorMes} />
                 </CardContent>
               </Card>
-              <Card>
-                <CardHeader>
-                  <CardTitle className="text-sm">Presupuesto vs real</CardTitle>
+              <Card className="border-zinc-800 bg-zinc-900/50">
+                <CardHeader className="flex flex-row items-center justify-between">
+                  <CardTitle className="text-sm text-zinc-400">Presupuesto vs real</CardTitle>
+                  <BudgetSettings />
                 </CardHeader>
                 <CardContent>
-                  <BudgetProgress data={presupuestos} />
+                  <BudgetProgress data={presupuestosConGasto} />
                 </CardContent>
               </Card>
             </div>
           </TabsContent>
-          <TabsContent value="detalle">
-            <Card>
+          <TabsContent value="gastos">
+            <Card className="border-zinc-800 bg-zinc-900/50">
               <CardHeader>
-                <CardTitle>Todos los gastos</CardTitle>
+                <CardTitle className="text-sm text-zinc-400">Todos los gastos</CardTitle>
               </CardHeader>
               <CardContent>
                 <ExpenseList expenses={gastos} />
+              </CardContent>
+            </Card>
+          </TabsContent>
+          <TabsContent value="ingresos">
+            <Card className="border-zinc-800 bg-zinc-900/50">
+              <CardHeader>
+                <CardTitle className="text-sm text-zinc-400">Todos los ingresos</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <IncomeList ingresos={ingresos} />
               </CardContent>
             </Card>
           </TabsContent>

@@ -1,0 +1,122 @@
+import { useState, type FormEvent } from "react"
+import { Plus, Loader2 } from "lucide-react"
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
+import { Button } from "@/components/ui/button"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { supabase } from "@/lib/supabase"
+import { useAuth } from "@/lib/auth"
+import { CATEGORIAS, type Categoria } from "@/types"
+
+export function AddExpenseDialog() {
+  const { user } = useAuth()
+  const [open, setOpen] = useState(false)
+  const [loading, setLoading] = useState(false)
+  const [monto, setMonto] = useState("")
+  const [concepto, setConcepto] = useState("")
+  const [categoria, setCategoria] = useState<Categoria>("Otros")
+  const [fecha, setFecha] = useState(() => new Date().toISOString().split("T")[0])
+
+  const categoriasDisponibles = CATEGORIAS.filter((c) => c !== "Ingresos")
+
+  const handleSubmit = async (e: FormEvent) => {
+    e.preventDefault()
+    if (!supabase || !user || !monto || !concepto) return
+
+    setLoading(true)
+    const { error } = await supabase.from("gastos").insert({
+      monto: parseInt(monto, 10),
+      concepto: concepto.trim(),
+      categoria,
+      fecha: new Date(fecha).toISOString(),
+      user_id: user.id,
+    })
+
+    setLoading(false)
+    if (error) {
+      console.error("Error al guardar:", error)
+      return
+    }
+
+    setMonto("")
+    setConcepto("")
+    setCategoria("Otros")
+    setFecha(new Date().toISOString().split("T")[0])
+    setOpen(false)
+  }
+
+  return (
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger asChild>
+        <Button className="bg-red-500/20 text-red-300 hover:bg-red-500/30 font-medium">
+          <Plus className="mr-1 h-4 w-4" />
+          Gasto
+        </Button>
+      </DialogTrigger>
+      <DialogContent className="border-zinc-800 bg-zinc-900 text-zinc-100">
+        <DialogHeader>
+          <DialogTitle className="text-zinc-100">Nuevo gasto</DialogTitle>
+        </DialogHeader>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div>
+            <label htmlFor="monto" className="text-sm font-medium text-zinc-300">Monto</label>
+            <input
+              id="monto"
+              type="number"
+              inputMode="numeric"
+              min={1}
+              required
+              value={monto}
+              onChange={(e) => setMonto(e.target.value)}
+              placeholder="5000"
+              className="mt-1 flex h-9 w-full rounded-md border border-zinc-700 bg-zinc-800/50 px-3 py-1 text-sm text-zinc-100 placeholder-zinc-500 focus:outline-none focus:ring-1 focus:ring-yellow-400"
+            />
+          </div>
+          <div>
+            <label htmlFor="concepto" className="text-sm font-medium text-zinc-300">Concepto</label>
+            <input
+              id="concepto"
+              type="text"
+              required
+              value={concepto}
+              onChange={(e) => setConcepto(e.target.value)}
+              placeholder="Almuerzo"
+              className="mt-1 flex h-9 w-full rounded-md border border-zinc-700 bg-zinc-800/50 px-3 py-1 text-sm text-zinc-100 placeholder-zinc-500 focus:outline-none focus:ring-1 focus:ring-yellow-400"
+            />
+          </div>
+          <div>
+            <label htmlFor="categoria" className="text-sm font-medium text-zinc-300">Categoría</label>
+            <Select value={categoria} onValueChange={(v) => setCategoria(v as Categoria)}>
+              <SelectTrigger className="mt-1 w-full border-zinc-700 bg-zinc-800/50 text-zinc-100">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent className="border-zinc-700 bg-zinc-900 text-zinc-100">
+                {categoriasDisponibles.map((cat) => (
+                  <SelectItem key={cat} value={cat} className="focus:bg-zinc-800 focus:text-zinc-100">{cat}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+          <div>
+            <label htmlFor="fecha" className="text-sm font-medium text-zinc-300">Fecha</label>
+            <input
+              id="fecha"
+              type="date"
+              value={fecha}
+              onChange={(e) => setFecha(e.target.value)}
+              className="mt-1 flex h-9 w-full rounded-md border border-zinc-700 bg-zinc-800/50 px-3 py-1 text-sm text-zinc-100 focus:outline-none focus:ring-1 focus:ring-yellow-400"
+            />
+          </div>
+          <div className="flex justify-end gap-3 pt-2">
+            <Button type="button" variant="outline" onClick={() => setOpen(false)} className="border-zinc-700 text-zinc-300 hover:bg-zinc-800 hover:text-zinc-100">
+              Cancelar
+            </Button>
+            <Button type="submit" disabled={loading} className="bg-yellow-400 text-zinc-950 hover:bg-yellow-300 font-medium">
+              {loading && <Loader2 className="mr-1 h-4 w-4 animate-spin" />}
+              Guardar
+            </Button>
+          </div>
+        </form>
+      </DialogContent>
+    </Dialog>
+  )
+}

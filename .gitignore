@@ -41,3 +41,12 @@ supabase/.temp/
 # Environment
 .env
 
+# Windows artifacts
+nul
+aux
+prn
+
+# Docs with credentials (no subir al repo)
+docs/credenciales.md
+docs/configuracion-completa.md
+

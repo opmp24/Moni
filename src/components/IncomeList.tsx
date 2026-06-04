@@ -10,14 +10,14 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { supabase } from "@/lib/supabase"
-import { CATEGORIA_COLORS, CATEGORIAS, type Gasto } from "@/types"
+import { CATEGORIA_COLORS, CATEGORIAS, type Ingreso } from "@/types"
 import { formatCurrency, formatDate } from "@/lib/utils"
 
-interface ExpenseListProps {
-  expenses: Gasto[]
+interface IncomeListProps {
+  ingresos: Ingreso[]
 }
 
-export function ExpenseList({ expenses }: ExpenseListProps) {
+export function IncomeList({ ingresos }: IncomeListProps) {
   const [deleting, setDeleting] = useState<string | null>(null)
   const [filtroCategoria, setFiltroCategoria] = useState<string>("todas")
   const [fechaDesde, setFechaDesde] = useState("")
@@ -29,7 +29,7 @@ export function ExpenseList({ expenses }: ExpenseListProps) {
 
   const filtrados = useMemo(() => {
     setPagina(1)
-    let items = expenses
+    let items = ingresos
 
     if (filtroCategoria !== "todas") {
       items = items.filter((g) => g.categoria === filtroCategoria)
@@ -41,7 +41,7 @@ export function ExpenseList({ expenses }: ExpenseListProps) {
       items = items.filter((g) => g.fecha <= fechaHasta + "T23:59:59")
     }
     return items
-  }, [expenses, filtroCategoria, fechaDesde, fechaHasta])
+  }, [ingresos, filtroCategoria, fechaDesde, fechaHasta])
 
   const totalPaginas = Math.max(1, Math.ceil(filtrados.length / POR_PAGINA))
   const paginaActual = Math.min(pagina, totalPaginas)
@@ -58,7 +58,7 @@ export function ExpenseList({ expenses }: ExpenseListProps) {
   const handleDelete = async (id: string) => {
     if (!supabase) return
     setDeleting(id)
-    await supabase.from("gastos").delete().eq("id", id)
+    await supabase.from("ingresos").delete().eq("id", id)
     setDeleting(null)
   }
 
@@ -76,7 +76,7 @@ export function ExpenseList({ expenses }: ExpenseListProps) {
           </SelectTrigger>
           <SelectContent className="border-zinc-800 bg-zinc-900 text-zinc-300">
             <SelectItem value="todas" className="text-xs focus:bg-zinc-800 focus:text-zinc-100">Todas</SelectItem>
-            {CATEGORIAS.filter((c) => c !== "Ingresos").map((cat) => (
+            {CATEGORIAS.map((cat) => (
               <SelectItem key={cat} value={cat} className="text-xs focus:bg-zinc-800 focus:text-zinc-100">
                 {cat}
               </SelectItem>
@@ -114,7 +114,7 @@ export function ExpenseList({ expenses }: ExpenseListProps) {
 
       {filtrados.length === 0 ? (
         <p className="py-8 text-center text-sm text-zinc-600">
-          {hayFiltros ? "Sin resultados con los filtros actuales" : "No hay gastos registrados"}
+          {hayFiltros ? "Sin resultados con los filtros actuales" : "No hay ingresos registrados"}
         </p>
       ) : (
         <div className="overflow-x-auto">
@@ -129,31 +129,31 @@ export function ExpenseList({ expenses }: ExpenseListProps) {
               </tr>
             </thead>
             <tbody>
-              {paginados.map((gasto) => (
-                <tr key={gasto.id} className="border-b border-zinc-800/50 last:border-0">
-                  <td className="py-3 pr-4 text-zinc-500">{formatDate(gasto.fecha)}</td>
-                  <td className="py-3 pr-4 font-medium text-zinc-200">{gasto.concepto}</td>
+              {paginados.map((ingreso) => (
+                <tr key={ingreso.id} className="border-b border-zinc-800/50 last:border-0">
+                  <td className="py-3 pr-4 text-zinc-500">{formatDate(ingreso.fecha)}</td>
+                  <td className="py-3 pr-4 font-medium text-zinc-200">{ingreso.concepto}</td>
                   <td className="py-3 pr-4">
                     <Badge
                       variant="outline"
                       className="border-0 text-white"
-                      style={{ backgroundColor: CATEGORIA_COLORS[gasto.categoria] }}
+                      style={{ backgroundColor: CATEGORIA_COLORS[ingreso.categoria] }}
                     >
-                      {gasto.categoria}
+                      {ingreso.categoria}
                     </Badge>
                   </td>
-                  <td className="py-3 pl-4 text-right font-semibold text-zinc-100">
-                    {formatCurrency(gasto.monto)}
+                  <td className="py-3 pl-4 text-right font-semibold text-emerald-400">
+                    +{formatCurrency(ingreso.monto)}
                   </td>
                   <td className="py-3">
                     <Button
                       variant="ghost"
                       size="icon"
                       className="h-7 w-7 text-zinc-600 hover:text-red-400"
-                      onClick={() => handleDelete(gasto.id)}
-                      disabled={deleting === gasto.id}
+                      onClick={() => handleDelete(ingreso.id)}
+                      disabled={deleting === ingreso.id}
                     >
-                      {deleting === gasto.id ? (
+                      {deleting === ingreso.id ? (
                         <span className="h-3 w-3 animate-spin rounded-full border border-zinc-500 border-t-transparent" />
                       ) : (
                         <Trash className="h-3.5 w-3.5" />

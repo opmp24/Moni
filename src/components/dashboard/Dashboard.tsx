@@ -12,6 +12,7 @@ import { IncomeList } from "@/components/IncomeList"
 import { AddExpenseDialog } from "@/components/AddExpenseDialog"
 import { AddIncomeDialog } from "@/components/AddIncomeDialog"
 import { TelegramLink } from "@/components/TelegramLink"
+import { MarqueeBar } from "@/components/MarqueeBar"
 import { BudgetSettings } from "@/components/BudgetSettings"
 import { CategoryEditor } from "@/components/CategoryEditor"
 import { ErrorBoundary } from "@/components/ErrorBoundary"
@@ -103,6 +104,8 @@ export function Dashboard() {
         </header>
 
         <TelegramLink />
+
+        <MarqueeBar gastos={gastos} />
 
         <div className="grid gap-4 md:grid-cols-3">
           <Card className="dashboard-card border-zinc-800 bg-zinc-900/50 transition-all duration-300 hover:border-yellow-500/30 hover:shadow-[0_0_20px_rgba(255,214,0,0.12)]">

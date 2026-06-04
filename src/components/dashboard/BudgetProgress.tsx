@@ -7,6 +7,17 @@ interface BudgetProgressProps {
 }
 
 export function BudgetProgress({ data }: BudgetProgressProps) {
+  if (data.length === 0) {
+    return (
+      <div className="flex flex-col items-center gap-2 py-6 text-center">
+        <p className="text-sm text-zinc-500">Sin presupuestos configurados</p>
+        <p className="text-xs text-zinc-600">
+            Usa el lápiz ✏️ o envía <code className="rounded bg-zinc-800 px-1 py-0.5 text-zinc-400">/presupuesto Categoria monto</code> a @PerJausBot
+        </p>
+      </div>
+    )
+  }
+
   return (
     <div className="space-y-4">
       {data.map((d) => {

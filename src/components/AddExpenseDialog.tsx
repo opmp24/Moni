@@ -15,16 +15,25 @@ export function AddExpenseDialog() {
   const [concepto, setConcepto] = useState("")
   const [categoria, setCategoria] = useState<Categoria>("Otros")
   const [fecha, setFecha] = useState(() => new Date().toISOString().split("T")[0])
+  const [errorMsg, setErrorMsg] = useState("")
 
   const categoriasDisponibles = CATEGORIAS.filter((c) => c !== "Ingresos")
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault()
-    if (!supabase || !user || !monto || !concepto) return
+    setErrorMsg("")
+
+    if (!supabase) { setErrorMsg("Supabase no está configurado"); return }
+    if (!user) { setErrorMsg("Debes iniciar sesión"); return }
+    if (!monto || parseInt(monto, 10) <= 0) { setErrorMsg("Ingresa un monto válido"); return }
+    if (!concepto.trim()) { setErrorMsg("Ingresa un concepto"); return }
+
+    const montoNum = parseInt(monto, 10)
+    if (isNaN(montoNum) || montoNum <= 0) { setErrorMsg("Monto inválido"); return }
 
     setLoading(true)
     const { error } = await supabase.from("gastos").insert({
-      monto: parseInt(monto, 10),
+      monto: montoNum,
       concepto: concepto.trim(),
       categoria,
       fecha: new Date(fecha).toISOString(),
@@ -33,7 +42,7 @@ export function AddExpenseDialog() {
 
     setLoading(false)
     if (error) {
-      console.error("Error al guardar:", error)
+      setErrorMsg(error.message)
       return
     }
 
@@ -44,8 +53,13 @@ export function AddExpenseDialog() {
     setOpen(false)
   }
 
+  const handleOpenChange = (open: boolean) => {
+    setOpen(open)
+    if (!open) setErrorMsg("")
+  }
+
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
         <Button className="bg-red-500/20 text-red-300 hover:bg-red-500/30 font-medium">
           <Plus className="mr-1 h-4 w-4" />
@@ -57,6 +71,9 @@ export function AddExpenseDialog() {
           <DialogTitle className="text-zinc-100">Nuevo gasto</DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
+          {errorMsg && (
+            <p className="rounded-md bg-red-500/10 px-3 py-2 text-sm text-red-400">{errorMsg}</p>
+          )}
           <div>
             <label htmlFor="monto" className="text-sm font-medium text-zinc-300">Monto</label>
             <input
@@ -107,7 +124,7 @@ export function AddExpenseDialog() {
             />
           </div>
           <div className="flex justify-end gap-3 pt-2">
-            <Button type="button" variant="outline" onClick={() => setOpen(false)} className="border-zinc-700 text-zinc-300 hover:bg-zinc-800 hover:text-zinc-100">
+            <Button type="button" variant="outline" onClick={() => handleOpenChange(false)} className="border-zinc-700 text-zinc-300 hover:bg-zinc-800 hover:text-zinc-100">
               Cancelar
             </Button>
             <Button type="submit" disabled={loading} className="bg-yellow-400 text-zinc-950 hover:bg-yellow-300 font-medium">

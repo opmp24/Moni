@@ -96,12 +96,12 @@ export function BudgetSettings() {
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button
-          variant="ghost"
-          size="icon"
-          className="h-6 w-6 text-zinc-600 hover:text-zinc-300"
-          title="Configurar presupuestos"
+          variant="outline"
+          size="sm"
+          className="h-7 border-zinc-700 text-xs text-zinc-400 hover:bg-zinc-800 hover:text-zinc-200"
         >
-          <PencilSimple className="h-3.5 w-3.5" weight="bold" />
+          <PencilSimple className="mr-1 h-3 w-3" weight="bold" />
+          Editar
         </Button>
       </DialogTrigger>
       <DialogContent className="border-zinc-800 bg-zinc-950 text-zinc-100">

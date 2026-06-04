@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react"
+import { useState, useEffect, useCallback, useId } from "react"
 import { supabase } from "@/lib/supabase"
 import { useAuth } from "@/lib/auth"
 import type { Presupuesto } from "@/types"
@@ -7,6 +7,7 @@ export function usePresupuestos() {
   const { user } = useAuth()
   const [presupuestos, setPresupuestos] = useState<Presupuesto[]>([])
   const [loading, setLoading] = useState(true)
+  const chanId = useId()
 
   const fetchPresupuestos = useCallback(async () => {
     if (!supabase || !user) return
@@ -31,7 +32,7 @@ export function usePresupuestos() {
     fetchPresupuestos()
 
     const channel = supabase
-      .channel("presupuestos-realtime")
+      .channel(`presupuestos-realtime-${chanId}`)
       .on(
         "postgres_changes",
         { event: "*", schema: "public", table: "presupuestos" },

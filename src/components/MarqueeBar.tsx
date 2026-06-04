@@ -6,9 +6,9 @@ interface MarqueeBarProps {
 }
 
 export function MarqueeBar({ gastos }: MarqueeBarProps) {
-  const ultimos = gastos.slice(0, 10)
+  const ultimo = gastos[0]
 
-  if (ultimos.length === 0) return null
+  if (!ultimo) return null
 
   return (
     <div className="relative flex h-8 items-center overflow-hidden rounded-lg border border-zinc-800 bg-zinc-900/50 px-0">
@@ -17,30 +17,20 @@ export function MarqueeBar({ gastos }: MarqueeBarProps) {
         En vivo
       </div>
       <div className="relative flex-1 overflow-hidden">
-        <div className="marquee-track flex gap-12 whitespace-nowrap px-4 text-[11px] text-zinc-400">
-          <span>{renderItems(ultimos)}</span>
-          <span>{renderItems(ultimos)}</span>
+        <div className="marquee-track whitespace-nowrap px-4 text-[11px] text-zinc-400">
+          {ultimo.concepto} — {formatCurrency(ultimo.monto)} en {ultimo.categoria}
         </div>
       </div>
       <style>{`
         @keyframes marquee {
-          0% { transform: translateX(0); }
-          100% { transform: translateX(-50%); }
+          0% { transform: translateX(100%); }
+          100% { transform: translateX(-100%); }
         }
         .marquee-track {
-          animation: marquee 30s linear infinite;
+          animation: marquee 20s linear infinite;
           width: fit-content;
         }
       `}</style>
     </div>
   )
-}
-
-function renderItems(gastos: Gasto[]) {
-  return gastos
-    .map(
-      (g) =>
-        `${g.concepto} — ${formatCurrency(g.monto)} en ${g.categoria}  ●  `
-    )
-    .join("")
 }

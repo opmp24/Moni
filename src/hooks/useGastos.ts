@@ -1,10 +1,11 @@
-import { useState, useEffect, useCallback } from "react"
+import { useState, useEffect, useCallback, useId } from "react"
 import { supabase } from "@/lib/supabase"
 import type { Gasto } from "@/types"
 
 export function useGastos() {
   const [gastos, setGastos] = useState<Gasto[]>([])
   const [loading, setLoading] = useState(true)
+  const chanId = useId()
 
   const fetchGastos = useCallback(async () => {
     if (!supabase) return
@@ -25,7 +26,7 @@ export function useGastos() {
     fetchGastos()
 
     const channel = supabase
-      .channel("gastos-realtime")
+      .channel(`gastos-realtime-${chanId}`)
       .on(
         "postgres_changes",
         { event: "*", schema: "public", table: "gastos" },

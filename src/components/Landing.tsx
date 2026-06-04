@@ -2,6 +2,7 @@ import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { useAuth } from "@/lib/auth"
 import { InstallPWA } from "@/components/InstallPWA"
+import { Footer } from "@/components/Footer"
 import { Button } from "@/components/ui/button"
 import {
   TelegramLogo,
@@ -119,7 +120,7 @@ export function Landing() {
           </div>
         </section>
 
-        <section className="relative z-10 border-t border-zinc-800/60 py-20">
+        <section id="features" className="relative z-10 border-t border-zinc-800/60 py-20">
           <div className="mx-auto max-w-6xl px-6">
             <div className="mb-14 text-center">
               <h2 className="text-3xl font-bold tracking-tight md:text-4xl">
@@ -147,7 +148,7 @@ export function Landing() {
           </div>
         </section>
 
-        <section className="relative z-10 border-t border-zinc-800/60 py-20">
+        <section id="how-it-works" className="relative z-10 border-t border-zinc-800/60 py-20">
           <div className="mx-auto max-w-6xl px-6">
             <div className="mb-14 text-center">
               <h2 className="text-3xl font-bold tracking-tight md:text-4xl">
@@ -296,19 +297,7 @@ export function Landing() {
         </section>
       </main>
 
-      <footer className="relative z-10 border-t border-zinc-800/60 py-8">
-        <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-4 px-6 md:flex-row">
-          <div className="flex items-center gap-2 text-sm text-zinc-500">
-            <div className="flex h-6 w-6 items-center justify-center rounded bg-yellow-400 text-xs font-bold text-zinc-950">
-              P
-            </div>
-            PerJaus &mdash; Control financiero personal
-          </div>
-          <p className="text-xs text-zinc-600">
-            Hecho con &mdash; y código abierto
-          </p>
-        </div>
-      </footer>
+      <Footer variant="landing" />
     </div>
   )
 }

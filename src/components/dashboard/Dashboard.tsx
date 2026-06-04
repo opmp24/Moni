@@ -17,6 +17,7 @@ import { BudgetSettings } from "@/components/BudgetSettings"
 import { CategoryEditor } from "@/components/CategoryEditor"
 import { ErrorBoundary } from "@/components/ErrorBoundary"
 import { SettingsPopup } from "@/components/SettingsPopup"
+import { DashboardFooter } from "@/components/Footer"
 import { useGastos } from "@/hooks/useGastos"
 import { useIngresos } from "@/hooks/useIngresos"
 import { usePresupuestos } from "@/hooks/usePresupuestos"
@@ -72,23 +73,23 @@ export function Dashboard() {
     <div className="min-h-screen bg-zinc-950">
       <div className="fixed inset-0 bg-[radial-gradient(ellipse_80%_50%_at_50%_-20%,rgba(255,214,0,0.08),transparent)] pointer-events-none" />
       <div className="relative z-10 mx-auto max-w-6xl space-y-6 p-4 md:p-6 lg:p-8">
-        <header className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
+        <header className="flex items-center justify-between gap-4">
+          <div className="flex min-w-0 items-center gap-3">
             {user?.user_metadata?.avatar_url && (
               <img
                 src={user.user_metadata.avatar_url}
                 alt="Avatar"
-                className="h-10 w-10 rounded-full border border-zinc-700"
+                className="h-10 w-10 shrink-0 rounded-full border border-zinc-700"
               />
             )}
-            <div>
+            <div className="min-w-0">
               <h1 className="text-2xl font-bold tracking-tight text-zinc-100">PerJaus</h1>
-              <p className="text-sm text-zinc-500">
+              <p className="truncate text-sm text-zinc-500">
                 {user?.user_metadata?.full_name ?? user?.email}
               </p>
             </div>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex shrink-0 items-center gap-2">
             <AddExpenseDialog open={expenseOpen} onOpenChange={setExpenseOpen} onSaved={refetchGastos} />
             <AddIncomeDialog open={incomeOpen} onOpenChange={setIncomeOpen} onSaved={refetchIngresos} />
             <Button
@@ -226,8 +227,10 @@ export function Dashboard() {
               </CardContent>
             </Card>
           </TabsContent>
-        </Tabs>
+      </Tabs>
       </div>
+
+      <DashboardFooter totalGastosMes={totalGastosMes} totalIngresosMes={totalIngresosMes} balance={balance} userEmail={user?.email} />
 
       <SettingsPopup
         open={settingsOpen}

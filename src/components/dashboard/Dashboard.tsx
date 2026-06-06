@@ -83,6 +83,7 @@ export function Dashboard() {
                 <img
                   src={user.user_metadata.avatar_url}
                   alt="Avatar"
+                  referrerPolicy="no-referrer"
                   className="absolute inset-0 h-full w-full object-cover"
                   onError={(e) => { (e.target as HTMLImageElement).style.display = "none" }}
                 />

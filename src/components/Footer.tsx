@@ -102,6 +102,28 @@ function LandingFooter() {
               >
                 <GithubLogo className="h-4 w-4" weight="fill" />
               </a>
+              <a
+                href="https://www.netlify.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex h-8 w-8 items-center justify-center rounded-lg bg-teal-500/10 text-teal-400 transition-colors hover:bg-teal-500/20"
+                title="Netlify"
+              >
+                <svg viewBox="0 0 24 24" className="h-4 w-4" fill="currentColor">
+                  <path d="M6.49 19.04h-2.7l-1.65-1.64v-2.7l4.35-4.35v2.7l-1.64 1.65h1.64v2.34zm9.02-14.08h2.7l1.65 1.64v2.7l-4.35 4.35v-2.7l1.64-1.65h-1.64v-2.34zm-7.98 7.2l-1.65-1.64v-2.7l4.35-4.35v2.7l-1.64 1.65h1.64v2.34H7.53zm9.96 6.88l1.65-1.64v-2.7l-4.35-4.35v2.7l1.64 1.65h-1.64v2.34h2.7z"/>
+                </svg>
+              </a>
+              <a
+                href="https://supabase.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-500/10 text-emerald-400 transition-colors hover:bg-emerald-500/20"
+                title="Supabase"
+              >
+                <svg viewBox="0 0 24 24" className="h-4 w-4" fill="currentColor">
+                  <path d="M21.362 9.354H12V.018l9.362 9.336zM12 9.354H2.638L12 .018v9.336zm0 9.26V24l-5.84-7.591h4.39l1.45-3.795.787 2.056.597 1.562h4.426L12 18.614z"/>
+                </svg>
+              </a>
             </div>
           </div>
 

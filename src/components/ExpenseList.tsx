@@ -1,5 +1,5 @@
-import { useState, useMemo } from "react"
-import { Trash, Funnel, X, CaretLeft, CaretRight, Check } from "@phosphor-icons/react"
+import { useState, useMemo, useCallback } from "react"
+import { Trash, X, CaretLeft, CaretRight, Check, Download, MagnifyingGlass, ArrowClockwise } from "@phosphor-icons/react"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import {
@@ -26,10 +26,13 @@ export function ExpenseList({ expenses }: ExpenseListProps) {
   const [filtroCategoria, setFiltroCategoria] = useState<string>("todas")
   const [fechaDesde, setFechaDesde] = useState("")
   const [fechaHasta, setFechaHasta] = useState("")
+  const [busqueda, setBusqueda] = useState("")
+  const [montoMin, setMontoMin] = useState("")
+  const [montoMax, setMontoMax] = useState("")
   const [pagina, setPagina] = useState(1)
   const POR_PAGINA = 10
 
-  const hayFiltros = filtroCategoria !== "todas" || fechaDesde || fechaHasta
+  const hayFiltros = filtroCategoria !== "todas" || fechaDesde || fechaHasta || busqueda || montoMin || montoMax
 
   const filtrados = useMemo(() => {
     setPagina(1)
@@ -38,14 +41,24 @@ export function ExpenseList({ expenses }: ExpenseListProps) {
     if (filtroCategoria !== "todas") {
       items = items.filter((g) => g.categoria === filtroCategoria)
     }
+    if (busqueda) {
+      const q = busqueda.toLowerCase()
+      items = items.filter((g) => g.concepto?.toLowerCase().includes(q))
+    }
     if (fechaDesde) {
       items = items.filter((g) => g.fecha >= fechaDesde)
     }
     if (fechaHasta) {
       items = items.filter((g) => g.fecha <= fechaHasta + "T23:59:59")
     }
+    if (montoMin) {
+      items = items.filter((g) => Number(g.monto) >= Number(montoMin))
+    }
+    if (montoMax) {
+      items = items.filter((g) => Number(g.monto) <= Number(montoMax))
+    }
     return items
-  }, [expenses, filtroCategoria, fechaDesde, fechaHasta])
+  }, [expenses, filtroCategoria, busqueda, fechaDesde, fechaHasta, montoMin, montoMax])
 
   const totalPaginas = Math.max(1, Math.ceil(filtrados.length / POR_PAGINA))
   const paginaActual = Math.min(pagina, totalPaginas)
@@ -56,8 +69,24 @@ export function ExpenseList({ expenses }: ExpenseListProps) {
     setFiltroCategoria("todas")
     setFechaDesde("")
     setFechaHasta("")
+    setBusqueda("")
+    setMontoMin("")
+    setMontoMax("")
     setPagina(1)
   }
+
+  const exportarCSV = useCallback(() => {
+    const headers = ["Fecha", "Concepto", "Categoría", "Monto"]
+    const rows = filtrados.map((g) => [g.fecha, g.concepto ?? "", g.categoria, g.monto])
+    const csv = [headers.join(","), ...rows.map((r) => r.join(","))].join("\n")
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" })
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement("a")
+    a.href = url
+    a.download = `gastos-${new Date().toISOString().slice(0, 10)}.csv`
+    a.click()
+    URL.revokeObjectURL(url)
+  }, [filtrados])
 
   const handleDelete = async (id: string) => {
     if (!supabase) return
@@ -69,13 +98,19 @@ export function ExpenseList({ expenses }: ExpenseListProps) {
   return (
     <div className="space-y-3">
       <div className="flex flex-wrap items-center gap-2">
-        <div className="flex items-center gap-1 text-xs text-zinc-500">
-          <Funnel className="h-3 w-3" weight="bold" />
-          <span>Filtrar:</span>
+        <div className="relative">
+          <MagnifyingGlass className="absolute left-2.5 top-1/2 h-3 w-3 -translate-y-1/2 text-zinc-500" weight="bold" />
+          <input
+            type="text"
+            value={busqueda}
+            onChange={(e) => setBusqueda(e.target.value)}
+            placeholder="Buscar..."
+            className="h-8 w-[160px] rounded-md border border-zinc-800 bg-zinc-900 pl-7 pr-2 text-xs text-zinc-300 placeholder:text-zinc-600"
+          />
         </div>
 
         <Select value={filtroCategoria} onValueChange={setFiltroCategoria}>
-          <SelectTrigger className="h-8 w-[140px] border-zinc-800 bg-zinc-900 text-xs text-zinc-300">
+          <SelectTrigger className="h-8 w-[130px] border-zinc-800 bg-zinc-900 text-xs text-zinc-300">
             <SelectValue placeholder="Categoría" />
           </SelectTrigger>
           <SelectContent className="border-zinc-800 bg-zinc-900 text-zinc-300">
@@ -92,28 +127,55 @@ export function ExpenseList({ expenses }: ExpenseListProps) {
           type="date"
           value={fechaDesde}
           onChange={(e) => setFechaDesde(e.target.value)}
-          className="h-8 rounded-md border border-zinc-800 bg-zinc-900 px-2 text-xs text-zinc-300 [color-scheme:dark]"
+          className="h-8 w-[130px] rounded-md border border-zinc-800 bg-zinc-900 px-2 text-xs text-zinc-300 [color-scheme:dark]"
           title="Desde"
         />
         <input
           type="date"
           value={fechaHasta}
           onChange={(e) => setFechaHasta(e.target.value)}
-          className="h-8 rounded-md border border-zinc-800 bg-zinc-900 px-2 text-xs text-zinc-300 [color-scheme:dark]"
+          className="h-8 w-[130px] rounded-md border border-zinc-800 bg-zinc-900 px-2 text-xs text-zinc-300 [color-scheme:dark]"
           title="Hasta"
         />
 
-        {hayFiltros && (
+        <input
+          type="number"
+          value={montoMin}
+          onChange={(e) => setMontoMin(e.target.value)}
+          placeholder="Monto min"
+          className="h-8 w-[100px] rounded-md border border-zinc-800 bg-zinc-900 px-2 text-xs text-zinc-300 placeholder:text-zinc-600 [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none"
+        />
+        <input
+          type="number"
+          value={montoMax}
+          onChange={(e) => setMontoMax(e.target.value)}
+          placeholder="Monto max"
+          className="h-8 w-[100px] rounded-md border border-zinc-800 bg-zinc-900 px-2 text-xs text-zinc-300 placeholder:text-zinc-600 [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none"
+        />
+
+        <div className="flex items-center gap-1">
+          {hayFiltros && (
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={limpiarFiltros}
+              className="h-8 px-2 text-xs text-zinc-500 hover:text-zinc-200"
+            >
+              <X className="h-3 w-3" weight="bold" />
+              Limpiar
+            </Button>
+          )}
           <Button
-            variant="ghost"
+            variant="outline"
             size="sm"
-            onClick={limpiarFiltros}
-            className="h-8 px-2 text-xs text-zinc-500 hover:text-zinc-200"
+            onClick={exportarCSV}
+            className="h-8 border-zinc-800 text-xs text-zinc-400 hover:bg-zinc-800 hover:text-zinc-200"
+            title="Exportar CSV"
           >
-            <X className="h-3 w-3" weight="bold" />
-            Limpiar
+            <Download className="h-3 w-3" weight="bold" />
+            CSV
           </Button>
-        )}
+        </div>
       </div>
 
       {filtrados.length === 0 ? (
@@ -136,7 +198,12 @@ export function ExpenseList({ expenses }: ExpenseListProps) {
               {paginados.map((gasto) => (
                 <tr key={gasto.id} className="border-b border-zinc-800/50 last:border-0">
                   <td className="py-3 pr-4 text-zinc-500">{formatDate(gasto.fecha)}</td>
-                  <td className="py-3 pr-4 font-medium text-zinc-200">{gasto.concepto}</td>
+                  <td className="py-3 pr-4 font-medium text-zinc-200">
+                    <span className="flex items-center gap-1.5">
+                      {gasto.recurrente && <ArrowClockwise className="h-3 w-3 text-yellow-400" weight="bold" />}
+                      {gasto.concepto}
+                    </span>
+                  </td>
                   <td className="py-3 pr-4">
                     {editingCategoria === gasto.id ? (
                       <div className="flex items-center gap-1">

@@ -411,6 +411,42 @@ serve(async (req) => {
       `${emoji} *${label}:* ${concepto} por ${formattedMonto} en la categoría *${categoria}*.`,
     )
 
+    // Budget alert
+    if (tipo === "gasto") {
+      const ahora = new Date()
+      const mesStart = `${ahora.getFullYear()}-${String(ahora.getMonth() + 1).padStart(2, "0")}-01`
+
+      const { data: presupuesto } = await supabase
+        .from("presupuestos")
+        .select("monto")
+        .eq("user_id", link.user_id)
+        .eq("categoria", categoria)
+        .eq("mes", mesStart)
+        .maybeSingle()
+
+      if (presupuesto) {
+        const { data } = await supabase
+          .from("gastos")
+          .select("monto")
+          .eq("user_id", link.user_id)
+          .eq("categoria", categoria)
+          .gte("fecha", mesStart)
+
+        const totalGastado = data?.reduce((s, g) => s + Number(g.monto), 0) ?? 0
+        const pct = (totalGastado / Number(presupuesto.monto)) * 100
+
+        if (pct >= 100) {
+          await sendTelegramMessage(chatId,
+            `⚠️ *¡Presupuesto agotado!* ${categoria} — ${new Intl.NumberFormat("es-CL", { style: "currency", currency: "CLP", maximumFractionDigits: 0 }).format(totalGastado)} de ${new Intl.NumberFormat("es-CL", { style: "currency", currency: "CLP", maximumFractionDigits: 0 }).format(Number(presupuesto.monto))}`
+          )
+        } else if (pct >= 80) {
+          await sendTelegramMessage(chatId,
+            `⚠️ *Alerta de presupuesto:* ${categoria} al ${Math.round(pct)}% — ${new Intl.NumberFormat("es-CL", { style: "currency", currency: "CLP", maximumFractionDigits: 0 }).format(totalGastado)} de ${new Intl.NumberFormat("es-CL", { style: "currency", currency: "CLP", maximumFractionDigits: 0 }).format(Number(presupuesto.monto))}`
+          )
+        }
+      }
+    }
+
     return new Response(JSON.stringify({ ok: true }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     })

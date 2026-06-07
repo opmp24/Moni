@@ -25,6 +25,7 @@ import { useCategorias } from "@/hooks/useCategorias"
 import { useAuth } from "@/lib/auth"
 import { formatCurrency } from "@/lib/utils"
 import { WeekChart } from "@/components/dashboard/WeekChart"
+import { duplicarRecurrentes } from "@/lib/recurrentes"
 import gsap from "gsap"
 
 export function Dashboard() {
@@ -53,6 +54,11 @@ export function Dashboard() {
       { y: 0, opacity: 1, duration: 0.5, stagger: 0.08, ease: "power2.out" }
     )
   }, [loading])
+
+  useEffect(() => {
+    if (!user?.id) return
+    duplicarRecurrentes(user.id)
+  }, [user?.id])
 
   const presupuestosConGasto = presupuestos.map((p) => {
     const gastado = gastosDelMes

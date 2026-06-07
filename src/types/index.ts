@@ -37,6 +37,8 @@ export interface Gasto {
   telegram_chat_id?: string
   user_id?: string
   created_at: string
+  recurrente?: boolean
+  periodo?: string
 }
 
 export interface Ingreso {
@@ -48,6 +50,8 @@ export interface Ingreso {
   telegram_chat_id?: string
   user_id?: string
   created_at: string
+  recurrente?: boolean
+  periodo?: string
 }
 
 export interface Presupuesto {

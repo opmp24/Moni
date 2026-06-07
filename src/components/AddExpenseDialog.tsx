@@ -25,6 +25,7 @@ export function AddExpenseDialog({ open: controlledOpen, onOpenChange, onSaved }
   const [concepto, setConcepto] = useState("")
   const [categoria, setCategoria] = useState<Categoria>("Otros")
   const [fecha, setFecha] = useState(() => new Date().toISOString().split("T")[0])
+  const [recurrente, setRecurrente] = useState(false)
   const [errorMsg, setErrorMsg] = useState("")
 
   const handleSubmit = async (e: FormEvent) => {
@@ -45,6 +46,8 @@ export function AddExpenseDialog({ open: controlledOpen, onOpenChange, onSaved }
       concepto: concepto.trim(),
       categoria,
       fecha: new Date(fecha).toISOString(),
+      recurrente,
+      periodo: recurrente ? "mensual" : null,
       user_id: user.id,
     })
 
@@ -58,6 +61,7 @@ export function AddExpenseDialog({ open: controlledOpen, onOpenChange, onSaved }
     setConcepto("")
     setCategoria("Otros")
     setFecha(new Date().toISOString().split("T")[0])
+    setRecurrente(false)
     onSaved?.()
     setOpen(false)
   }
@@ -132,6 +136,15 @@ export function AddExpenseDialog({ open: controlledOpen, onOpenChange, onSaved }
               className="mt-1 flex h-9 w-full rounded-md border border-zinc-700 bg-zinc-800/50 px-3 py-1 text-sm text-zinc-100 focus:outline-none focus:ring-1 focus:ring-yellow-400"
             />
           </div>
+          <label className="flex items-center gap-2 text-sm text-zinc-400">
+            <input
+              type="checkbox"
+              checked={recurrente}
+              onChange={(e) => setRecurrente(e.target.checked)}
+              className="h-4 w-4 rounded border-zinc-700 bg-zinc-800 text-yellow-400 focus:ring-yellow-400"
+            />
+            Repetir mensualmente
+          </label>
           <div className="flex justify-end gap-3 pt-2">
             <Button type="button" variant="outline" onClick={() => handleOpenChange(false)} className="border-zinc-700 text-zinc-300 hover:bg-zinc-800 hover:text-zinc-100">
               Cancelar

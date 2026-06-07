@@ -46,7 +46,6 @@ nul
 aux
 prn
 
-# Docs with credentials (no subir al repo)
-docs/credenciales.md
-docs/configuracion-completa.md
+# Docs (no subir al repo — contiene credenciales, prompts, config)
+docs/
 

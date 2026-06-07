@@ -13,6 +13,7 @@ import { AddExpenseDialog } from "@/components/AddExpenseDialog"
 import { AddIncomeDialog } from "@/components/AddIncomeDialog"
 import { TelegramLink } from "@/components/TelegramLink"
 import { MarqueeBar } from "@/components/MarqueeBar"
+import { MetasPanel } from "@/components/MetasPanel"
 import { BudgetSettings } from "@/components/BudgetSettings"
 import { CategoryEditor } from "@/components/CategoryEditor"
 import { ErrorBoundary } from "@/components/ErrorBoundary"
@@ -25,6 +26,7 @@ import { useCategorias } from "@/hooks/useCategorias"
 import { useAuth } from "@/lib/auth"
 import { formatCurrency } from "@/lib/utils"
 import { WeekChart } from "@/components/dashboard/WeekChart"
+import { BalanceChart } from "@/components/dashboard/BalanceChart"
 import { duplicarRecurrentes } from "@/lib/recurrentes"
 import gsap from "gsap"
 
@@ -42,8 +44,27 @@ export function Dashboard() {
   const { getColor } = useCategorias()
   const cardsRef = useRef<HTMLDivElement>(null)
 
+  const ahora = new Date()
+  const mesPasado = new Date(ahora.getFullYear(), ahora.getMonth() - 1, 1)
+  const mesPasadoEnd = new Date(ahora.getFullYear(), ahora.getMonth(), 0, 23, 59, 59)
+
+  const gastosMesPasado = gastos.filter((g) => {
+    const d = new Date(g.fecha)
+    return d >= mesPasado && d <= mesPasadoEnd
+  })
+  const ingresosMesPasado = ingresos.filter((g) => {
+    const d = new Date(g.fecha)
+    return d >= mesPasado && d <= mesPasadoEnd
+  })
+  const totalGastosMP = gastosMesPasado.reduce((s, g) => s + Number(g.monto), 0)
+  const totalIngresosMP = ingresosMesPasado.reduce((s, g) => s + Number(g.monto), 0)
+  const balanceMP = totalIngresosMP - totalGastosMP
+
   const loading = loadingGastos || loadingIngresos || loadingPresupuestos
   const balance = totalIngresosMes - totalGastosMes
+  const diffGastos = totalGastosMP > 0 ? ((totalGastosMes - totalGastosMP) / totalGastosMP) * 100 : 0
+  const diffIngresos = totalIngresosMP > 0 ? ((totalIngresosMes - totalIngresosMP) / totalIngresosMP) * 100 : 0
+  const diffBalance = balanceMP !== 0 ? ((balance - balanceMP) / Math.abs(balanceMP)) * 100 : 0
   const transaccionesTotales = gastos.length + ingresos.length
 
   useEffect(() => {
@@ -69,20 +90,20 @@ export function Dashboard() {
 
   if (loading) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-zinc-950">
+      <div className="flex min-h-screen items-center justify-center bg-background">
         <Loader2 className="h-8 w-8 animate-spin text-yellow-400" />
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen bg-zinc-950">
+    <div className="min-h-screen bg-background">
       <div className="fixed inset-0 bg-[radial-gradient(ellipse_80%_50%_at_50%_-20%,rgba(255,214,0,0.08),transparent)] pointer-events-none" />
       <div className="relative z-10 mx-auto max-w-6xl space-y-6 p-4 md:p-6 lg:p-8">
         <header className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
           <div className="flex items-center gap-3">
-            <div className="relative h-10 w-10 shrink-0 overflow-hidden rounded-full border border-zinc-700">
-              <div className="flex h-full w-full items-center justify-center bg-zinc-800 text-sm font-semibold text-zinc-400">
+            <div className="relative h-10 w-10 shrink-0 overflow-hidden rounded-full border border-border">
+              <div className="flex h-full w-full items-center justify-center bg-muted text-sm font-semibold text-muted-foreground">
                 {(user?.user_metadata?.full_name ?? user?.email ?? "U").charAt(0).toUpperCase()}
               </div>
               {user?.user_metadata?.avatar_url && (
@@ -96,8 +117,8 @@ export function Dashboard() {
               )}
             </div>
             <div className="min-w-0">
-              <h1 className="text-2xl font-bold tracking-tight text-zinc-100">PerJaus</h1>
-              <p className="truncate text-sm text-zinc-500">
+              <h1 className="text-2xl font-bold tracking-tight text-foreground">PerJaus</h1>
+              <p className="truncate text-sm text-muted-foreground">
                 {user?.user_metadata?.full_name ?? user?.email}
               </p>
             </div>
@@ -110,7 +131,7 @@ export function Dashboard() {
               size="icon"
               onClick={() => setSettingsOpen(true)}
               title="Configuración"
-              className="h-10 w-10 border-zinc-700 text-zinc-300 hover:border-yellow-500/50 hover:bg-zinc-800 hover:text-yellow-400"
+              className="h-10 w-10 border-border text-card-foreground hover:border-yellow-500/50 hover:bg-accent hover:text-yellow-400"
             >
               <GearSix className="h-5 w-5" weight="bold" />
             </Button>
@@ -122,34 +143,49 @@ export function Dashboard() {
         <MarqueeBar gastos={gastos} />
 
         <div className="grid gap-4 md:grid-cols-3">
-          <Card className="dashboard-card border-zinc-800 bg-zinc-900/50 transition-all duration-300 hover:border-yellow-500/30 hover:shadow-[0_0_20px_rgba(255,214,0,0.12)]">
+          <Card className="dashboard-card border-border bg-card transition-all duration-300 hover:border-yellow-500/30 hover:shadow-[0_0_20px_rgba(255,214,0,0.12)]">
             <CardHeader className="flex flex-row items-center justify-between pb-2">
-              <CardTitle className="text-sm font-medium text-zinc-400">Balance del mes</CardTitle>
-              <Wallet className="h-4 w-4 text-zinc-600" weight="bold" />
+              <CardTitle className="text-sm font-medium text-muted-foreground">Balance del mes</CardTitle>
+              <Wallet className="h-4 w-4 text-muted-foreground" weight="bold" />
             </CardHeader>
             <CardContent>
-              <p className={`text-2xl font-bold ${balance >= 0 ? "text-emerald-400" : "text-red-400"}`}>
+              <p className={`text-2xl font-bold ${balance >= 0 ? "text-emerald-400" : "text-destructive"}`}>
                 {formatCurrency(Math.abs(balance))}
                 <span className="ml-1 text-sm">{balance >= 0 ? "a favor" : "en contra"}</span>
               </p>
+              {diffBalance !== 0 && (
+                <p className={`mt-0.5 text-[10px] ${diffBalance > 0 ? "text-emerald-500" : "text-red-500"}`}>
+                  {diffBalance > 0 ? "▲" : "▼"} {Math.abs(diffBalance).toFixed(0)}% vs mes pasado
+                </p>
+              )}
               <div className="mt-2 flex items-center gap-3 text-xs">
                 <div className="flex items-center gap-1">
                   <ArrowUpRight className="h-3 w-3 text-emerald-500" weight="bold" />
-                  <span className="text-zinc-500">Ingresos</span>
+                  <span className="text-muted-foreground">Ingresos</span>
                   <span className="font-medium text-emerald-400">{formatCurrency(totalIngresosMes)}</span>
+                  {diffIngresos !== 0 && (
+                    <span className={`text-[10px] ${diffIngresos > 0 ? "text-emerald-500" : "text-red-500"}`}>
+                      {diffIngresos > 0 ? "▲" : "▼"}{Math.abs(diffIngresos).toFixed(0)}%
+                    </span>
+                  )}
                 </div>
                 <div className="flex items-center gap-1">
                   <ArrowDownRight className="h-3 w-3 text-red-500" weight="bold" />
-                  <span className="text-zinc-500">Gastos</span>
-                  <span className="font-medium text-zinc-200">{formatCurrency(totalGastosMes)}</span>
+                  <span className="text-muted-foreground">Gastos</span>
+                  <span className="font-medium text-card-foreground">{formatCurrency(totalGastosMes)}</span>
+                  {diffGastos !== 0 && (
+                    <span className={`text-[10px] ${diffGastos > 0 ? "text-red-500" : "text-emerald-500"}`}>
+                      {diffGastos > 0 ? "▲" : "▼"}{Math.abs(diffGastos).toFixed(0)}%
+                    </span>
+                  )}
                 </div>
               </div>
             </CardContent>
           </Card>
-          <Card className="dashboard-card border-zinc-800 bg-zinc-900/50 transition-all duration-300 hover:border-yellow-500/30 hover:shadow-[0_0_20px_rgba(255,214,0,0.12)]">
+          <Card className="dashboard-card border-border bg-card transition-all duration-300 hover:border-yellow-500/30 hover:shadow-[0_0_20px_rgba(255,214,0,0.12)]">
             <CardHeader className="flex flex-row items-center justify-between pb-2">
-              <CardTitle className="text-sm font-medium text-zinc-400">Top categoría</CardTitle>
-              <TrendingUp className="h-4 w-4 text-zinc-600" />
+              <CardTitle className="text-sm font-medium text-muted-foreground">Top categoría</CardTitle>
+              <TrendingUp className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
               <div className="flex items-center gap-2">
@@ -159,59 +195,59 @@ export function Dashboard() {
                     style={{ backgroundColor: getColor(topCategoria.categoria) }}
                   />
                 )}
-                <p className="text-2xl font-bold text-zinc-100">{topCategoria?.categoria ?? "—"}</p>
+                <p className="text-2xl font-bold text-foreground">{topCategoria?.categoria ?? "—"}</p>
               </div>
-              <p className="text-xs text-zinc-500">
+              <p className="text-xs text-muted-foreground">
                 {topCategoria ? formatCurrency(topCategoria.monto) : "Sin datos"}
               </p>
             </CardContent>
           </Card>
-          <Card className="dashboard-card border-zinc-800 bg-zinc-900/50 transition-all duration-300 hover:border-yellow-500/30 hover:shadow-[0_0_20px_rgba(255,214,0,0.12)]">
+          <Card className="dashboard-card border-border bg-card transition-all duration-300 hover:border-yellow-500/30 hover:shadow-[0_0_20px_rgba(255,214,0,0.12)]">
             <CardHeader className="flex flex-row items-center justify-between pb-2">
-              <CardTitle className="text-sm font-medium text-zinc-400">Transacciones</CardTitle>
-              <Receipt className="h-4 w-4 text-zinc-600" />
+              <CardTitle className="text-sm font-medium text-muted-foreground">Transacciones</CardTitle>
+              <Receipt className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <p className="text-2xl font-bold text-zinc-100">{transaccionesTotales}</p>
-              <p className="mb-1 mt-2 text-[10px] text-zinc-500">Últimos 7 días</p>
+              <p className="text-2xl font-bold text-foreground">{transaccionesTotales}</p>
+              <p className="mb-1 mt-2 text-[10px] text-muted-foreground">Últimos 7 días</p>
               <WeekChart gastos={gastos} />
             </CardContent>
           </Card>
         </div>
 
         <Tabs value={tab} onValueChange={setTab}>
-          <TabsList className="border-zinc-800 bg-zinc-900">
-            <TabsTrigger value="resumen" className="text-zinc-400 data-[state=active]:bg-zinc-800 data-[state=active]:text-zinc-100">
+          <TabsList className="border-border bg-muted">
+            <TabsTrigger value="resumen" className="text-muted-foreground data-[state=active]:bg-accent data-[state=active]:text-accent-foreground">
               Resumen
             </TabsTrigger>
-            <TabsTrigger value="gastos" className="text-zinc-400 data-[state=active]:bg-zinc-800 data-[state=active]:text-zinc-100">
+            <TabsTrigger value="gastos" className="text-muted-foreground data-[state=active]:bg-accent data-[state=active]:text-accent-foreground">
               Gastos
             </TabsTrigger>
-            <TabsTrigger value="ingresos" className="text-zinc-400 data-[state=active]:bg-zinc-800 data-[state=active]:text-zinc-100">
+            <TabsTrigger value="ingresos" className="text-muted-foreground data-[state=active]:bg-accent data-[state=active]:text-accent-foreground">
               Ingresos
             </TabsTrigger>
           </TabsList>
           <TabsContent value="resumen" className="space-y-4">
             <div className="grid gap-4 md:grid-cols-3">
-              <Card className="border-zinc-800 bg-zinc-900/50 transition-all duration-300 hover:border-yellow-500/30 hover:shadow-[0_0_20px_rgba(255,214,0,0.12)]">
+              <Card className="border-border bg-card transition-all duration-300 hover:border-yellow-500/30 hover:shadow-[0_0_20px_rgba(255,214,0,0.12)]">
                 <CardHeader>
-                  <CardTitle className="text-sm text-zinc-400">Por categoría</CardTitle>
+                  <CardTitle className="text-sm text-muted-foreground">Por categoría</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <DonutChart data={categorias} />
                 </CardContent>
               </Card>
-              <Card className="border-zinc-800 bg-zinc-900/50 transition-all duration-300 hover:border-yellow-500/30 hover:shadow-[0_0_20px_rgba(255,214,0,0.12)]">
+              <Card className="border-border bg-card transition-all duration-300 hover:border-yellow-500/30 hover:shadow-[0_0_20px_rgba(255,214,0,0.12)]">
                 <CardHeader>
-                  <CardTitle className="text-sm text-zinc-400">Evolución mensual</CardTitle>
+                  <CardTitle className="text-sm text-muted-foreground">Evolución mensual</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <BarChart data={gastosPorMes} />
                 </CardContent>
               </Card>
-              <Card className="border-zinc-800 bg-zinc-900/50 transition-all duration-300 hover:border-yellow-500/30 hover:shadow-[0_0_20px_rgba(255,214,0,0.12)]">
+              <Card className="border-border bg-card transition-all duration-300 hover:border-yellow-500/30 hover:shadow-[0_0_20px_rgba(255,214,0,0.12)]">
                 <CardHeader className="flex flex-row items-center justify-between">
-                  <CardTitle className="text-sm text-zinc-400">Presupuesto vs real</CardTitle>
+                  <CardTitle className="text-sm text-muted-foreground">Presupuesto vs real</CardTitle>
                   <BudgetSettings open={budgetOpen} onOpenChange={setBudgetOpen} onSaved={refetchPresupuestos} />
                 </CardHeader>
                 <CardContent>
@@ -219,11 +255,24 @@ export function Dashboard() {
                 </CardContent>
               </Card>
             </div>
+            <Card className="border-border bg-card transition-all duration-300 hover:border-yellow-500/30 hover:shadow-[0_0_20px_rgba(255,214,0,0.12)]">
+              <CardHeader>
+                <CardTitle className="text-sm text-muted-foreground">Balance acumulado</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <BalanceChart gastosPorMes={gastosPorMes} ingresos={ingresos} gastos={gastos} />
+              </CardContent>
+            </Card>
+            <Card className="border-border bg-card transition-all duration-300 hover:border-yellow-500/30 hover:shadow-[0_0_20px_rgba(255,214,0,0.12)]">
+              <CardContent className="pt-6">
+                <MetasPanel />
+              </CardContent>
+            </Card>
           </TabsContent>
           <TabsContent value="gastos">
-            <Card className="border-zinc-800 bg-zinc-900/50">
+            <Card className="border-border bg-card">
               <CardHeader>
-                <CardTitle className="text-sm text-zinc-400">Todos los gastos</CardTitle>
+                <CardTitle className="text-sm text-muted-foreground">Todos los gastos</CardTitle>
               </CardHeader>
               <CardContent>
                 <ExpenseList expenses={gastos} />
@@ -231,9 +280,9 @@ export function Dashboard() {
             </Card>
           </TabsContent>
           <TabsContent value="ingresos">
-            <Card className="border-zinc-800 bg-zinc-900/50">
+            <Card className="border-border bg-card">
               <CardHeader>
-                <CardTitle className="text-sm text-zinc-400">Todos los ingresos</CardTitle>
+                <CardTitle className="text-sm text-muted-foreground">Todos los ingresos</CardTitle>
               </CardHeader>
               <CardContent>
                 <IncomeList ingresos={ingresos} />

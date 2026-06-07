@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { Coins, Tag, SignOut, ArrowDownRight, ArrowUpRight } from "@phosphor-icons/react"
+import { Coins, Tag, SignOut, ArrowDownRight, ArrowUpRight, Sun, Moon, Desktop } from "@phosphor-icons/react"
 import { Button } from "@/components/ui/button"
 import {
   Dialog,
@@ -7,6 +7,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog"
+import { useTheme } from "@/lib/theme"
 
 interface SettingsPopupProps {
   open?: boolean
@@ -17,6 +18,12 @@ interface SettingsPopupProps {
   onIngreso: () => void
   onCerrarSesion: () => void
 }
+
+const TEMAS = [
+  { value: "light" as const, icon: Sun, label: "Claro" },
+  { value: "dark" as const, icon: Moon, label: "Oscuro" },
+  { value: "system" as const, icon: Desktop, label: "Sistema" },
+]
 
 export function SettingsPopup({
   open: controlledOpen,
@@ -30,6 +37,7 @@ export function SettingsPopup({
   const [internalOpen, setInternalOpen] = useState(false)
   const open = controlledOpen ?? internalOpen
   const setOpen = onOpenChange ?? setInternalOpen
+  const { theme, setTheme } = useTheme()
 
   const closeAnd = (fn: () => void) => () => {
     setOpen(false)
@@ -38,10 +46,35 @@ export function SettingsPopup({
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogContent className="border-zinc-800 bg-zinc-950 text-zinc-100 sm:max-w-md">
+      <DialogContent className="border-border bg-background text-foreground sm:max-w-md">
         <DialogHeader>
-          <DialogTitle className="text-zinc-100">Configuración</DialogTitle>
+          <DialogTitle className="text-foreground">Configuración</DialogTitle>
         </DialogHeader>
+
+        <div className="mb-4">
+          <p className="mb-2 text-xs font-medium text-muted-foreground">Tema</p>
+          <div className="flex gap-2">
+            {TEMAS.map((t) => {
+              const active = theme === t.value
+              const Icon = t.icon
+              return (
+                <button
+                  key={t.value}
+                  onClick={() => setTheme(t.value)}
+                  className={`flex flex-1 flex-col items-center gap-1.5 rounded-xl border p-3 transition-colors ${
+                    active
+                      ? "border-primary bg-primary/10 text-foreground"
+                      : "border-border bg-card text-muted-foreground hover:border-border hover:bg-accent"
+                  }`}
+                >
+                  <Icon className={`h-5 w-5 ${active ? "text-primary" : ""}`} weight={active ? "fill" : "bold"} />
+                  <span className="text-xs font-medium">{t.label}</span>
+                </button>
+              )
+            })}
+          </div>
+        </div>
+
         <div className="grid grid-cols-2 gap-3">
           <SettingsButton
             icon={Coins}
@@ -56,7 +89,7 @@ export function SettingsPopup({
           <SettingsButton
             icon={ArrowDownRight}
             label="Gasto"
-            iconColor="text-red-400"
+            iconColor="text-destructive"
             onClick={closeAnd(onGasto)}
           />
           <SettingsButton
@@ -69,7 +102,7 @@ export function SettingsPopup({
         <Button
           variant="outline"
           onClick={closeAnd(onCerrarSesion)}
-          className="mt-2 border-zinc-800 text-red-400 hover:bg-red-950/50 hover:text-red-300"
+          className="mt-2 border-border text-destructive hover:bg-destructive/10 hover:text-destructive"
         >
           <SignOut className="mr-2 h-4 w-4" weight="bold" />
           Cerrar sesión
@@ -93,12 +126,12 @@ function SettingsButton({
   return (
     <button
       onClick={onClick}
-      className="flex flex-col items-center gap-2 rounded-xl border border-zinc-800 bg-zinc-900/50 p-4 transition-colors hover:bg-zinc-800 hover:border-zinc-700"
+      className="flex flex-col items-center gap-2 rounded-xl border border-border bg-card p-4 transition-colors hover:bg-accent hover:border-border"
     >
-      <div className={`flex h-10 w-10 items-center justify-center rounded-full bg-zinc-800 ${iconColor ?? "text-zinc-300"}`}>
+      <div className={`flex h-10 w-10 items-center justify-center rounded-full bg-muted ${iconColor ?? "text-muted-foreground"}`}>
         <Icon className="h-5 w-5" weight="bold" />
       </div>
-      <span className="text-sm font-medium text-zinc-200">{label}</span>
+      <span className="text-sm font-medium text-card-foreground">{label}</span>
     </button>
   )
 }

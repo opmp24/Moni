@@ -12,9 +12,9 @@ export function BudgetProgress({ data }: BudgetProgressProps) {
   if (data.length === 0) {
     return (
       <div className="flex flex-col items-center gap-2 py-6 text-center">
-        <p className="text-sm text-zinc-500">Sin presupuestos configurados</p>
-        <p className="text-xs text-zinc-600">
-            Usa el lápiz ✏️ o envía <code className="rounded bg-zinc-800 px-1 py-0.5 text-zinc-400">/presupuesto Categoria monto</code> a @PerJausBot
+        <p className="text-sm text-muted-foreground">Sin presupuestos configurados</p>
+        <p className="text-xs text-muted-foreground">
+            Usa el lápiz ✏️ o envía <code className="rounded bg-muted px-1 py-0.5 text-muted-foreground">/presupuesto Categoria monto</code> a @PerJausBot
         </p>
       </div>
     )
@@ -37,7 +37,7 @@ export function BudgetProgress({ data }: BudgetProgressProps) {
                 />
                 {d.categoria}
                 {isWarning && <WarningCircle className="h-3.5 w-3.5 text-yellow-400" weight="fill" />}
-                {isOver && <WarningCircle className="h-3.5 w-3.5 text-red-400" weight="fill" />}
+                {isOver && <WarningCircle className="h-3.5 w-3.5 text-destructive" weight="fill" />}
               </span>
               <span className={isOver ? "text-destructive" : "text-muted-foreground"}>
                 {formatCurrency(d.gastado)} / {formatCurrency(d.presupuesto)}

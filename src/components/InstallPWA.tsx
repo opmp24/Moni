@@ -43,7 +43,7 @@ export function InstallPWA() {
     <Button
       onClick={handleInstall}
       variant="outline"
-      className="gap-2 border-zinc-700 text-zinc-300 hover:bg-zinc-800 hover:text-zinc-100"
+      className="gap-2 border-border text-card-foreground hover:bg-accent hover:text-accent-foreground"
     >
       <DownloadSimple className="h-4 w-4" />
       Instalar app

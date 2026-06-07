@@ -11,13 +11,13 @@ export function MarqueeBar({ gastos }: MarqueeBarProps) {
   if (!ultimo) return null
 
   return (
-    <div className="relative flex h-8 items-center overflow-hidden rounded-lg border border-zinc-800 bg-zinc-900/50 px-0">
-      <div className="flex shrink-0 items-center gap-2 border-r border-zinc-800 px-3 text-[11px] font-medium text-zinc-500">
+    <div className="relative flex h-8 items-center overflow-hidden rounded-lg border border-border bg-card px-0">
+      <div className="flex shrink-0 items-center gap-2 border-r border-border px-3 text-[11px] font-medium text-muted-foreground">
         <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
         En vivo
       </div>
       <div className="relative flex-1 overflow-hidden">
-        <div className="marquee-track whitespace-nowrap px-4 text-[11px] text-zinc-400">
+        <div className="marquee-track whitespace-nowrap px-4 text-[11px] text-muted-foreground">
           {ultimo.concepto} — {formatCurrency(ultimo.monto)} en {ultimo.categoria}
         </div>
       </div>

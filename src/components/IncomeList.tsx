@@ -97,24 +97,24 @@ export function IncomeList({ ingresos }: IncomeListProps) {
     <div className="space-y-3">
       <div className="flex flex-wrap items-center gap-2">
         <div className="relative">
-          <MagnifyingGlass className="absolute left-2.5 top-1/2 h-3 w-3 -translate-y-1/2 text-zinc-500" weight="bold" />
+          <MagnifyingGlass className="absolute left-2.5 top-1/2 h-3 w-3 -translate-y-1/2 text-muted-foreground" weight="bold" />
           <input
             type="text"
             value={busqueda}
             onChange={(e) => setBusqueda(e.target.value)}
             placeholder="Buscar..."
-            className="h-8 w-[160px] rounded-md border border-zinc-800 bg-zinc-900 pl-7 pr-2 text-xs text-zinc-300 placeholder:text-zinc-600"
+            className="h-8 w-[160px] rounded-md border border-border bg-card pl-7 pr-2 text-xs text-card-foreground placeholder:text-muted-foreground"
           />
         </div>
 
         <Select value={filtroCategoria} onValueChange={setFiltroCategoria}>
-          <SelectTrigger className="h-8 w-[130px] border-zinc-800 bg-zinc-900 text-xs text-zinc-300">
+          <SelectTrigger className="h-8 w-[130px] border-border bg-card text-xs text-card-foreground">
             <SelectValue placeholder="Categoría" />
           </SelectTrigger>
-          <SelectContent className="border-zinc-800 bg-zinc-900 text-zinc-300">
-            <SelectItem value="todas" className="text-xs focus:bg-zinc-800 focus:text-zinc-100">Todas</SelectItem>
+          <SelectContent className="border-border bg-card text-card-foreground">
+            <SelectItem value="todas" className="text-xs focus:bg-accent focus:text-accent-foreground">Todas</SelectItem>
             {categoriasList.map((cat) => (
-              <SelectItem key={cat.nombre} value={cat.nombre} className="text-xs focus:bg-zinc-800 focus:text-zinc-100">
+              <SelectItem key={cat.nombre} value={cat.nombre} className="text-xs focus:bg-accent focus:text-accent-foreground">
                 {cat.nombre}
               </SelectItem>
             ))}
@@ -125,14 +125,14 @@ export function IncomeList({ ingresos }: IncomeListProps) {
           type="date"
           value={fechaDesde}
           onChange={(e) => setFechaDesde(e.target.value)}
-          className="h-8 w-[130px] rounded-md border border-zinc-800 bg-zinc-900 px-2 text-xs text-zinc-300 [color-scheme:dark]"
+          className="h-8 w-[130px] rounded-md border border-border bg-card px-2 text-xs text-card-foreground [color-scheme:var(--color-scheme)]"
           title="Desde"
         />
         <input
           type="date"
           value={fechaHasta}
           onChange={(e) => setFechaHasta(e.target.value)}
-          className="h-8 w-[130px] rounded-md border border-zinc-800 bg-zinc-900 px-2 text-xs text-zinc-300 [color-scheme:dark]"
+          className="h-8 w-[130px] rounded-md border border-border bg-card px-2 text-xs text-card-foreground [color-scheme:var(--color-scheme)]"
           title="Hasta"
         />
 
@@ -141,14 +141,14 @@ export function IncomeList({ ingresos }: IncomeListProps) {
           value={montoMin}
           onChange={(e) => setMontoMin(e.target.value)}
           placeholder="Monto min"
-          className="h-8 w-[100px] rounded-md border border-zinc-800 bg-zinc-900 px-2 text-xs text-zinc-300 placeholder:text-zinc-600 [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none"
+          className="h-8 w-[100px] rounded-md border border-border bg-card px-2 text-xs text-card-foreground placeholder:text-muted-foreground [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none"
         />
         <input
           type="number"
           value={montoMax}
           onChange={(e) => setMontoMax(e.target.value)}
           placeholder="Monto max"
-          className="h-8 w-[100px] rounded-md border border-zinc-800 bg-zinc-900 px-2 text-xs text-zinc-300 placeholder:text-zinc-600 [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none"
+          className="h-8 w-[100px] rounded-md border border-border bg-card px-2 text-xs text-card-foreground placeholder:text-muted-foreground [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none"
         />
 
         <div className="flex items-center gap-1">
@@ -157,7 +157,7 @@ export function IncomeList({ ingresos }: IncomeListProps) {
               variant="ghost"
               size="sm"
               onClick={limpiarFiltros}
-              className="h-8 px-2 text-xs text-zinc-500 hover:text-zinc-200"
+              className="h-8 px-2 text-xs text-muted-foreground hover:text-accent-foreground"
             >
               <X className="h-3 w-3" weight="bold" />
               Limpiar
@@ -167,7 +167,7 @@ export function IncomeList({ ingresos }: IncomeListProps) {
             variant="outline"
             size="sm"
             onClick={exportarCSV}
-            className="h-8 border-zinc-800 text-xs text-zinc-400 hover:bg-zinc-800 hover:text-zinc-200"
+            className="h-8 border-border text-xs text-muted-foreground hover:bg-accent hover:text-accent-foreground"
             title="Exportar CSV"
           >
             <Download className="h-3 w-3" weight="bold" />
@@ -177,26 +177,26 @@ export function IncomeList({ ingresos }: IncomeListProps) {
       </div>
 
       {filtrados.length === 0 ? (
-        <p className="py-8 text-center text-sm text-zinc-600">
+        <p className="py-8 text-center text-sm text-muted-foreground">
           {hayFiltros ? "Sin resultados con los filtros actuales" : "No hay ingresos registrados"}
         </p>
       ) : (
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-b border-zinc-800">
-                <th className="pb-2 pr-4 text-left text-xs font-medium text-zinc-500">Fecha</th>
-                <th className="pb-2 pr-4 text-left text-xs font-medium text-zinc-500">Concepto</th>
-                <th className="pb-2 pr-4 text-left text-xs font-medium text-zinc-500">Categoría</th>
-                <th className="pb-2 pl-4 text-right text-xs font-medium text-zinc-500">Monto</th>
+              <tr className="border-b border-border">
+                <th className="pb-2 pr-4 text-left text-xs font-medium text-muted-foreground">Fecha</th>
+                <th className="pb-2 pr-4 text-left text-xs font-medium text-muted-foreground">Concepto</th>
+                <th className="pb-2 pr-4 text-left text-xs font-medium text-muted-foreground">Categoría</th>
+                <th className="pb-2 pl-4 text-right text-xs font-medium text-muted-foreground">Monto</th>
                 <th className="w-10 pb-2" />
               </tr>
             </thead>
             <tbody>
               {paginados.map((ingreso) => (
-                <tr key={ingreso.id} className="border-b border-zinc-800/50 last:border-0">
-                  <td className="py-3 pr-4 text-zinc-500">{formatDate(ingreso.fecha)}</td>
-                  <td className="py-3 pr-4 font-medium text-zinc-200">
+                <tr key={ingreso.id} className="border-b border-border last:border-0">
+                  <td className="py-3 pr-4 text-muted-foreground">{formatDate(ingreso.fecha)}</td>
+                  <td className="py-3 pr-4 font-medium text-card-foreground">
                     <span className="flex items-center gap-1.5">
                       {ingreso.recurrente && <ArrowClockwise className="h-3 w-3 text-yellow-400" weight="bold" />}
                       {ingreso.concepto}
@@ -218,7 +218,7 @@ export function IncomeList({ ingresos }: IncomeListProps) {
                     <Button
                       variant="ghost"
                       size="icon"
-                      className="h-7 w-7 text-zinc-600 hover:text-red-400"
+                      className="h-7 w-7 text-muted-foreground hover:text-red-400"
                       onClick={() => handleDelete(ingreso.id)}
                       disabled={deleting === ingreso.id}
                     >
@@ -234,15 +234,15 @@ export function IncomeList({ ingresos }: IncomeListProps) {
             </tbody>
           </table>
           {filtrados.length > POR_PAGINA && (
-            <div className="flex items-center justify-between border-t border-zinc-800 pt-3">
-              <p className="text-xs text-zinc-600">
+            <div className="flex items-center justify-between border-t border-border pt-3">
+              <p className="text-xs text-muted-foreground">
                 Mostrando {inicio + 1}&ndash;{Math.min(inicio + POR_PAGINA, filtrados.length)} de {filtrados.length}
               </p>
               <div className="flex items-center gap-1">
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="h-7 w-7 text-zinc-500 hover:text-zinc-200 disabled:opacity-30"
+                  className="h-7 w-7 text-muted-foreground hover:text-accent-foreground disabled:opacity-30"
                   disabled={paginaActual <= 1}
                   onClick={() => setPagina((p) => Math.max(1, p - 1))}
                 >
@@ -255,8 +255,8 @@ export function IncomeList({ ingresos }: IncomeListProps) {
                     size="sm"
                     className={`h-7 min-w-[28px] px-1 text-xs ${
                       p === paginaActual
-                        ? "bg-zinc-800 text-zinc-100"
-                        : "text-zinc-500 hover:text-zinc-200"
+                        ? "bg-zinc-800 text-foreground"
+                        : "text-muted-foreground hover:text-accent-foreground"
                     }`}
                     onClick={() => setPagina(p)}
                   >
@@ -266,7 +266,7 @@ export function IncomeList({ ingresos }: IncomeListProps) {
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="h-7 w-7 text-zinc-500 hover:text-zinc-200 disabled:opacity-30"
+                  className="h-7 w-7 text-muted-foreground hover:text-accent-foreground disabled:opacity-30"
                   disabled={paginaActual >= totalPaginas}
                   onClick={() => setPagina((p) => Math.min(totalPaginas, p + 1))}
                 >

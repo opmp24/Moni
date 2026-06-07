@@ -1,6 +1,6 @@
 # PerJaus — Guía para el Agente
 
-## Importante: Siempre responder en español. El usuario habla español, todas las respuestas deben ser en español.
+## Importante: Siempre responder en español neutro. El usuario habla español, todas las respuestas deben ser en español.
 
 ## Stack
 
@@ -17,6 +17,18 @@
 - `npm run build` — typecheck + build
 - `npm run lint` — ESLint
 - `npm run preview` — preview build local
+- `npm test` — ejecutar tests unitarios (Vitest)
+- `npm run test:watch` — tests en modo watch
+
+## Testing (Vitest)
+- Framework: **Vitest** + **React Testing Library** + **jsdom**
+- Configuración en `vite.config.ts` (sección `test`)
+- Setup global en `src/test/setup.ts`
+- Convención: tests junto al componente con sufijo `.test.tsx`
+- Después de cada implementación o cambio significativo, ejecutar:
+  1. `npm run build` — verifica typecheck + build
+  2. `npm test` — verifica que tests existentes no fallen
+  3. Si se agregó lógica nueva, escribir tests que la cubran
 
 ## Proyecto: Personal Finance PWA
 
@@ -73,3 +85,7 @@
 9. Poner VITE_SUPABASE_URL y VITE_SUPABASE_ANON_KEY en Netlify dashboard
 10. Telegram webhook: categorías dinámicas (no hardcoded)
 11. DonutChart/BudgetProgress: usar `useCategorias().getColor()` en vez de `CATEGORIA_COLORS` directo
+
+12. verificar si Supabase CLI esta instalado para hacer cambios en la BBDD
+
+13. revisar la carpeta docs y el archivo credenciales.md 

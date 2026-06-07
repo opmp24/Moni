@@ -3,3 +3,4 @@
 ALTER PUBLICATION supabase_realtime ADD TABLE presupuestos;
 ALTER PUBLICATION supabase_realtime ADD TABLE categorias;
 ALTER PUBLICATION supabase_realtime ADD TABLE ingresos;
+ALTER PUBLICATION supabase_realtime ADD TABLE metas;

@@ -74,7 +74,7 @@ export function TelegramLink() {
   }
 
   return (
-    <div className="rounded-lg border border-zinc-800 bg-zinc-900/50 px-4 py-3">
+    <div className="rounded-lg border border-border bg-card px-4 py-3">
       <div className="flex items-center justify-between gap-4">
         <div className="flex items-center gap-2.5">
           <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-sky-500/10 text-sky-400">
@@ -82,7 +82,7 @@ export function TelegramLink() {
           </div>
           <div>
             <p className="text-sm font-medium">Conectar Telegram</p>
-            <p className="text-xs text-zinc-500">Registra gastos desde tu chat</p>
+            <p className="text-xs text-muted-foreground">Registra gastos desde tu chat</p>
           </div>
         </div>
         <Button
@@ -90,7 +90,7 @@ export function TelegramLink() {
           disabled={generating}
           size="sm"
           variant="outline"
-          className="border-zinc-700 text-zinc-300 hover:bg-zinc-800"
+          className="border-border text-card-foreground hover:bg-accent"
         >
           {generating ? (
             <span className="mr-1 h-3 w-3 animate-spin rounded-full border border-zinc-400 border-t-transparent" />
@@ -99,15 +99,15 @@ export function TelegramLink() {
         </Button>
       </div>
       {code && (
-        <div className="mt-3 flex items-center gap-3 rounded-lg border border-zinc-700 bg-zinc-800/50 px-4 py-3">
+        <div className="mt-3 flex items-center gap-3 rounded-lg border border-border bg-muted px-4 py-3">
           <div className="flex-1">
-            <p className="text-xs text-zinc-400">Envía este código al bot de Telegram:</p>
+            <p className="text-xs text-muted-foreground">Envía este código al bot de Telegram:</p>
             <p className="mt-0.5 font-mono text-lg font-bold tracking-wider text-yellow-400">
               {code}
             </p>
-            <p className="mt-0.5 text-[10px] text-zinc-600">Válido por 10 minutos</p>
+            <p className="mt-0.5 text-[10px] text-muted-foreground">Válido por 10 minutos</p>
           </div>
-          <Button size="icon" variant="ghost" onClick={handleCopy} className="h-8 w-8 text-zinc-400">
+          <Button size="icon" variant="ghost" onClick={handleCopy} className="h-8 w-8 text-muted-foreground">
             {copied ? <CheckCircle className="h-4 w-4" weight="fill" /> : <Copy className="h-4 w-4" />}
           </Button>
         </div>

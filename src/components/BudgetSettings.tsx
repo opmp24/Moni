@@ -109,19 +109,19 @@ export function BudgetSettings({ open: controlledOpen, onOpenChange, onSaved }: 
         <Button
           variant="outline"
           size="sm"
-          className="h-7 border-zinc-700 text-xs text-zinc-400 hover:bg-zinc-800 hover:text-zinc-200"
+          className="h-7 border-border text-xs text-muted-foreground hover:bg-accent hover:text-accent-foreground"
         >
           <PencilSimple className="mr-1 h-3 w-3" weight="bold" />
           Editar
         </Button>
       </DialogTrigger>
-      <DialogContent className="border-zinc-800 bg-zinc-950 text-zinc-100">
+      <DialogContent className="border-border bg-background text-foreground">
         <DialogHeader>
-          <DialogTitle className="text-zinc-100">Presupuestos mensuales</DialogTitle>
+          <DialogTitle className="text-foreground">Presupuestos mensuales</DialogTitle>
         </DialogHeader>
         {loading ? (
           <div className="flex justify-center py-8">
-            <Loader2 className="h-5 w-5 animate-spin text-zinc-500" />
+            <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
           </div>
         ) : (
           <div className="space-y-3">
@@ -131,14 +131,14 @@ export function BudgetSettings({ open: controlledOpen, onOpenChange, onSaved }: 
                   className="h-3 w-3 shrink-0 rounded-full"
                   style={{ backgroundColor: getColor(cat.nombre) }}
                 />
-                <label className="flex-1 text-sm text-zinc-300">{cat.nombre}</label>
+                <label className="flex-1 text-sm text-card-foreground">{cat.nombre}</label>
                 <div className="relative">
-                  <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-xs text-zinc-500">$</span>
+                  <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-xs text-muted-foreground">$</span>
                   <input
                     type="text"
                     value={obtenerMonto(cat.nombre).toLocaleString("es-CL")}
                     onChange={(e) => handleChange(cat.nombre, e.target.value)}
-                    className="h-9 w-36 rounded-md border border-zinc-800 bg-zinc-900 pl-6 pr-3 text-right text-sm text-zinc-200 [color-scheme:dark]"
+                    className="h-9 w-36 rounded-md border border-border bg-card pl-6 pr-3 text-right text-sm text-card-foreground [color-scheme:var(--color-scheme)]"
                   />
                 </div>
               </div>

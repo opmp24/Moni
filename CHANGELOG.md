@@ -27,7 +27,8 @@
 
 ### 🔧 Técnico
 
-- **CategoryEditor más ancho** — diálogo `sm:max-w-lg`, ColorPicker en una línea
+- **Tema claro/oscuro** — ThemeProvider con `useTheme()` hook, toggle en SettingsPopup con 3 modos: claro/oscuro/sistema, persiste en localStorage, detecta `prefers-color-scheme`
+- **Refactor semántico de clases** — todos los componentes migrados de colores hardcodeados (`bg-zinc-950`, `text-zinc-100`, `border-zinc-800`) a variables CSS semánticas (`bg-background`, `text-foreground`, `border-border`)
 - `useCategorias().getColor()` reemplaza `CATEGORIA_COLORS` directo en DonutChart y BudgetProgress
 - Canales Realtime con `useId()` para evitar colisiones de nombre
 - Iconos Netlify y Supabase en el footer

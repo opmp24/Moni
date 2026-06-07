@@ -26,6 +26,7 @@ export function AddExpenseDialog({ open: controlledOpen, onOpenChange, onSaved }
   const [categoria, setCategoria] = useState<Categoria>("Otros")
   const [fecha, setFecha] = useState(() => new Date().toISOString().split("T")[0])
   const [recurrente, setRecurrente] = useState(false)
+  const [tagsStr, setTagsStr] = useState("")
   const [errorMsg, setErrorMsg] = useState("")
 
   const handleSubmit = async (e: FormEvent) => {
@@ -48,6 +49,7 @@ export function AddExpenseDialog({ open: controlledOpen, onOpenChange, onSaved }
       fecha: new Date(fecha).toISOString(),
       recurrente,
       periodo: recurrente ? "mensual" : null,
+      tags: tagsStr ? tagsStr.split(",").map((t) => t.trim()).filter(Boolean) : [],
       user_id: user.id,
     })
 
@@ -62,6 +64,7 @@ export function AddExpenseDialog({ open: controlledOpen, onOpenChange, onSaved }
     setCategoria("Otros")
     setFecha(new Date().toISOString().split("T")[0])
     setRecurrente(false)
+    setTagsStr("")
     onSaved?.()
     setOpen(false)
   }
@@ -79,16 +82,16 @@ export function AddExpenseDialog({ open: controlledOpen, onOpenChange, onSaved }
           Gasto
         </Button>
       </DialogTrigger>
-      <DialogContent className="border-zinc-800 bg-zinc-900 text-zinc-100">
+      <DialogContent className="border-border bg-card text-foreground">
         <DialogHeader>
-          <DialogTitle className="text-zinc-100">Nuevo gasto</DialogTitle>
+          <DialogTitle className="text-foreground">Nuevo gasto</DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
           {errorMsg && (
             <p className="rounded-md bg-red-500/10 px-3 py-2 text-sm text-red-400">{errorMsg}</p>
           )}
           <div>
-            <label htmlFor="monto" className="text-sm font-medium text-zinc-300">Monto</label>
+            <label htmlFor="monto" className="text-sm font-medium text-card-foreground">Monto</label>
             <input
               id="monto"
               type="number"
@@ -98,11 +101,11 @@ export function AddExpenseDialog({ open: controlledOpen, onOpenChange, onSaved }
               value={monto}
               onChange={(e) => setMonto(e.target.value)}
               placeholder="5000"
-              className="mt-1 flex h-9 w-full rounded-md border border-zinc-700 bg-zinc-800/50 px-3 py-1 text-sm text-zinc-100 placeholder-zinc-500 focus:outline-none focus:ring-1 focus:ring-yellow-400"
+              className="mt-1 flex h-9 w-full rounded-md border border-border bg-muted px-3 py-1 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-yellow-400"
             />
           </div>
           <div>
-            <label htmlFor="concepto" className="text-sm font-medium text-zinc-300">Concepto</label>
+            <label htmlFor="concepto" className="text-sm font-medium text-card-foreground">Concepto</label>
             <input
               id="concepto"
               type="text"
@@ -110,43 +113,52 @@ export function AddExpenseDialog({ open: controlledOpen, onOpenChange, onSaved }
               value={concepto}
               onChange={(e) => setConcepto(e.target.value)}
               placeholder="Almuerzo"
-              className="mt-1 flex h-9 w-full rounded-md border border-zinc-700 bg-zinc-800/50 px-3 py-1 text-sm text-zinc-100 placeholder-zinc-500 focus:outline-none focus:ring-1 focus:ring-yellow-400"
+              className="mt-1 flex h-9 w-full rounded-md border border-border bg-muted px-3 py-1 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-yellow-400"
             />
           </div>
           <div>
-            <label htmlFor="categoria" className="text-sm font-medium text-zinc-300">Categoría</label>
+            <label htmlFor="categoria" className="text-sm font-medium text-card-foreground">Categoría</label>
             <Select value={categoria} onValueChange={(v) => setCategoria(v as Categoria)}>
-              <SelectTrigger className="mt-1 w-full border-zinc-700 bg-zinc-800/50 text-zinc-100">
+              <SelectTrigger className="mt-1 w-full border-border bg-muted text-foreground">
                 <SelectValue />
               </SelectTrigger>
-              <SelectContent className="border-zinc-700 bg-zinc-900 text-zinc-100">
+              <SelectContent className="border-border bg-card text-foreground">
                 {categoriasGasto.map((cat) => (
-                  <SelectItem key={cat.nombre} value={cat.nombre} className="focus:bg-zinc-800 focus:text-zinc-100">{cat.nombre}</SelectItem>
+                  <SelectItem key={cat.nombre} value={cat.nombre} className="focus:bg-accent focus:text-accent-foreground">{cat.nombre}</SelectItem>
                 ))}
               </SelectContent>
             </Select>
           </div>
           <div>
-            <label htmlFor="fecha" className="text-sm font-medium text-zinc-300">Fecha</label>
+            <label htmlFor="fecha" className="text-sm font-medium text-card-foreground">Fecha</label>
             <input
               id="fecha"
               type="date"
               value={fecha}
               onChange={(e) => setFecha(e.target.value)}
-              className="mt-1 flex h-9 w-full rounded-md border border-zinc-700 bg-zinc-800/50 px-3 py-1 text-sm text-zinc-100 focus:outline-none focus:ring-1 focus:ring-yellow-400"
+              className="mt-1 flex h-9 w-full rounded-md border border-border bg-muted px-3 py-1 text-sm text-foreground focus:outline-none focus:ring-1 focus:ring-yellow-400"
             />
           </div>
-          <label className="flex items-center gap-2 text-sm text-zinc-400">
+          <div>
+            <label className="text-sm font-medium text-card-foreground">Etiquetas</label>
+            <input
+              value={tagsStr}
+              onChange={(e) => setTagsStr(e.target.value)}
+              placeholder="comida, trabajo, urgente"
+              className="mt-1 flex h-9 w-full rounded-md border border-border bg-muted px-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-yellow-400"
+            />
+          </div>
+          <label className="flex items-center gap-2 text-sm text-muted-foreground">
             <input
               type="checkbox"
               checked={recurrente}
               onChange={(e) => setRecurrente(e.target.checked)}
-              className="h-4 w-4 rounded border-zinc-700 bg-zinc-800 text-yellow-400 focus:ring-yellow-400"
+              className="h-4 w-4 rounded border-border bg-muted text-yellow-400 focus:ring-yellow-400"
             />
             Repetir mensualmente
           </label>
           <div className="flex justify-end gap-3 pt-2">
-            <Button type="button" variant="outline" onClick={() => handleOpenChange(false)} className="border-zinc-700 text-zinc-300 hover:bg-zinc-800 hover:text-zinc-100">
+            <Button type="button" variant="outline" onClick={() => handleOpenChange(false)} className="border-border text-card-foreground hover:bg-accent hover:text-accent-foreground">
               Cancelar
             </Button>
             <Button type="submit" disabled={loading} className="bg-yellow-400 text-zinc-950 hover:bg-yellow-300 font-medium">

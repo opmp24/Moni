@@ -33,7 +33,7 @@ export function WeekChart({ gastos }: WeekChartProps) {
               className="w-full rounded-t-sm bg-yellow-400/70 transition-all duration-500"
               style={{ height: Math.max(h, 2) }}
             />
-            <span className="text-[10px] text-zinc-600">{d.label}</span>
+            <span className="text-[10px] text-muted-foreground">{d.label}</span>
           </div>
         )
       })}

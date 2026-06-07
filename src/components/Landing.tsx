@@ -62,7 +62,7 @@ export function Landing() {
   if (user) return null
 
   return (
-    <div className="min-h-screen bg-zinc-950 text-zinc-100 overflow-x-hidden">
+    <div className="min-h-screen bg-background text-foreground overflow-x-hidden">
       <div className="fixed inset-0 bg-[radial-gradient(ellipse_80%_50%_at_50%_-20%,rgba(255,214,0,0.12),transparent)] pointer-events-none" />
 
       <header className="relative z-10 mx-auto flex max-w-6xl items-center justify-between px-6 py-5">
@@ -88,7 +88,7 @@ export function Landing() {
         <section className="relative z-10 mx-auto max-w-6xl px-6 pt-20 pb-24 md:pt-28 md:pb-32">
           <div className="grid items-center gap-12 md:grid-cols-2 md:gap-16">
             <div className={`transition-all duration-700 ${mounted ? "translate-y-0 opacity-100" : "translate-y-6 opacity-0"}`}>
-              <div className="mb-4 inline-flex items-center gap-1.5 rounded-full border border-zinc-800 bg-zinc-900/50 px-3 py-1 text-xs text-zinc-400">
+              <div className="mb-4 inline-flex items-center gap-1.5 rounded-full border border-border bg-card px-3 py-1 text-xs text-muted-foreground">
                 <span className="h-1.5 w-1.5 rounded-full bg-yellow-400" />
                 Control financiero personal
               </div>
@@ -96,7 +96,7 @@ export function Landing() {
                 Tus finanzas en{" "}
                 <span className="text-yellow-400">un solo lugar</span>
               </h1>
-              <p className="mt-4 max-w-md text-base leading-relaxed text-zinc-400 md:text-lg">
+              <p className="mt-4 max-w-md text-base leading-relaxed text-muted-foreground md:text-lg">
                 Registra tus gastos desde Telegram, visualiza tus hábitos de consumo
                 y mantén el control de tu dinero. Simple, rápido, sin esfuerzo.
               </p>
@@ -120,13 +120,13 @@ export function Landing() {
           </div>
         </section>
 
-        <section id="features" className="relative z-10 border-t border-zinc-800/60 py-20">
+        <section id="features" className="relative z-10 border-t border-border py-20">
           <div className="mx-auto max-w-6xl px-6">
             <div className="mb-14 text-center">
               <h2 className="text-3xl font-bold tracking-tight md:text-4xl">
                 Por qué <span className="text-yellow-400">PerJaus</span>
               </h2>
-              <p className="mt-3 text-zinc-400 max-w-lg mx-auto">
+              <p className="mt-3 text-muted-foreground max-w-lg mx-auto">
                 Olvídate de hojas de cálculo. Tu dinero merece algo mejor.
               </p>
             </div>
@@ -134,43 +134,43 @@ export function Landing() {
               {features.map((f, i) => (
                 <div
                   key={f.title}
-                  className="group rounded-2xl border border-zinc-800 bg-zinc-900/40 p-6 transition-all duration-300 hover:border-zinc-700 hover:bg-zinc-900/60"
+                  className="group rounded-2xl border border-border bg-card p-6 transition-all duration-300 hover:border-border hover:bg-card"
                   style={{ animationDelay: `${i * 100}ms` }}
                 >
                   <div className="mb-4 flex h-10 w-10 items-center justify-center rounded-xl bg-yellow-400/10 text-yellow-400">
                     <f.icon className="h-5 w-5" />
                   </div>
                   <h3 className="mb-2 text-lg font-semibold">{f.title}</h3>
-                  <p className="text-sm leading-relaxed text-zinc-400">{f.desc}</p>
+                  <p className="text-sm leading-relaxed text-muted-foreground">{f.desc}</p>
                 </div>
               ))}
             </div>
           </div>
         </section>
 
-        <section id="how-it-works" className="relative z-10 border-t border-zinc-800/60 py-20">
+        <section id="how-it-works" className="relative z-10 border-t border-border py-20">
           <div className="mx-auto max-w-6xl px-6">
             <div className="mb-14 text-center">
               <h2 className="text-3xl font-bold tracking-tight md:text-4xl">
                 Cómo funciona
               </h2>
-              <p className="mt-3 text-zinc-400">Tres pasos y ya estás listo.</p>
+              <p className="mt-3 text-muted-foreground">Tres pasos y ya estás listo.</p>
             </div>
             <div className="relative flex flex-col gap-0 md:flex-row md:gap-8">
               {steps.map((s, i) => (
                 <div key={s.label} className="relative flex-1">
                   <div className="flex flex-col items-center text-center">
-                    <div className="flex h-14 w-14 items-center justify-center rounded-full border border-zinc-700 bg-zinc-900 text-yellow-400">
+                    <div className="flex h-14 w-14 items-center justify-center rounded-full border border-border bg-card text-yellow-400">
                       <s.icon className="h-6 w-6" />
                     </div>
                     <div className="mt-2 flex h-6 w-6 items-center justify-center rounded-full bg-yellow-400 text-xs font-bold text-zinc-950">
                       {i + 1}
                     </div>
                     <h3 className="mt-4 text-lg font-semibold">{s.label}</h3>
-                    <p className="mt-1 text-sm text-zinc-400 max-w-xs">{s.desc}</p>
+                    <p className="mt-1 text-sm text-muted-foreground max-w-xs">{s.desc}</p>
                   </div>
                   {i < steps.length - 1 && (
-                    <div className="hidden md:block absolute top-7 left-[60%] w-[calc(80%)] border-t border-dashed border-zinc-700" />
+                    <div className="hidden md:block absolute top-7 left-[60%] w-[calc(80%)] border-t border-dashed border-border" />
                   )}
                 </div>
               ))}
@@ -178,70 +178,70 @@ export function Landing() {
           </div>
         </section>
 
-        <section className="relative z-10 border-t border-zinc-800/60 py-20">
+        <section className="relative z-10 border-t border-border py-20">
           <div className="mx-auto max-w-6xl px-6">
             <div className="grid items-center gap-10 md:grid-cols-5">
               <div className="md:col-span-2">
                 <h2 className="text-3xl font-bold tracking-tight md:text-4xl">
                   Bot de <span className="text-yellow-400">Telegram</span>
                 </h2>
-                <p className="mt-3 text-zinc-400">
+                <p className="mt-3 text-muted-foreground">
                   El bot <span className="font-mono text-yellow-400">@PerJausBot</span> procesa tu lenguaje natural y registra los gastos automáticamente.
                 </p>
-                <div className="mt-5 space-y-2 text-sm text-zinc-400">
+                <div className="mt-5 space-y-2 text-sm text-muted-foreground">
                   <div className="flex items-start gap-2">
                     <span className="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-yellow-400" />
-                    <span><strong className="text-zinc-200">Mensajes simples:</strong> <span className="text-zinc-500">"almuerzo 5000", "taxi 3000"</span></span>
+                    <span><strong className="text-card-foreground">Mensajes simples:</strong> <span className="text-muted-foreground">"almuerzo 5000", "taxi 3000"</span></span>
                   </div>
                   <div className="flex items-start gap-2">
                     <span className="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-yellow-400" />
-                    <span><strong className="text-zinc-200">Múltiples items:</strong> <span className="text-zinc-500">"cine 8000 + palomitas 4000"</span></span>
+                    <span><strong className="text-card-foreground">Múltiples items:</strong> <span className="text-muted-foreground">"cine 8000 + palomitas 4000"</span></span>
                   </div>
                   <div className="flex items-start gap-2">
                     <span className="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-yellow-400" />
-                    <span><strong className="text-zinc-200">Cantidades:</strong> <span className="text-zinc-500">"2 entradas cada una 4000"</span></span>
+                    <span><strong className="text-card-foreground">Cantidades:</strong> <span className="text-muted-foreground">"2 entradas cada una 4000"</span></span>
                   </div>
                   <div className="flex items-start gap-2">
                     <span className="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-yellow-400" />
-                    <span><strong className="text-zinc-200">Vinculación:</strong> <span className="text-zinc-500">Genera un código en la web y envía <span className="font-mono text-yellow-400">/vinculate CODIGO</span> al bot</span></span>
+                    <span><strong className="text-card-foreground">Vinculación:</strong> <span className="text-muted-foreground">Genera un código en la web y envía <span className="font-mono text-yellow-400">/vinculate CODIGO</span> al bot</span></span>
                   </div>
                 </div>
               </div>
               <div className="md:col-span-3">
-                <div className="rounded-2xl border border-zinc-800 bg-zinc-900/60 p-5">
-                  <div className="mb-3 flex items-center gap-2 border-b border-zinc-800 pb-3">
+                <div className="rounded-2xl border border-border bg-card p-5">
+                  <div className="mb-3 flex items-center gap-2 border-b border-border pb-3">
                     <div className="flex h-7 w-7 items-center justify-center rounded-full bg-sky-500">
                       <TelegramLogo className="h-3.5 w-3.5 text-white" weight="fill" />
                     </div>
                     <span className="text-sm font-medium">@PerJausBot</span>
-                    <span className="ml-auto text-[10px] text-zinc-600">En línea</span>
+                    <span className="ml-auto text-[10px] text-muted-foreground">En línea</span>
                   </div>
                   <div className="space-y-3">
                     <div className="flex justify-end">
-                      <div className="rounded-2xl rounded-br-md bg-yellow-400/10 px-3 py-2 text-sm text-zinc-200">
+                      <div className="rounded-2xl rounded-br-md bg-yellow-400/10 px-3 py-2 text-sm text-card-foreground">
                         almuerzo 5000
                       </div>
                     </div>
                     <div className="flex justify-start">
-                      <div className="rounded-2xl rounded-bl-md bg-zinc-800/80 px-3 py-2 text-sm text-zinc-300">
+                      <div className="rounded-2xl rounded-bl-md bg-muted px-3 py-2 text-sm text-card-foreground">
                         ✅ <strong>Gasto registrado:</strong> Almuerzo por $5.000 en <strong>Alimentación</strong>.
                       </div>
                     </div>
                     <div className="flex justify-end">
-                      <div className="rounded-2xl rounded-br-md bg-yellow-400/10 px-3 py-2 text-sm text-zinc-200">
+                      <div className="rounded-2xl rounded-br-md bg-yellow-400/10 px-3 py-2 text-sm text-card-foreground">
                         cine 8000 + palomitas 4000
                       </div>
                     </div>
                     <div className="flex justify-start">
-                      <div className="rounded-2xl rounded-bl-md bg-zinc-800/80 px-3 py-2 text-sm text-zinc-300">
+                      <div className="rounded-2xl rounded-bl-md bg-muted px-3 py-2 text-sm text-card-foreground">
                         ✅ <strong>Gasto registrado:</strong> Cine por $8.000 en <strong>Entretenimiento</strong>.
                       </div>
-                      <div className="rounded-2xl rounded-bl-md bg-zinc-800/80 px-3 py-2 text-sm text-zinc-300 mt-1">
+                      <div className="rounded-2xl rounded-bl-md bg-muted px-3 py-2 text-sm text-card-foreground mt-1">
                         ✅ <strong>Gasto registrado:</strong> Palomitas por $4.000 en <strong>Entretenimiento</strong>.
                       </div>
                     </div>
                     <div className="flex justify-start">
-                      <div className="rounded-2xl rounded-bl-md bg-zinc-800/80 px-2.5 py-1 text-[10px] text-zinc-500">
+                      <div className="rounded-2xl rounded-bl-md bg-muted px-2.5 py-1 text-[10px] text-muted-foreground">
                         /vinculate — Vincula tu chat con la web
                       </div>
                     </div>
@@ -252,17 +252,17 @@ export function Landing() {
           </div>
         </section>
 
-        <section className="relative z-10 border-t border-zinc-800/60 py-16">
+        <section className="relative z-10 border-t border-border py-16">
           <div className="mx-auto max-w-6xl px-6">
             <div className="grid gap-4 md:grid-cols-3">
               {metrics.map((m) => (
-                <div key={m.label} className="flex items-center gap-4 rounded-xl border border-zinc-800 bg-zinc-900/30 px-6 py-5">
+                <div key={m.label} className="flex items-center gap-4 rounded-xl border border-border bg-card px-6 py-5">
                   <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-yellow-400/10 text-yellow-400">
                     <m.icon className="h-5 w-5" />
                   </div>
                   <div>
                     <p className="text-lg font-bold">{m.value}</p>
-                    <p className="text-xs text-zinc-500">{m.label}</p>
+                    <p className="text-xs text-muted-foreground">{m.label}</p>
                   </div>
                 </div>
               ))}
@@ -270,12 +270,12 @@ export function Landing() {
           </div>
         </section>
 
-        <section className="relative z-10 border-t border-zinc-800/60 py-24">
+        <section className="relative z-10 border-t border-border py-24">
           <div className="mx-auto max-w-6xl px-6 text-center">
             <h2 className="text-3xl font-bold tracking-tight md:text-4xl">
               ¿Listo para tomar el control?
             </h2>
-            <p className="mt-3 text-zinc-400 max-w-md mx-auto">
+            <p className="mt-3 text-muted-foreground max-w-md mx-auto">
             Únete a PerJaus y empieza a gestionar tus finanzas de forma inteligente.
             </p>
             <div className="mt-8 flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
@@ -289,7 +289,7 @@ export function Landing() {
               </Button>
               <InstallPWA />
             </div>
-            <div className="mt-6 flex items-center justify-center gap-2 text-xs text-zinc-500">
+            <div className="mt-6 flex items-center justify-center gap-2 text-xs text-muted-foreground">
               <ShieldCheck className="h-3.5 w-3.5" />
               Tus datos están seguros con Supabase
             </div>
@@ -329,10 +329,10 @@ function DashboardPreview() {
   let cumulative = 0
 
   return (
-    <div className="rounded-2xl border border-zinc-800 bg-zinc-900/60 p-5 shadow-2xl shadow-yellow-400/5 backdrop-blur-sm">
+    <div className="rounded-2xl border border-border bg-card p-5 shadow-2xl shadow-yellow-400/5 backdrop-blur-sm">
       <div className="mb-4 flex items-center justify-between">
         <div>
-          <p className="text-xs text-zinc-500">Este mes</p>
+          <p className="text-xs text-muted-foreground">Este mes</p>
           <p className="text-xl font-bold">$ 340.000</p>
         </div>
         <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-yellow-400/10 text-yellow-400">
@@ -340,23 +340,23 @@ function DashboardPreview() {
         </div>
       </div>
       <div className="mb-4 grid grid-cols-2 gap-3">
-        <div className="rounded-xl border border-zinc-800 bg-zinc-900/80 p-3">
-          <p className="text-[10px] text-zinc-500">Top categoría</p>
+        <div className="rounded-xl border border-border bg-card p-3">
+          <p className="text-[10px] text-muted-foreground">Top categoría</p>
           <div className="mt-1 flex items-center gap-1.5">
             <span className="h-2 w-2 rounded-full bg-yellow-400" />
             <p className="text-sm font-semibold">Alimentación</p>
           </div>
-          <p className="text-xs text-zinc-400">$ 153.000</p>
+          <p className="text-xs text-muted-foreground">$ 153.000</p>
         </div>
-        <div className="rounded-xl border border-zinc-800 bg-zinc-900/80 p-3">
-          <p className="text-[10px] text-zinc-500">Transacciones</p>
+        <div className="rounded-xl border border-border bg-card p-3">
+          <p className="text-[10px] text-muted-foreground">Transacciones</p>
           <p className="mt-1 text-sm font-semibold">24 este mes</p>
           <p className="text-xs text-yellow-400">+3 hoy</p>
         </div>
       </div>
 
       <div className="mb-4">
-        <p className="mb-2 text-xs font-medium text-zinc-400">Evolución mensual</p>
+        <p className="mb-2 text-xs font-medium text-muted-foreground">Evolución mensual</p>
         <div className="flex items-end gap-1.5">
           {bars.map((b) => (
             <div key={b.label} className="flex flex-1 flex-col items-center gap-1">
@@ -364,14 +364,14 @@ function DashboardPreview() {
                 className="w-full rounded-t-sm bg-yellow-400/80 transition-all duration-500"
                 style={{ height: `${(b.value / maxBar) * 48}px` }}
               />
-              <span className="text-[10px] text-zinc-600">{b.label}</span>
+              <span className="text-[10px] text-muted-foreground">{b.label}</span>
             </div>
           ))}
         </div>
       </div>
 
       <div>
-        <p className="mb-3 text-xs font-medium text-zinc-400">Por categoría</p>
+        <p className="mb-3 text-xs font-medium text-muted-foreground">Por categoría</p>
         <div className="flex flex-col items-center gap-4">
           <svg width={donutSize} height={donutSize} viewBox={`0 0 ${donutSize} ${donutSize}`} className="-rotate-90">
             <circle cx={donutCenter} cy={donutCenter} r={donutRadius} fill="none" stroke="rgb(39 39 42)" strokeWidth={donutStroke} />
@@ -400,8 +400,8 @@ function DashboardPreview() {
             {categories.map((c) => (
               <div key={c.label} className="flex items-center gap-1">
                 <span className="h-1.5 w-1.5 rounded-full" style={{ backgroundColor: c.color }} />
-                <span className="text-[10px] text-zinc-400">{c.label}</span>
-                <span className="text-[10px] text-zinc-500">{c.value}%</span>
+                <span className="text-[10px] text-muted-foreground">{c.label}</span>
+                <span className="text-[10px] text-muted-foreground">{c.value}%</span>
               </div>
             ))}
           </div>

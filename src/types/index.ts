@@ -39,6 +39,7 @@ export interface Gasto {
   created_at: string
   recurrente?: boolean
   periodo?: string
+  tags?: string[]
 }
 
 export interface Ingreso {
@@ -52,6 +53,7 @@ export interface Ingreso {
   created_at: string
   recurrente?: boolean
   periodo?: string
+  tags?: string[]
 }
 
 export interface Presupuesto {
@@ -62,6 +64,18 @@ export interface Presupuesto {
   monto: number
   created_at: string
   updated_at: string
+}
+
+export interface Meta {
+  id: string
+  user_id?: string
+  nombre: string
+  monto_objetivo: number
+  monto_actual: number
+  color: string
+  icono: string
+  creada_en: string
+  completada: boolean
 }
 
 export interface DashboardKPIs {

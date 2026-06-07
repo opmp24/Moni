@@ -7,7 +7,7 @@ interface DonutChartProps {
 export function DonutChart({ data }: DonutChartProps) {
   const { getColor } = useCategorias()
   const total = data.reduce((sum, d) => sum + d.monto, 0)
-  if (total === 0) return <p className="py-4 text-center text-sm text-zinc-600">Sin datos</p>
+  if (total === 0) return <p className="py-4 text-center text-sm text-muted-foreground">Sin datos</p>
 
   const size = 180
   const center = size / 2
@@ -49,8 +49,8 @@ export function DonutChart({ data }: DonutChartProps) {
               className="h-2.5 w-2.5 shrink-0 rounded-full"
               style={{ backgroundColor: getColor(d.categoria) }}
             />
-            <span className="text-zinc-400">{d.categoria}</span>
-            <span className="font-medium text-zinc-200">
+            <span className="text-muted-foreground">{d.categoria}</span>
+            <span className="font-medium text-card-foreground">
               {new Intl.NumberFormat("es-CL", { style: "percent", maximumFractionDigits: 0 }).format(d.monto / total)}
             </span>
           </div>

@@ -1,6 +1,8 @@
 -- PerJaus: Compromisos (próximos pagos)
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+DROP TABLE IF EXISTS compromisos;
 CREATE TABLE compromisos (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
   concepto TEXT NOT NULL,
   monto NUMERIC(12, 0) NOT NULL CHECK (monto > 0),

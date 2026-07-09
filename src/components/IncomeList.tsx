@@ -1,5 +1,5 @@
 import { useState, useMemo, useCallback } from "react"
-import { Trash, X, CaretLeft, CaretRight, Download, MagnifyingGlass, ArrowClockwise, PencilSimple, Check } from "@phosphor-icons/react"
+import { Trash, X, CaretLeft, CaretRight, CaretDown, CaretUp, Download, MagnifyingGlass, ArrowClockwise, PencilSimple, Check } from "@phosphor-icons/react"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import {
@@ -38,6 +38,22 @@ export function IncomeList({ ingresos }: IncomeListProps) {
   const [editFecha, setEditFecha] = useState("")
   const [editTags, setEditTags] = useState("")
   const [savingEdit, setSavingEdit] = useState(false)
+  const [sortColumn, setSortColumn] = useState<"fecha" | "concepto" | "categoria" | "monto">("fecha")
+  const [sortDir, setSortDir] = useState<"asc" | "desc">("desc")
+
+  const toggleSort = (col: typeof sortColumn) => {
+    if (sortColumn === col) {
+      setSortDir((d) => (d === "asc" ? "desc" : "asc"))
+    } else {
+      setSortColumn(col)
+      setSortDir(col === "fecha" ? "desc" : "asc")
+    }
+  }
+
+  const SortIcon = ({ col }: { col: typeof sortColumn }) => {
+    if (sortColumn !== col) return null
+    return sortDir === "asc" ? <CaretUp className="inline-block h-3 w-3" weight="bold" /> : <CaretDown className="inline-block h-3 w-3" weight="bold" />
+  }
 
   const startEdit = (ingreso: Ingreso) => {
     setEditingId(ingreso.id)
@@ -67,59 +83,72 @@ export function IncomeList({ ingresos }: IncomeListProps) {
 
   const hayFiltros = filtroCategoria !== "todas" || fechaDesde || fechaHasta || busqueda || montoMin || montoMax
 
-  const filtrados = useMemo(() => {
-    setPagina(1)
-    let items = ingresos
+const filtrados = useMemo(() => {
+      setPagina(1)
+      let items = ingresos
 
-    if (filtroCategoria !== "todas") {
-      items = items.filter((g) => g.categoria === filtroCategoria)
-    }
-    if (busqueda) {
-      const q = busqueda.toLowerCase()
-      items = items.filter((g) => g.concepto?.toLowerCase().includes(q))
-    }
-    if (fechaDesde) {
-      items = items.filter((g) => g.fecha >= fechaDesde)
-    }
-    if (fechaHasta) {
-      items = items.filter((g) => g.fecha <= fechaHasta + "T23:59:59")
-    }
-    if (montoMin) {
-      items = items.filter((g) => Number(g.monto) >= Number(montoMin))
-    }
-    if (montoMax) {
-      items = items.filter((g) => Number(g.monto) <= Number(montoMax))
-    }
-    return items
-  }, [ingresos, filtroCategoria, busqueda, fechaDesde, fechaHasta, montoMin, montoMax])
+      if (filtroCategoria !== "todas") {
+        items = items.filter((g) => g.categoria === filtroCategoria)
+      }
+      if (busqueda) {
+        const q = busqueda.toLowerCase()
+        items = items.filter((g) => g.concepto?.toLowerCase().includes(q))
+      }
+      if (fechaDesde) {
+        items = items.filter((g) => g.fecha >= fechaDesde)
+      }
+      if (fechaHasta) {
+        items = items.filter((g) => g.fecha <= fechaHasta + "T23:59:59")
+      }
+      if (montoMin) {
+        items = items.filter((g) => Number(g.monto) >= Number(montoMin))
+      }
+      if (montoMax) {
+        items = items.filter((g) => Number(g.monto) <= Number(montoMax))
+      }
+      return items
+    }, [ingresos, filtroCategoria, busqueda, fechaDesde, fechaHasta, montoMin, montoMax])
 
-  const totalPaginas = Math.max(1, Math.ceil(filtrados.length / POR_PAGINA))
-  const paginaActual = Math.min(pagina, totalPaginas)
-  const inicio = (paginaActual - 1) * POR_PAGINA
-  const paginados = filtrados.slice(inicio, inicio + POR_PAGINA)
+    const sorted = useMemo(() => {
+      const items = [...filtrados]
+      items.sort((a, b) => {
+        let cmp = 0
+        if (sortColumn === "monto") cmp = a.monto - b.monto
+        else if (sortColumn === "fecha") cmp = a.fecha.localeCompare(b.fecha)
+        else if (sortColumn === "concepto") cmp = (a.concepto ?? "").localeCompare(b.concepto ?? "")
+        else if (sortColumn === "categoria") cmp = a.categoria.localeCompare(b.categoria)
+        return sortDir === "asc" ? cmp : -cmp
+      })
+      return items
+    }, [filtrados, sortColumn, sortDir])
 
-  const limpiarFiltros = () => {
-    setFiltroCategoria("todas")
-    setFechaDesde("")
-    setFechaHasta("")
-    setBusqueda("")
-    setMontoMin("")
-    setMontoMax("")
-    setPagina(1)
-  }
+    const totalPaginas = Math.max(1, Math.ceil(sorted.length / POR_PAGINA))
+    const paginaActual = Math.min(pagina, totalPaginas)
+    const inicio = (paginaActual - 1) * POR_PAGINA
+    const paginados = sorted.slice(inicio, inicio + POR_PAGINA)
 
-  const exportarCSV = useCallback(() => {
-    const headers = ["Fecha", "Concepto", "Categoría", "Monto"]
-    const rows = filtrados.map((g) => [g.fecha, g.concepto ?? "", g.categoria, g.monto])
-    const csv = [headers.join(","), ...rows.map((r) => r.join(","))].join("\n")
-    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" })
-    const url = URL.createObjectURL(blob)
-    const a = document.createElement("a")
-    a.href = url
-    a.download = `ingresos-${new Date().toISOString().slice(0, 10)}.csv`
-    a.click()
-    URL.revokeObjectURL(url)
-  }, [filtrados])
+    const limpiarFiltros = () => {
+      setFiltroCategoria("todas")
+      setFechaDesde("")
+      setFechaHasta("")
+      setBusqueda("")
+      setMontoMin("")
+      setMontoMax("")
+      setPagina(1)
+    }
+
+    const exportarCSV = useCallback(() => {
+      const headers = ["Fecha", "Concepto", "Categoría", "Monto"]
+      const rows = sorted.map((g) => [g.fecha, g.concepto ?? "", g.categoria, g.monto])
+      const csv = [headers.join(","), ...rows.map((r) => r.join(","))].join("\n")
+      const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" })
+      const url = URL.createObjectURL(blob)
+      const a = document.createElement("a")
+      a.href = url
+      a.download = `ingresos-${new Date().toISOString().slice(0, 10)}.csv`
+      a.click()
+      URL.revokeObjectURL(url)
+    }, [sorted])
 
   const handleDelete = async (id: string) => {
     if (!supabase) return
@@ -218,15 +247,15 @@ export function IncomeList({ ingresos }: IncomeListProps) {
       ) : (
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
-            <thead>
-              <tr className="border-b border-border">
-                <th className="pb-2 pr-4 text-left text-xs font-medium text-muted-foreground">Fecha</th>
-                <th className="pb-2 pr-4 text-left text-xs font-medium text-muted-foreground">Concepto</th>
-                <th className="pb-2 pr-4 text-left text-xs font-medium text-muted-foreground">Categoría</th>
-                <th className="pb-2 pl-4 text-right text-xs font-medium text-muted-foreground">Monto</th>
-                <th className="w-10 pb-2" />
-              </tr>
-            </thead>
+<thead>
+               <tr className="border-b border-border">
+                 <th className="cursor-pointer pb-2 pr-4 text-left text-xs font-medium text-muted-foreground hover:text-foreground select-none" onClick={() => toggleSort("fecha")}>Fecha <SortIcon col="fecha" /></th>
+                 <th className="cursor-pointer pb-2 pr-4 text-left text-xs font-medium text-muted-foreground hover:text-foreground select-none" onClick={() => toggleSort("concepto")}>Concepto <SortIcon col="concepto" /></th>
+                 <th className="cursor-pointer pb-2 pr-4 text-left text-xs font-medium text-muted-foreground hover:text-foreground select-none" onClick={() => toggleSort("categoria")}>Categoría <SortIcon col="categoria" /></th>
+                 <th className="cursor-pointer pb-2 pl-4 text-right text-xs font-medium text-muted-foreground hover:text-foreground select-none" onClick={() => toggleSort("monto")}>Monto <SortIcon col="monto" /></th>
+                 <th className="w-10 pb-2" />
+               </tr>
+             </thead>
             <tbody>
               {paginados.map((ingreso) => (
                 <tr key={ingreso.id} className="border-b border-border last:border-0">

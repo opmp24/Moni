@@ -1,8 +1,10 @@
 # Wally — Guía para el Agente
 
 ## Importante: Siempre responder en español neutro. El usuario habla español, todas las respuestas deben ser en español.
+1. verificar si Supabase CLI esta instalado para hacer cambios en la BBDD
+2. revisar la carpeta docs y el archivo credenciales.md  y advertir si cambian
+3. respuesas cortas sin adulaciones.
 
-## Stack
 
 ## Stack
 - **Frontend**: React 19 + TypeScript + Vite + Tailwind CSS
@@ -11,6 +13,7 @@
 - **PWA**: vite-plugin-pwa
 - **Despliegue**: Netlify (auto-deploy desde `main`)
 - **Bots**: Telegram (@WallyBot) + Gemini AI
+
 
 ## Comandos
 - `npm run dev` — servidor local
@@ -74,19 +77,3 @@
 - PWA instalable
 - Telegram bot con IA (Gemini) para registrar gastos
 
-### Pendientes
-1. Botón de ajustes más grande
-2. Dashboard con más gráficas + animaciones (GSAP o CSS)
-3. Brillo hover amarillo en tarjetas del dashboard
-4. Mostrar nombre y foto de Google en la UI
-5. Gráfica donut en landing con datos reales
-6. Editar categoría de gasto inline desde ExpenseList
-7. CategoryEditor más ancho (ColorPicker en una línea)
-8. Mejorar parsing del bot de Telegram (prompt de Gemini)
-9. Poner VITE_SUPABASE_URL y VITE_SUPABASE_ANON_KEY en Netlify dashboard
-10. Telegram webhook: categorías dinámicas (no hardcoded)
-11. DonutChart/BudgetProgress: usar `useCategorias().getColor()` en vez de `CATEGORIA_COLORS` directo
-
-12. verificar si Supabase CLI esta instalado para hacer cambios en la BBDD
-
-13. revisar la carpeta docs y el archivo credenciales.md 

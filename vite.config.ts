@@ -10,6 +10,7 @@ export default defineConfig({
     VitePWA({
       registerType: "autoUpdate",
       includeAssets: ["favicon.svg", "pwa-192x192.png", "pwa-512x512.png"],
+      workbox: { maximumFileSizeToCacheInBytes: 4 * 1024 * 1024 },
       manifest: {
         name: "Wally",
         short_name: "Wally",
@@ -38,6 +39,15 @@ export default defineConfig({
       },
     }),
   ],
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          three: ["three", "@react-three/fiber", "@react-three/drei"],
+        },
+      },
+    },
+  },
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),

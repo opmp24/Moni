@@ -1,5 +1,5 @@
 import { useState, useMemo, useCallback } from "react"
-import { Trash, X, CaretLeft, CaretRight, Check, Download, MagnifyingGlass, ArrowClockwise, PencilSimple } from "@phosphor-icons/react"
+import { Trash, X, CaretLeft, CaretRight, CaretDown, CaretUp, Check, Download, MagnifyingGlass, ArrowClockwise, PencilSimple } from "@phosphor-icons/react"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import {
@@ -38,6 +38,22 @@ export function ExpenseList({ expenses }: ExpenseListProps) {
   const [editFecha, setEditFecha] = useState("")
   const [editTags, setEditTags] = useState("")
   const [savingEdit, setSavingEdit] = useState(false)
+  const [sortColumn, setSortColumn] = useState<"fecha" | "concepto" | "categoria" | "monto">("fecha")
+  const [sortDir, setSortDir] = useState<"asc" | "desc">("desc")
+
+  const toggleSort = (col: typeof sortColumn) => {
+    if (sortColumn === col) {
+      setSortDir((d) => (d === "asc" ? "desc" : "asc"))
+    } else {
+      setSortColumn(col)
+      setSortDir(col === "fecha" ? "desc" : "asc")
+    }
+  }
+
+  const SortIcon = ({ col }: { col: typeof sortColumn }) => {
+    if (sortColumn !== col) return null
+    return sortDir === "asc" ? <CaretUp className="inline-block h-3 w-3" weight="bold" /> : <CaretDown className="inline-block h-3 w-3" weight="bold" />
+  }
 
   const startEdit = (gasto: Gasto) => {
     setEditingId(gasto.id)
@@ -93,10 +109,23 @@ export function ExpenseList({ expenses }: ExpenseListProps) {
     return items
   }, [expenses, filtroCategoria, busqueda, fechaDesde, fechaHasta, montoMin, montoMax])
 
-  const totalPaginas = Math.max(1, Math.ceil(filtrados.length / POR_PAGINA))
+  const sorted = useMemo(() => {
+    const items = [...filtrados]
+    items.sort((a, b) => {
+      let cmp = 0
+      if (sortColumn === "monto") cmp = a.monto - b.monto
+      else if (sortColumn === "fecha") cmp = a.fecha.localeCompare(b.fecha)
+      else if (sortColumn === "concepto") cmp = (a.concepto ?? "").localeCompare(b.concepto ?? "")
+      else if (sortColumn === "categoria") cmp = a.categoria.localeCompare(b.categoria)
+      return sortDir === "asc" ? cmp : -cmp
+    })
+    return items
+  }, [filtrados, sortColumn, sortDir])
+
+  const totalPaginas = Math.max(1, Math.ceil(sorted.length / POR_PAGINA))
   const paginaActual = Math.min(pagina, totalPaginas)
   const inicio = (paginaActual - 1) * POR_PAGINA
-  const paginados = filtrados.slice(inicio, inicio + POR_PAGINA)
+  const paginados = sorted.slice(inicio, inicio + POR_PAGINA)
 
   const limpiarFiltros = () => {
     setFiltroCategoria("todas")
@@ -110,7 +139,7 @@ export function ExpenseList({ expenses }: ExpenseListProps) {
 
   const exportarCSV = useCallback(() => {
     const headers = ["Fecha", "Concepto", "Categoría", "Monto"]
-    const rows = filtrados.map((g) => [g.fecha, g.concepto ?? "", g.categoria, g.monto])
+    const rows = sorted.map((g) => [g.fecha, g.concepto ?? "", g.categoria, g.monto])
     const csv = [headers.join(","), ...rows.map((r) => r.join(","))].join("\n")
     const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" })
     const url = URL.createObjectURL(blob)
@@ -119,7 +148,7 @@ export function ExpenseList({ expenses }: ExpenseListProps) {
     a.download = `gastos-${new Date().toISOString().slice(0, 10)}.csv`
     a.click()
     URL.revokeObjectURL(url)
-  }, [filtrados])
+  }, [sorted])
 
   const handleDelete = async (id: string) => {
     if (!supabase) return
@@ -211,7 +240,7 @@ export function ExpenseList({ expenses }: ExpenseListProps) {
         </div>
       </div>
 
-      {filtrados.length === 0 ? (
+      {sorted.length === 0 ? (
         <p className="py-8 text-center text-sm text-muted-foreground">
           {hayFiltros ? "Sin resultados con los filtros actuales" : "No hay gastos registrados"}
         </p>
@@ -220,10 +249,10 @@ export function ExpenseList({ expenses }: ExpenseListProps) {
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-border">
-                <th className="pb-2 pr-4 text-left text-xs font-medium text-muted-foreground">Fecha</th>
-                <th className="pb-2 pr-4 text-left text-xs font-medium text-muted-foreground">Concepto</th>
-                <th className="pb-2 pr-4 text-left text-xs font-medium text-muted-foreground">Categoría</th>
-                <th className="pb-2 pl-4 text-right text-xs font-medium text-muted-foreground">Monto</th>
+                <th className="cursor-pointer pb-2 pr-4 text-left text-xs font-medium text-muted-foreground hover:text-foreground select-none" onClick={() => toggleSort("fecha")}>Fecha <SortIcon col="fecha" /></th>
+                <th className="cursor-pointer pb-2 pr-4 text-left text-xs font-medium text-muted-foreground hover:text-foreground select-none" onClick={() => toggleSort("concepto")}>Concepto <SortIcon col="concepto" /></th>
+                <th className="cursor-pointer pb-2 pr-4 text-left text-xs font-medium text-muted-foreground hover:text-foreground select-none" onClick={() => toggleSort("categoria")}>Categoría <SortIcon col="categoria" /></th>
+                <th className="cursor-pointer pb-2 pl-4 text-right text-xs font-medium text-muted-foreground hover:text-foreground select-none" onClick={() => toggleSort("monto")}>Monto <SortIcon col="monto" /></th>
                 <th className="w-10 pb-2" />
               </tr>
             </thead>
@@ -403,10 +432,10 @@ export function ExpenseList({ expenses }: ExpenseListProps) {
               ))}
             </tbody>
           </table>
-          {filtrados.length > POR_PAGINA && (
+          {sorted.length > POR_PAGINA && (
             <div className="flex items-center justify-between border-t border-border pt-3">
               <p className="text-xs text-muted-foreground">
-                Mostrando {inicio + 1}&ndash;{Math.min(inicio + POR_PAGINA, filtrados.length)} de {filtrados.length}
+                Mostrando {inicio + 1}&ndash;{Math.min(inicio + POR_PAGINA, sorted.length)} de {sorted.length}
               </p>
               <div className="flex items-center gap-1">
                 <Button

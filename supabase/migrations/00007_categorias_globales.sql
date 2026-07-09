@@ -24,18 +24,23 @@ DROP POLICY IF EXISTS "Users can insert own categorias" ON categorias;
 DROP POLICY IF EXISTS "Users can update own categorias" ON categorias;
 DROP POLICY IF EXISTS "Users can delete own categorias" ON categorias;
 
+DROP POLICY IF EXISTS "Anyone can view global categorias" ON categorias;
+DROP POLICY IF EXISTS "Anyone can view global categorias" ON categorias;
 CREATE POLICY "Anyone can view global categorias"
   ON categorias FOR SELECT
   USING (user_id IS NULL OR auth.uid() = user_id);
 
+DROP POLICY IF EXISTS "Users can insert own categorias" ON categorias;
 CREATE POLICY "Users can insert own categorias"
   ON categorias FOR INSERT
   WITH CHECK (auth.uid() = user_id);
 
+DROP POLICY IF EXISTS "Users can update own categorias" ON categorias;
 CREATE POLICY "Users can update own categorias"
   ON categorias FOR UPDATE
   USING (auth.uid() = user_id);
 
+DROP POLICY IF EXISTS "Users can delete own categorias" ON categorias;
 CREATE POLICY "Users can delete own categorias"
   ON categorias FOR DELETE
   USING (auth.uid() = user_id);

@@ -40,24 +40,31 @@ Del mensaje del usuario extrae esta información en JSON:
 - recurrente: boolean opcional (true solo si menciona "cada mes", "todos los meses", "mensual")
 
 REGLAS IMPORTANTES:
-1. MULTIPLICACIÓN: Si dice "4 entradas a 10000", "3 cosas de 5000", "2 x 3000": calcula monto = cantidad × precio_unitario
-2. INGRESOS: Si habla de sueldo, salario, pago recibido, transferencia recibida, ingreso, remuneración, honorario, freelance → categoria "Ingresos", tipo "ingreso"
-3. COMPROMISOS: Si menciona "el día X de cada mes", "el X de cada mes", "pago recurrente" → tipo "compromiso", recurrente true. Guarda la fecha del día (ej: "día 1" → fecha = YYYY-MM-01 del mes actual)
-4. COMPROMISO ÚNICO: Si menciona "el día X" sin "cada mes" → tipo "compromiso", recurrente false, fecha = la fecha mencionada
-5. Para gastos normales: tipo "gasto", elige la categoría más adecuada
-6. Si hay múltiples items separados por +, y, & → responde con un ARRAY JSON
+1. MULTIPLICACIÓN: Si dice "4 entradas a 10000", "4 en 3500", "3 cosas de 5000", "2 x 3000", "4 entradas por 10000": calcula monto = cantidad × precio_unitario
+2. PRECIO DIRECTO: Si dice "remedios por 5000", "vitaminas por 3000": el monto es 5000 y 3000 respectivamente (no multiplicar).
+3. MULTIPLE ITEMS MISMA TRANSACCIÓN: Si menciona varios items en el mismo lugar o contexto separados por "y" (ej: "remedios por 5000 y vitaminas 3000", "pan y leche"), trata como UNA sola transacción con monto = suma de los items, concepto que describa ambos (ej: "Remedios y vitaminas").
+4. INGRESOS: Si habla de sueldo, salario, pago recibido, transferencia recibida, ingreso, remuneración, honorario, freelance → categoria "Ingresos", tipo "ingreso"
+5. COMPROMISOS: Si menciona "el día X de cada mes", "el X de cada mes", "pago recurrente" → tipo "compromiso", recurrente true. Guarda la fecha del día (ej: "día 1" → fecha = YYYY-MM-01 del mes actual)
+6. COMPROMISO ÚNICO: Si menciona "el día X" sin "cada mes" → tipo "compromiso", recurrente false, fecha = la fecha mencionada
+7. Para gastos normales: tipo "gasto", elige la categoría más adecuada
+8. Si hay múltiples TRANSACCIONES separadas claramente (ej: "almuerzo 5000 + taxi 3000", "sueldo 500000 y ingreso extra 100000") → responde con un ARRAY JSON de objetos, cada uno siguiendo las reglas anteriores.
 
 EJEMPLOS:
 - "almuerzo 5000" → {"monto":5000,"concepto":"Almuerzo","categoria":"Alimentación","tipo":"gasto"}
 - "sueldo 500000" → {"monto":500000,"concepto":"Sueldo","categoria":"Ingresos","tipo":"ingreso"}
 - "4 entradas a 10000" → {"monto":40000,"concepto":"Entradas","categoria":"Entretenimiento","tipo":"gasto"}
+- "4 en 3500" → {"monto":14000,"concepto":"Item","categoria":"Otros","tipo":"gasto"}
 - "taxi 3000 ayer" → {"monto":3000,"concepto":"Taxi","categoria":"Transporte","tipo":"gasto","fecha":"2026-07-07"}
 - "arriendo el 1 de cada mes por 300000" → {"monto":300000,"concepto":"Arriendo","categoria":"Vivienda","tipo":"compromiso","recurrente":true,"fecha":"2026-07-01"}
 - "pago autopista el dia 23 por 30000" → {"monto":30000,"concepto":"Autopista","categoria":"Transporte","tipo":"compromiso","fecha":"2026-07-23"}
 - "pago prestamo el 5 de cada mes por 50000" → {"monto":50000,"concepto":"Préstamo","categoria":"Otros","tipo":"compromiso","recurrente":true,"fecha":"2026-07-05"}
 - "3 cervezas a 2500" → {"monto":7500,"concepto":"Cervezas","categoria":"Entretenimiento","tipo":"gasto"}
+- "Entrada para ir a museo 10,000 por 4" → {"monto":40000,"concepto":"Entrada al museo","categoria":"Entretenimiento","tipo":"gasto"}
+- "compra en farmacia, remedios por 5000 y vitaminas 3000" → {"monto":8000,"concepto":"Remedios y vitaminas","categoria":"Salud","tipo":"gasto"}
+- "almuerzo 5000 + taxi 3000" → [{"monto":5000,"concepto":"Almuerzo","categoria":"Alimentación","tipo":"gasto"},{"monto":3000,"concepto":"Taxi","categoria":"Transporte","tipo":"gasto"}]
+- "sueldo 500000 y ingreso extra 100000" → [{"monto":500000,"concepto":"Sueldo","categoria":"Ingresos","tipo":"ingreso"},{"monto":100000,"concepto":"Ingreso extra","categoria":"Ingresos","tipo":"ingreso"}]
 
-Responde ÚNICAMENTE con un JSON. Si no puedes identificar, responde {"error": "No pude entender el mensaje"}.`
+Responde ÚNICAMENTE con un JSON (o un array de JSON). Si no puedes identificar, responde {"error": "No pude entender el mensaje"}. y da ejemplo de cómo debería ser el mensaje. No agregues texto adicional, ni explicaciones, ni emojis.`
 }
 
 async function llamarNVIDIA(prompt: string): Promise<string> {
@@ -321,6 +328,27 @@ serve(async (req) => {
       })
     }
 
+    if (text.startsWith("/ayuda")) {
+      await sendTelegramMessage(chatId,
+        "🤖 *Comandos Wally:*\n\n"
+        + "Envíame cualquier gasto y lo registro automáticamente.\n"
+        + "Ejemplos:\n"
+        + "_almuerzo 5000_\n"
+        + "_sueldo 500000_\n"
+        + "_taxi 3000_\n"
+        + "_4 entradas a 10000_\n"
+        + "_arriendo el 1 de cada mes por 300000_\n"
+        + "_pago autopista el dia 23_\n\n"
+        + "/vinculate <codigo> — Vincular con tu cuenta web\n"
+        + "/presupuesto <categoria> <monto> — Fijar presupuesto\n"
+        + "  Ej: /presupuesto Alimentación 250000\n"
+        + "/start — Mensaje de bienvenida"
+      )
+      return new Response(JSON.stringify({ ok: true }), {
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      })
+    }
+
     if (text.startsWith("/vinculate")) {
       const code = text.replace("/vinculate", "").trim()
       if (!code) {
@@ -468,25 +496,59 @@ serve(async (req) => {
       .eq("user_id", link.user_id)
     const categoriasUsuario = [...new Set([...CATEGORIAS_PREDEFINIDAS, ...(cats?.map(c => c.nombre) ?? [])])]
 
-    let resultado: ParseResult
+    const { data: link } = await supabase
+      .from("user_telegram_links")
+      .select("user_id")
+      .eq("telegram_chat_id", String(chatId))
+      .maybeSingle()
+
+    if (!link) {
+      await sendTelegramMessage(chatId,
+        "🔗 *Primero vincula tu chat con tu cuenta web.*\n\n"
+        + "Desde el Dashboard de Wally genera un código en \"Conectar Telegram\"\n"
+        + "y luego envía:\n" + "_/vinculate CODIGO_"
+      )
+      return new Response(JSON.stringify({ ok: false, error: "Not linked" }), {
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      })
+    }
+
+    const { data: cats } = await supabase
+      .from("categorias")
+      .select("nombre")
+      .eq("user_id", link.user_id)
+    const categoriasUsuario = [...new Set([...CATEGORIAS_PREDEFINIDAS, ...(cats?.map(c => c.nombre) ?? [])])]
+
+    let resultados: ParseResult[] = []
     try {
       const prompt = construirPrompt(categoriasUsuario)
       const responseText = await llamarNVIDIA(`${prompt}\n\nMensaje: ${text}`)
       const parsed = JSON.parse(responseText)
 
-      if (parsed.error) throw new Error(parsed.error)
-      if (!parsed.monto || !parsed.concepto || !parsed.categoria || !parsed.tipo) throw new Error("Invalid response")
-
-      const hoy = new Date()
-      const hoyStr = `${hoy.getFullYear()}-${String(hoy.getMonth() + 1).padStart(2, "0")}-${String(hoy.getDate()).padStart(2, "0")}`
-
-      resultado = {
-        monto: parsed.monto,
-        concepto: parsed.concepto,
-        categoria: parsed.categoria,
-        tipo: parsed.tipo,
-        fecha: parsed.fecha ?? hoyStr,
-        recurrente: parsed.recurrente ?? false,
+      if (Array.isArray(parsed)) {
+        for (const item of parsed) {
+          if (item.error) throw new Error(item.error)
+          if (!item.monto || !item.concepto || !item.categoria || !item.tipo) throw new Error("Invalid response item")
+          resultados.push({
+            monto: item.monto,
+            concepto: item.concepto,
+            categoria: item.categoria,
+            tipo: item.tipo,
+            fecha: item.fecha ?? `${new Date().getFullYear()}-${String(new Date().getMonth() + 1).padStart(2, "0")}-${String(new Date().getDate()).padStart(2, "0")}`,
+            recurrente: item.recurrente ?? false,
+          })
+        }
+      } else {
+        if (parsed.error) throw new Error(parsed.error)
+        if (!parsed.monto || !parsed.concepto || !parsed.categoria || !parsed.tipo) throw new Error("Invalid response")
+        resultados.push({
+          monto: parsed.monto,
+          concepto: parsed.concepto,
+          categoria: parsed.categoria,
+          tipo: parsed.tipo,
+          fecha: parsed.fecha ?? `${new Date().getFullYear()}-${String(new Date().getMonth() + 1).padStart(2, "0")}-${String(new Date().getDate()).padStart(2, "0")}`,
+          recurrente: parsed.recurrente ?? false,
+        })
       }
     } catch (err) {
       const fallback = parseGastoFallback(text)
@@ -498,71 +560,79 @@ serve(async (req) => {
           headers: { ...corsHeaders, "Content-Type": "application/json" },
         })
       }
-      resultado = fallback
+      resultados = [fallback]
     }
 
-    if (!categoriasUsuario.includes(resultado.categoria)) {
-      resultado.categoria = "Otros"
-    }
+    // Procesar cada resultado
+    let respuestaMensajes: string[] = []
+    let totalGastadoParaPresupuesto = 0
+    let categoriaPresupuesto: string | null = null
 
-    if (!resultado.fecha) {
-      const hoy = new Date()
-      resultado.fecha = `${hoy.getFullYear()}-${String(hoy.getMonth() + 1).padStart(2, "0")}-${String(hoy.getDate()).padStart(2, "0")}`
-    }
-
-    if (resultado.tipo === "compromiso") {
-      const { error: insertError } = await supabase.from("compromisos").insert({
-        user_id: link.user_id,
-        concepto: resultado.concepto,
-        monto: resultado.monto,
-        categoria: resultado.categoria,
-        fecha_vencimiento: resultado.fecha,
-        recurrente: resultado.recurrente ?? false,
-      })
-
-      if (insertError) {
-        await sendTelegramMessage(chatId, "❌ *Error al guardar el compromiso.* Intenta de nuevo.")
-        return new Response(JSON.stringify({ ok: false, error: insertError }), {
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
-        })
+    for (const res of resultados) {
+      if (!categoriasUsuario.includes(res.categoria)) {
+        res.categoria = "Otros"
+      }
+      if (!res.fecha) {
+        const hoy = new Date()
+        res.fecha = `${hoy.getFullYear()}-${String(hoy.getMonth() + 1).padStart(2, "0")}-${String(hoy.getDate()).padStart(2, "0")}`
       }
 
-      const formattedMonto = new Intl.NumberFormat("es-CL", { style: "currency", currency: "CLP", maximumFractionDigits: 0 }).format(resultado.monto)
-      const freq = resultado.recurrente ? " (recurrente)" : ""
-      await sendTelegramMessage(chatId,
-        `📅 *Compromiso registrado${freq}:* ${resultado.concepto} por ${formattedMonto} el ${resultado.fecha} en *${resultado.categoria}*.`
-      )
-      return new Response(JSON.stringify({ ok: true }), {
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      })
+      if (res.tipo === "compromiso") {
+        const { error: insertError } = await supabase.from("compromisos").insert({
+          user_id: link.user_id,
+          concepto: res.concepto,
+          monto: res.monto,
+          categoria: res.categoria,
+          fecha_vencimiento: res.fecha,
+          recurrente: res.recurrente ?? false,
+        })
+
+        if (insertError) {
+          await sendTelegramMessage(chatId, "❌ *Error al guardar el compromiso.* Intenta de nuevo.")
+          return new Response(JSON.stringify({ ok: false, error: insertError }), {
+            headers: { ...corsHeaders, "Content-Type": "application/json" },
+          })
+        }
+
+        const formattedMonto = new Intl.NumberFormat("es-CL", { style: "currency", currency: "CLP", maximumFractionDigits: 0 }).format(res.monto)
+        const freq = res.recurrente ? " (recurrente)" : ""
+        respuestaMensajes.push(`📅 *Compromiso registrado${freq}:* ${res.concepto} por ${formattedMonto} el ${res.fecha} en *${res.categoria}*.`)
+      } else {
+        const tabla = res.tipo === "ingreso" ? "ingresos" : "gastos"
+        const { error: insertError } = await supabase.from(tabla).insert({
+          user_id: link.user_id,
+          concepto: res.concepto,
+          monto: res.monto,
+          categoria: res.categoria,
+          fecha: new Date(res.fecha + "T12:00:00").toISOString(),
+          telegram_chat_id: String(chatId),
+        })
+
+        if (insertError) {
+          await sendTelegramMessage(chatId, "❌ *Error al guardar.* Intenta de nuevo.")
+          return new Response(JSON.stringify({ ok: false, error: insertError }), {
+            headers: { ...corsHeaders, "Content-Type": "application/json" },
+          })
+        }
+
+        const formattedMonto = new Intl.NumberFormat("es-CL", { style: "currency", currency: "CLP", maximumFractionDigits: 0 }).format(res.monto)
+        const emoji = res.tipo === "ingreso" ? "💰" : "✅"
+        const label = res.tipo === "ingreso" ? "Ingreso registrado" : "Gasto registrado"
+        const fechaTexto = res.fecha ? ` (${res.fecha})` : ""
+        respuestaMensajes.push(`${emoji} *${label}:* ${res.concepto} por ${formattedMonto} en *${res.categoria}*${fechaTexto}.`)
+
+        if (res.tipo === "gasto") {
+          totalGastadoParaPresupuesto += res.monto
+          categoriaPresupuesto = res.categoria
+        }
+      }
     }
 
-    const tabla = resultado.tipo === "ingreso" ? "ingresos" : "gastos"
-    const { error: insertError } = await supabase.from(tabla).insert({
-      monto: resultado.monto,
-      concepto: resultado.concepto,
-      categoria: resultado.categoria,
-      fecha: new Date(resultado.fecha + "T12:00:00").toISOString(),
-      telegram_chat_id: String(chatId),
-      user_id: link.user_id,
-    })
+    // Envío de respuestas combinadas
+    await sendTelegramMessage(chatId, respuestaMensajes.join("\n"))
 
-    if (insertError) {
-      await sendTelegramMessage(chatId, "❌ *Error al guardar.* Intenta de nuevo.")
-      return new Response(JSON.stringify({ ok: false, error: insertError }), {
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      })
-    }
-
-    const formattedMonto = new Intl.NumberFormat("es-CL", { style: "currency", currency: "CLP", maximumFractionDigits: 0 }).format(resultado.monto)
-    const emoji = resultado.tipo === "ingreso" ? "💰" : "✅"
-    const label = resultado.tipo === "ingreso" ? "Ingreso registrado" : "Gasto registrado"
-    const fechaTexto = resultado.fecha ? ` (${resultado.fecha})` : ""
-    await sendTelegramMessage(chatId,
-      `${emoji} *${label}:* ${resultado.concepto} por ${formattedMonto} en *${resultado.categoria}*${fechaTexto}.`
-    )
-
-    if (resultado.tipo === "gasto") {
+    // Verificación de presupuesto (solo si hubo al menos un gasto)
+    if (resultado?.tipo === "gasto" && categoriaPresupuesto) {
       const ahora = new Date()
       const mesStart = `${ahora.getFullYear()}-${String(ahora.getMonth() + 1).padStart(2, "0")}-01`
 
@@ -570,7 +640,7 @@ serve(async (req) => {
         .from("presupuestos")
         .select("monto")
         .eq("user_id", link.user_id)
-        .eq("categoria", resultado.categoria)
+        .eq("categoria", categoriaPresupuesto)
         .eq("mes", mesStart)
         .maybeSingle()
 
@@ -579,7 +649,7 @@ serve(async (req) => {
           .from("gastos")
           .select("monto")
           .eq("user_id", link.user_id)
-          .eq("categoria", resultado.categoria)
+          .eq("categoria", categoriaPresupuesto)
           .gte("fecha", mesStart)
 
         const totalGastado = data?.reduce((s, g) => s + Number(g.monto), 0) ?? 0
@@ -587,11 +657,11 @@ serve(async (req) => {
 
         if (pct >= 100) {
           await sendTelegramMessage(chatId,
-            `⚠️ *¡Presupuesto agotado!* ${resultado.categoria} — ${new Intl.NumberFormat("es-CL", { style: "currency", currency: "CLP", maximumFractionDigits: 0 }).format(totalGastado)} de ${new Intl.NumberFormat("es-CL", { style: "currency", currency: "CLP", maximumFractionDigits: 0 }).format(Number(presupuesto.monto))}`
+            `⚠️ *¡Presupuesto agotado!* ${categoriaPresupuesto} — ${new Intl.NumberFormat("es-CL", { style: "currency", currency: "CLP", maximumFractionDigits: 0 }).format(totalGastado)} de ${new Intl.NumberFormat("es-CL", { style: "currency", currency: "CLP", maximumFractionDigits: 0 }).format(Number(presupuesto.monto))}`
           )
         } else if (pct >= 80) {
           await sendTelegramMessage(chatId,
-            `⚠️ *Alerta de presupuesto:* ${resultado.categoria} al ${Math.round(pct)}% — ${new Intl.NumberFormat("es-CL", { style: "currency", currency: "CLP", maximumFractionDigits: 0 }).format(totalGastado)} de ${new Intl.NumberFormat("es-CL", { style: "currency", currency: "CLP", maximumFractionDigits: 0 }).format(Number(presupuesto.monto))}`
+            `⚠️ *Alerta de presupuesto:* ${categoriaPresupuesto} al ${Math.round(pct)}% — ${new Intl.NumberFormat("es-CL", { style: "currency", currency: "CLP", maximumFractionDigits: 0 }).format(totalGastado)} de ${new Intl.NumberFormat("es-CL", { style: "currency", currency: "CLP", maximumFractionDigits: 0 }).format(Number(presupuesto.monto))}`
           )
         }
       }

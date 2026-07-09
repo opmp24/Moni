@@ -1,4 +1,4 @@
-# PerJaus — Guía para el Agente
+# Wally — Guía para el Agente
 
 ## Importante: Siempre responder en español neutro. El usuario habla español, todas las respuestas deben ser en español.
 
@@ -10,7 +10,7 @@
 - **Backend**: Supabase (PostgreSQL, Auth, Realtime, Edge Functions)
 - **PWA**: vite-plugin-pwa
 - **Despliegue**: Netlify (auto-deploy desde `main`)
-- **Bots**: Telegram (@PerJausBot) + Gemini AI
+- **Bots**: Telegram (@WallyBot) + Gemini AI
 
 ## Comandos
 - `npm run dev` — servidor local
@@ -19,6 +19,7 @@
 - `npm run preview` — preview build local
 - `npm test` — ejecutar tests unitarios (Vitest)
 - `npm run test:watch` — tests en modo watch
+
 
 ## Testing (Vitest)
 - Framework: **Vitest** + **React Testing Library** + **jsdom**
@@ -36,17 +37,17 @@
 - GitHub: `github.com/opmp24/Moni`
 - Rama `main` → Netlify auto-deploy
 - Rama `development` → trabajo activo
-- URL: `perjaus.netlify.app`
+- URL: `wally.netlify.app`
 
 ### Supabase
 - Proyecto: `yfdwtfricvquakrtarey`
 - Tablas con Realtime: `gastos`, `presupuestos`, `categorias`, `ingresos`
 - Auth: Google OAuth habilitado (Client ID: `351795914656-cepr4dv8rahikbkfpq9rmivad3ef63v2.apps.googleusercontent.com`)
-- Auth config: `site_url = http://localhost:5173`, `uri_allow_list` incluye `localhost` y `perjaus.netlify.app`
+- Auth config: `site_url = http://localhost:5173`, `uri_allow_list` incluye `localhost` y `wally.netlify.app`
 - Edge Function: `telegram-webhook` (URL: `/functions/v1/telegram-webhook`)
 
 ### Telegram
-- Bot: `@PerJausBot`
+- Bot: `@WallyBot`
 - Token y GEMINI_API_KEY en secrets de Edge Function
 - Función: el usuario envía mensajes tipo "gasté 500 en comida" → Gemini parsea → inserta en DB
 

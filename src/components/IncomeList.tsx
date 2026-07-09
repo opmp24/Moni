@@ -1,5 +1,5 @@
 import { useState, useMemo, useCallback } from "react"
-import { Trash, X, CaretLeft, CaretRight, Download, MagnifyingGlass, ArrowClockwise } from "@phosphor-icons/react"
+import { Trash, X, CaretLeft, CaretRight, Download, MagnifyingGlass, ArrowClockwise, PencilSimple, Check } from "@phosphor-icons/react"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import {
@@ -29,6 +29,41 @@ export function IncomeList({ ingresos }: IncomeListProps) {
   const [montoMax, setMontoMax] = useState("")
   const [pagina, setPagina] = useState(1)
   const POR_PAGINA = 10
+
+  const [editingCategoria, setEditingCategoria] = useState<string | null>(null)
+  const [savingCat, setSavingCat] = useState<string | null>(null)
+  const [editingId, setEditingId] = useState<string | null>(null)
+  const [editConcepto, setEditConcepto] = useState("")
+  const [editMonto, setEditMonto] = useState("")
+  const [editFecha, setEditFecha] = useState("")
+  const [editTags, setEditTags] = useState("")
+  const [savingEdit, setSavingEdit] = useState(false)
+
+  const startEdit = (ingreso: Ingreso) => {
+    setEditingId(ingreso.id)
+    setEditConcepto(ingreso.concepto ?? "")
+    setEditMonto(String(ingreso.monto))
+    setEditFecha(ingreso.fecha.slice(0, 10))
+    setEditTags(ingreso.tags?.join(", ") ?? "")
+  }
+
+  const cancelEdit = () => {
+    setEditingId(null)
+  }
+
+  const handleEditSave = async (id: string) => {
+    if (!supabase) return
+    setSavingEdit(true)
+    const tags = editTags.split(",").map(t => t.trim()).filter(Boolean)
+    await supabase.from("ingresos").update({
+      concepto: editConcepto,
+      monto: Number(editMonto),
+      fecha: new Date(editFecha).toISOString(),
+      tags,
+    }).eq("id", id)
+    setSavingEdit(false)
+    setEditingId(null)
+  }
 
   const hayFiltros = filtroCategoria !== "todas" || fechaDesde || fechaHasta || busqueda || montoMin || montoMax
 
@@ -195,39 +230,174 @@ export function IncomeList({ ingresos }: IncomeListProps) {
             <tbody>
               {paginados.map((ingreso) => (
                 <tr key={ingreso.id} className="border-b border-border last:border-0">
-                  <td className="py-3 pr-4 text-muted-foreground">{formatDate(ingreso.fecha)}</td>
-                  <td className="py-3 pr-4 font-medium text-card-foreground">
-                    <span className="flex items-center gap-1.5">
-                      {ingreso.recurrente && <ArrowClockwise className="h-3 w-3 text-yellow-400" weight="bold" />}
-                      {ingreso.concepto}
-                    </span>
+                  <td className="py-3 pr-4">
+                    {editingId === ingreso.id ? (
+                      <input
+                        type="date"
+                        value={editFecha}
+                        onChange={(e) => setEditFecha(e.target.value)}
+                        className="h-7 w-[130px] rounded-md border border-border bg-muted px-2 text-xs text-card-foreground [color-scheme:var(--color-scheme)]"
+                      />
+                    ) : (
+                      <span className="text-muted-foreground">{formatDate(ingreso.fecha)}</span>
+                    )}
                   </td>
                   <td className="py-3 pr-4">
-                    <Badge
-                      variant="outline"
-                      className="border-0 text-white"
-                      style={{ backgroundColor: getColor(ingreso.categoria) }}
-                    >
-                      {ingreso.categoria}
-                    </Badge>
+                    {editingId === ingreso.id ? (
+                      <div className="space-y-1">
+                        <input
+                          type="text"
+                          value={editConcepto}
+                          onChange={(e) => setEditConcepto(e.target.value)}
+                          className="h-7 w-[160px] rounded-md border border-border bg-muted px-2 text-xs text-card-foreground"
+                          placeholder="Concepto"
+                        />
+                        <input
+                          type="text"
+                          value={editTags}
+                          onChange={(e) => setEditTags(e.target.value)}
+                          className="h-7 w-[160px] rounded-md border border-border bg-muted px-2 text-xs text-card-foreground"
+                          placeholder="Tags (coma separada)"
+                        />
+                      </div>
+                    ) : (
+                      <>
+                        <span className="flex items-center gap-1.5 font-medium text-card-foreground">
+                          {ingreso.recurrente && <ArrowClockwise className="h-3 w-3 text-yellow-400" weight="bold" />}
+                          {ingreso.concepto}
+                        </span>
+                        {ingreso.tags && ingreso.tags.length > 0 && (
+                          <div className="mt-0.5 flex flex-wrap gap-1">
+                            {ingreso.tags.map((tag) => (
+                              <span key={tag} className="rounded bg-muted px-1.5 py-[1px] text-[9px] text-muted-foreground">
+                                {tag}
+                              </span>
+                            ))}
+                          </div>
+                        )}
+                      </>
+                    )}
                   </td>
-                  <td className="py-3 pl-4 text-right font-semibold text-emerald-400">
-                    +{formatCurrency(ingreso.monto)}
+                  <td className="py-3 pr-4">
+                    {editingCategoria === ingreso.id ? (
+                      <div className="flex items-center gap-1">
+                        <Select
+                          value={ingreso.categoria}
+                          onValueChange={async (nuevaCat) => {
+                            setSavingCat(ingreso.id)
+                            await supabase!.from("ingresos").update({ categoria: nuevaCat }).eq("id", ingreso.id)
+                            setSavingCat(null)
+                            setEditingCategoria(null)
+                          }}
+                        >
+                          <SelectTrigger className="h-7 w-[140px] border-border bg-muted text-xs text-card-foreground">
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent className="border-border bg-card text-card-foreground">
+                            {categoriasList.map((cat) => (
+                              <SelectItem key={cat.nombre} value={cat.nombre} className="text-xs focus:bg-accent focus:text-accent-foreground">
+                                {cat.nombre}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                        <button
+                          onClick={() => setEditingCategoria(null)}
+                          className="rounded p-0.5 text-muted-foreground hover:text-card-foreground"
+                        >
+                          <X className="h-3 w-3" weight="bold" />
+                        </button>
+                      </div>
+                    ) : (
+                      <button
+                        onClick={() => setEditingCategoria(ingreso.id)}
+                        className="group relative"
+                        title="Cambiar categoría"
+                      >
+                        <Badge
+                          variant="outline"
+                          className="border-0 pr-2 text-white transition-all group-hover:pr-7"
+                          style={{ backgroundColor: savingCat === ingreso.id ? "#6B7280" : getColor(ingreso.categoria) }}
+                        >
+                          {savingCat === ingreso.id ? (
+                            <span className="inline-block h-3 w-3 animate-spin rounded-full border border-white border-t-transparent" />
+                          ) : (
+                            ingreso.categoria
+                          )}
+                        </Badge>
+                        {savingCat !== ingreso.id && (
+                          <span className="absolute right-1 top-1/2 -translate-y-1/2 text-[10px] text-white/60 opacity-0 transition-opacity group-hover:opacity-100">
+                            <Check className="h-3 w-3" weight="bold" />
+                          </span>
+                        )}
+                      </button>
+                    )}
+                  </td>
+                  <td className="py-3 pl-4 text-right">
+                    {editingId === ingreso.id ? (
+                      <input
+                        type="number"
+                        value={editMonto}
+                        onChange={(e) => setEditMonto(e.target.value)}
+                        className="h-7 w-[100px] rounded-md border border-border bg-muted px-2 text-right text-xs text-card-foreground [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none"
+                        step="0.01"
+                      />
+                    ) : (
+                      <span className="font-semibold text-emerald-400">+{formatCurrency(ingreso.monto)}</span>
+                    )}
                   </td>
                   <td className="py-3">
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="h-7 w-7 text-muted-foreground hover:text-red-400"
-                      onClick={() => handleDelete(ingreso.id)}
-                      disabled={deleting === ingreso.id}
-                    >
-                      {deleting === ingreso.id ? (
-                        <span className="h-3 w-3 animate-spin rounded-full border border-zinc-500 border-t-transparent" />
+                    <div className="flex items-center gap-1">
+                      {editingId === ingreso.id ? (
+                        <>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-7 w-7 text-emerald-400 hover:text-emerald-300"
+                            onClick={() => handleEditSave(ingreso.id)}
+                            disabled={savingEdit}
+                          >
+                            {savingEdit ? (
+                              <span className="h-3 w-3 animate-spin rounded-full border border-zinc-500 border-t-transparent" />
+                            ) : (
+                              <Check className="h-3.5 w-3.5" weight="bold" />
+                            )}
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-7 w-7 text-muted-foreground hover:text-card-foreground"
+                            onClick={cancelEdit}
+                          >
+                            <X className="h-3.5 w-3.5" weight="bold" />
+                          </Button>
+                        </>
                       ) : (
-                        <Trash className="h-3.5 w-3.5" />
+                        <>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-7 w-7 text-muted-foreground hover:text-blue-400"
+                            onClick={() => startEdit(ingreso)}
+                          >
+                            <PencilSimple className="h-3.5 w-3.5" />
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-7 w-7 text-muted-foreground hover:text-red-400"
+                            onClick={() => handleDelete(ingreso.id)}
+                            disabled={deleting === ingreso.id}
+                          >
+                            {deleting === ingreso.id ? (
+                              <span className="h-3 w-3 animate-spin rounded-full border border-zinc-500 border-t-transparent" />
+                            ) : (
+                              <Trash className="h-3.5 w-3.5" />
+                            )}
+                          </Button>
+                        </>
                       )}
-                    </Button>
+                    </div>
                   </td>
                 </tr>
               ))}

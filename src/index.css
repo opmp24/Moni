@@ -63,3 +63,43 @@
     font-family: "Outfit", sans-serif;
   }
 }
+
+@layer utilities {
+  .card-glow {
+    @apply transition-all duration-300;
+  }
+  .card-glow:hover {
+    border-color: rgba(255, 214, 0, 0.5);
+    box-shadow: 0 0 25px rgba(255, 214, 0, 0.18), 0 0 60px rgba(255, 214, 0, 0.06);
+  }
+}
+
+.dark .rdp-root {
+  --rdp-accent-color: #facc15;
+  --rdp-accent-background-color: rgba(250, 204, 21, 0.12);
+  --rdp-today-color: #facc15;
+}
+
+.rdp-root {
+  --rdp-day-height: 38px;
+  --rdp-day-width: 38px;
+  --rdp-day_button-height: 36px;
+  --rdp-day_button-width: 36px;
+}
+
+.rdp-day_button:hover {
+  background-color: rgba(255, 255, 255, 0.08);
+}
+
+.dark .rdp-nav svg {
+  fill: #e4e4e7;
+}
+
+.dark .rdp-weekday {
+  color: #a1a1aa;
+}
+
+.dark .rdp-day_button:focus-visible {
+  outline: 2px solid #facc15;
+  outline-offset: 2px;
+}

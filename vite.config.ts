@@ -11,8 +11,8 @@ export default defineConfig({
       registerType: "autoUpdate",
       includeAssets: ["favicon.svg", "pwa-192x192.png", "pwa-512x512.png"],
       manifest: {
-        name: "PerJaus",
-        short_name: "PerJaus",
+        name: "Wally",
+        short_name: "Wally",
         description: "Control de finanzas personales",
         lang: "es",
         theme_color: "#FFD600",

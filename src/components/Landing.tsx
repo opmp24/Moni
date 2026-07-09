@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react"
+import { useEffect, useState, useRef } from "react"
+import gsap from "gsap"
 import { useNavigate } from "react-router-dom"
 import { useAuth } from "@/lib/auth"
 import { InstallPWA } from "@/components/InstallPWA"
@@ -32,13 +33,13 @@ const features = [
   {
     icon: DeviceMobile,
     title: "App instalable",
-    desc: "PerJaus funciona como una app nativa en tu celular. Instálala con un clic y úsala sin conexión.",
+    desc: "Wally funciona como una app nativa en tu celular. Instálala con un clic y úsala sin conexión.",
   },
 ]
 
 const steps = [
   { icon: GoogleLogo, label: "Inicia sesión", desc: "Con tu cuenta de Google, en segundos." },
-  { icon: Robot, label: "Conecta Telegram", desc: "En la web genera un código y envíalo al bot @PerJausBot con /vinculate." },
+  { icon: Robot, label: "Conecta Telegram", desc: "En la web genera un código y envíalo al bot @WallyBot con /vinculate." },
   { icon: Lightning, label: "Registra gastos", desc: "Envía mensajes como \"taxi 3000\" al bot y nosotros lo procesamos." },
 ]
 
@@ -68,9 +69,9 @@ export function Landing() {
       <header className="relative z-10 mx-auto flex max-w-6xl items-center justify-between px-6 py-5">
         <div className="flex items-center gap-2.5">
           <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-yellow-400 text-sm font-bold text-zinc-950">
-            P
+            W
           </div>
-          <span className="text-lg font-semibold tracking-tight">PerJaus</span>
+          <span className="text-lg font-semibold tracking-tight">Wally</span>
         </div>
         <div className="flex items-center gap-3">
           <InstallPWA />
@@ -124,7 +125,7 @@ export function Landing() {
           <div className="mx-auto max-w-6xl px-6">
             <div className="mb-14 text-center">
               <h2 className="text-3xl font-bold tracking-tight md:text-4xl">
-                Por qué <span className="text-yellow-400">PerJaus</span>
+                Por qué <span className="text-yellow-400">Wally</span>
               </h2>
               <p className="mt-3 text-muted-foreground max-w-lg mx-auto">
                 Olvídate de hojas de cálculo. Tu dinero merece algo mejor.
@@ -186,7 +187,7 @@ export function Landing() {
                   Bot de <span className="text-yellow-400">Telegram</span>
                 </h2>
                 <p className="mt-3 text-muted-foreground">
-                  El bot <span className="font-mono text-yellow-400">@PerJausBot</span> procesa tu lenguaje natural y registra los gastos automáticamente.
+                  El bot <span className="font-mono text-yellow-400">@WallyBot</span> procesa tu lenguaje natural y registra los gastos automáticamente.
                 </p>
                 <div className="mt-5 space-y-2 text-sm text-muted-foreground">
                   <div className="flex items-start gap-2">
@@ -213,7 +214,7 @@ export function Landing() {
                     <div className="flex h-7 w-7 items-center justify-center rounded-full bg-sky-500">
                       <TelegramLogo className="h-3.5 w-3.5 text-white" weight="fill" />
                     </div>
-                    <span className="text-sm font-medium">@PerJausBot</span>
+                    <span className="text-sm font-medium">@WallyBot</span>
                     <span className="ml-auto text-[10px] text-muted-foreground">En línea</span>
                   </div>
                   <div className="space-y-3">
@@ -252,6 +253,35 @@ export function Landing() {
           </div>
         </section>
 
+        <section className="relative z-10 border-t border-border py-16 bg-card/50">
+          <div className="mx-auto max-w-6xl px-6">
+            <div className="mb-10 text-center">
+              <h2 className="text-2xl font-bold tracking-tight md:text-3xl">
+                Cómo conectar <span className="text-yellow-400">Telegram</span>
+              </h2>
+              <p className="mt-2 text-sm text-muted-foreground max-w-md mx-auto">
+                Sigue estos pasos y empieza a registrar gastos en segundos.
+              </p>
+            </div>
+            <div className="mx-auto max-w-2xl space-y-4">
+              {[
+                { step: 1, text: "Inicia sesión con Google haciendo clic en \"Comenzar gratis\" arriba." },
+                { step: 2, text: "Ve a Configuración (⚙️) → Conectar Telegram y presiona \"Generar código\"." },
+                { step: 3, text: "Abre Telegram en tu celular y busca el bot <span class=\"font-mono\">@WallyBot</span>." },
+                { step: 4, text: "Inicia el chat con el bot y envía: <span class=\"font-mono\">/vinculate</span> seguido del código que apareció en la web." },
+                { step: 5, text: "¡Listo! Ahora puedes enviar mensajes como <span class=\"font-mono\">\"almuerzo 5000\"</span> y el bot lo registrará automáticamente." },
+              ].map((s) => (
+                <div key={s.step} className="flex items-start gap-4 rounded-xl border border-border bg-card px-5 py-4">
+                  <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-yellow-400 text-xs font-bold text-zinc-950">
+                    {s.step}
+                  </div>
+                  <p className="text-sm text-card-foreground leading-relaxed" dangerouslySetInnerHTML={{ __html: s.text }} />
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
         <section className="relative z-10 border-t border-border py-16">
           <div className="mx-auto max-w-6xl px-6">
             <div className="grid gap-4 md:grid-cols-3">
@@ -276,7 +306,7 @@ export function Landing() {
               ¿Listo para tomar el control?
             </h2>
             <p className="mt-3 text-muted-foreground max-w-md mx-auto">
-            Únete a PerJaus y empieza a gestionar tus finanzas de forma inteligente.
+            Únete a Wally y empieza a gestionar tus finanzas de forma inteligente.
             </p>
             <div className="mt-8 flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
               <Button
@@ -303,7 +333,8 @@ export function Landing() {
 }
 
 function DashboardPreview() {
-  const bars = [
+  const ref = useRef<HTMLDivElement>(null)
+  const barsData = [
     { label: "Ene", value: 40 },
     { label: "Feb", value: 60 },
     { label: "Mar", value: 35 },
@@ -318,7 +349,55 @@ function DashboardPreview() {
     { label: "Entretenimiento", value: 12, color: "#9B59B6" },
     { label: "Otros", value: 8, color: "#6B7280" },
   ]
-  const maxBar = Math.max(...bars.map(b => b.value))
+  const maxBar = Math.max(...barsData.map(b => b.value))
+  const amountRef = useRef<HTMLSpanElement>(null)
+
+  const containerRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    const el = containerRef.current
+    if (!el) return
+
+    const bars = el.querySelectorAll<HTMLElement>(".landing-bar")
+    const segments = el.querySelectorAll<SVGCircleElement>(".landing-donut-segment")
+    const labels = el.querySelectorAll<HTMLElement>(".landing-cat-label")
+
+    gsap.set(bars, { scaleY: 0, transformOrigin: "bottom center" })
+    gsap.set(segments, { strokeDasharray: "0 1000" })
+
+    const tl = gsap.timeline({ defaults: { ease: "power2.out" } })
+
+    tl.to(amountRef.current, {
+      duration: 1.2,
+      textContent: 340000,
+      snap: { textContent: 1 },
+      ease: "power1.out",
+    })
+
+    tl.to(bars, {
+      scaleY: 1,
+      duration: 0.6,
+      stagger: 0.07,
+      ease: "back.out(1.4)",
+    }, "-=0.6")
+
+    tl.to(segments, {
+      strokeDasharray: (i) => {
+        const c = categories[i]
+        const pct = c.value / categories.reduce((s, c) => s + c.value, 0)
+        const circ = 2 * Math.PI * 55
+        return `${pct * circ} ${circ}`
+      },
+      duration: 0.5,
+      stagger: 0.12,
+      ease: "power1.out",
+    }, "-=0.3")
+
+    tl.fromTo(labels,
+      { autoAlpha: 0, y: 6 },
+      { autoAlpha: 1, y: 0, duration: 0.3, stagger: 0.05 },
+    "-=0.2")
+  }, [])
 
   const donutSize = 140
   const donutCenter = donutSize / 2
@@ -329,11 +408,11 @@ function DashboardPreview() {
   let cumulative = 0
 
   return (
-    <div className="rounded-2xl border border-border bg-card p-5 shadow-2xl shadow-yellow-400/5 backdrop-blur-sm">
+    <div ref={containerRef} className="rounded-2xl border border-border bg-card p-5 shadow-2xl shadow-yellow-400/5 backdrop-blur-sm">
       <div className="mb-4 flex items-center justify-between">
         <div>
           <p className="text-xs text-muted-foreground">Este mes</p>
-          <p className="text-xl font-bold">$ 340.000</p>
+          <p className="text-xl font-bold">$ <span ref={amountRef}>0</span></p>
         </div>
         <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-yellow-400/10 text-yellow-400">
           <Wallet className="h-4 w-4" />
@@ -358,10 +437,10 @@ function DashboardPreview() {
       <div className="mb-4">
         <p className="mb-2 text-xs font-medium text-muted-foreground">Evolución mensual</p>
         <div className="flex items-end gap-1.5">
-          {bars.map((b) => (
+          {barsData.map((b) => (
             <div key={b.label} className="flex flex-1 flex-col items-center gap-1">
               <div
-                className="w-full rounded-t-sm bg-yellow-400/80 transition-all duration-500"
+                className="landing-bar w-full rounded-t-sm bg-yellow-400/80"
                 style={{ height: `${(b.value / maxBar) * 48}px` }}
               />
               <span className="text-[10px] text-muted-foreground">{b.label}</span>
@@ -378,27 +457,27 @@ function DashboardPreview() {
             {categories.map((c) => {
               const percent = c.value / total
               const offset = cumulative * donutCirc
-              const length = percent * donutCirc
               cumulative += percent
               return (
                 <circle
                   key={c.label}
+                  className="landing-donut-segment"
                   cx={donutCenter}
                   cy={donutCenter}
                   r={donutRadius}
                   fill="none"
                   stroke={c.color}
                   strokeWidth={donutStroke}
-                  strokeDasharray={`${length} ${donutCirc - length}`}
+                  strokeDasharray={`0 1000`}
                   strokeDashoffset={-offset}
                   strokeLinecap="butt"
                 />
               )
             })}
           </svg>
-          <div className="flex flex-wrap justify-center gap-x-3 gap-y-1">
+          <div ref={ref} className="flex flex-wrap justify-center gap-x-3 gap-y-1">
             {categories.map((c) => (
-              <div key={c.label} className="flex items-center gap-1">
+              <div key={c.label} className="landing-cat-label flex items-center gap-1">
                 <span className="h-1.5 w-1.5 rounded-full" style={{ backgroundColor: c.color }} />
                 <span className="text-[10px] text-muted-foreground">{c.label}</span>
                 <span className="text-[10px] text-muted-foreground">{c.value}%</span>

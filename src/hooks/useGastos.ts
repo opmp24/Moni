@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback, useId } from "react"
 import { supabase } from "@/lib/supabase"
 import type { Gasto } from "@/types"
+import { parseDateSafe } from "@/lib/utils"
 
 export function useGastos() {
   const [gastos, setGastos] = useState<Gasto[]>([])
@@ -40,7 +41,7 @@ export function useGastos() {
   const ahora = new Date()
   const monthStart = new Date(ahora.getFullYear(), ahora.getMonth(), 1)
 
-  const gastosDelMes = gastos.filter((g) => new Date(g.fecha) >= monthStart)
+  const gastosDelMes = gastos.filter((g) => parseDateSafe(g.fecha) >= monthStart)
   const totalGastosMes = gastosDelMes.reduce((s, g) => s + Number(g.monto), 0)
 
   const categorias: { categoria: string; monto: number }[] = []
@@ -61,7 +62,7 @@ export function useGastos() {
   const meses = ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"]
 
   for (const g of gastos) {
-    const d = new Date(g.fecha)
+    const d = parseDateSafe(g.fecha)
     const key = `${d.getFullYear()}-${d.getMonth()}`
     mesMap.set(key, (mesMap.get(key) ?? 0) + Number(g.monto))
   }

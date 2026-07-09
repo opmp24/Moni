@@ -1,5 +1,5 @@
 {
-  "name": "perjaus",
+  "name": "wally",
   "private": true,
   "version": "0.1.0",
   "type": "module",
@@ -25,9 +25,11 @@
     "@supabase/supabase-js": "^2.49.4",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "date-fns": "^4.4.0",
     "gsap": "^3.15.0",
     "lucide-react": "^0.487.0",
     "react": "^19.1.0",
+    "react-day-picker": "^10.0.1",
     "react-dom": "^19.1.0",
     "react-router-dom": "^7.16.0",
     "tailwind-merge": "^3.2.0",

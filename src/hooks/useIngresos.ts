@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback, useId } from "react"
 import { supabase } from "@/lib/supabase"
 import type { Ingreso } from "@/types"
+import { parseDateSafe } from "@/lib/utils"
 
 export function useIngresos() {
   const [ingresos, setIngresos] = useState<Ingreso[]>([])
@@ -40,7 +41,7 @@ export function useIngresos() {
   const ahora = new Date()
   const monthStart = new Date(ahora.getFullYear(), ahora.getMonth(), 1)
 
-  const ingresosDelMes = ingresos.filter((g) => new Date(g.fecha) >= monthStart)
+  const ingresosDelMes = ingresos.filter((g) => parseDateSafe(g.fecha) >= monthStart)
   const totalIngresosMes = ingresosDelMes.reduce((s, g) => s + Number(g.monto), 0)
 
   return {

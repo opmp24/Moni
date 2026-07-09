@@ -46,6 +46,9 @@ nul
 aux
 prn
 
+# Local dev files (no subir al repo — contiene credenciales, config)
+local/
+
 # Docs (no subir al repo — contiene credenciales, prompts, config)
 docs/
 

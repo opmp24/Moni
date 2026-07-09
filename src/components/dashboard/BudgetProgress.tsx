@@ -14,7 +14,7 @@ export function BudgetProgress({ data }: BudgetProgressProps) {
       <div className="flex flex-col items-center gap-2 py-6 text-center">
         <p className="text-sm text-muted-foreground">Sin presupuestos configurados</p>
         <p className="text-xs text-muted-foreground">
-            Usa el lápiz ✏️ o envía <code className="rounded bg-muted px-1 py-0.5 text-muted-foreground">/presupuesto Categoria monto</code> a @PerJausBot
+            Usa el lápiz ✏️ o envía <code className="rounded bg-muted px-1 py-0.5 text-muted-foreground">/presupuesto Categoria monto</code> a @WallyBot
         </p>
       </div>
     )

@@ -14,6 +14,7 @@ import { AddIncomeDialog } from "@/components/AddIncomeDialog"
 import { TelegramLink } from "@/components/TelegramLink"
 import { MarqueeBar } from "@/components/MarqueeBar"
 import { MetasPanel } from "@/components/MetasPanel"
+import { CompromisosPanel } from "@/components/CompromisosPanel"
 import { BudgetSettings } from "@/components/BudgetSettings"
 import { CategoryEditor } from "@/components/CategoryEditor"
 import { ErrorBoundary } from "@/components/ErrorBoundary"
@@ -24,9 +25,11 @@ import { useIngresos } from "@/hooks/useIngresos"
 import { usePresupuestos } from "@/hooks/usePresupuestos"
 import { useCategorias } from "@/hooks/useCategorias"
 import { useAuth } from "@/lib/auth"
-import { formatCurrency } from "@/lib/utils"
+import { formatCurrency, parseDateSafe } from "@/lib/utils"
 import { WeekChart } from "@/components/dashboard/WeekChart"
 import { BalanceChart } from "@/components/dashboard/BalanceChart"
+import { IngresoVsGastoChart } from "@/components/dashboard/IngresoVsGastoChart"
+import { UltimosDiasChart } from "@/components/dashboard/UltimosDiasChart"
 import { duplicarRecurrentes } from "@/lib/recurrentes"
 import gsap from "gsap"
 
@@ -49,11 +52,11 @@ export function Dashboard() {
   const mesPasadoEnd = new Date(ahora.getFullYear(), ahora.getMonth(), 0, 23, 59, 59)
 
   const gastosMesPasado = gastos.filter((g) => {
-    const d = new Date(g.fecha)
+    const d = parseDateSafe(g.fecha)
     return d >= mesPasado && d <= mesPasadoEnd
   })
   const ingresosMesPasado = ingresos.filter((g) => {
-    const d = new Date(g.fecha)
+    const d = parseDateSafe(g.fecha)
     return d >= mesPasado && d <= mesPasadoEnd
   })
   const totalGastosMP = gastosMesPasado.reduce((s, g) => s + Number(g.monto), 0)
@@ -75,6 +78,16 @@ export function Dashboard() {
       { y: 0, opacity: 1, duration: 0.5, stagger: 0.08, ease: "power2.out" }
     )
   }, [loading])
+
+  useEffect(() => {
+    if (tab !== "resumen") return
+    const cards = document.querySelectorAll<HTMLElement>(".dashboard-card-resumen")
+    if (cards.length === 0) return
+    gsap.fromTo(cards,
+      { y: 20, opacity: 0 },
+      { y: 0, opacity: 1, duration: 0.4, stagger: 0.06, ease: "power2.out" }
+    )
+  }, [tab, loading])
 
   useEffect(() => {
     if (!user?.id) return
@@ -99,7 +112,7 @@ export function Dashboard() {
   return (
     <div className="min-h-screen bg-background">
       <div className="fixed inset-0 bg-[radial-gradient(ellipse_80%_50%_at_50%_-20%,rgba(255,214,0,0.08),transparent)] pointer-events-none" />
-      <div className="relative z-10 mx-auto max-w-6xl space-y-6 p-4 md:p-6 lg:p-8">
+      <div className="relative z-10 space-y-6 p-4 md:p-6 lg:p-8">
         <header className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
           <div className="flex items-center gap-3">
             <div className="relative h-10 w-10 shrink-0 overflow-hidden rounded-full border border-border">
@@ -117,7 +130,7 @@ export function Dashboard() {
               )}
             </div>
             <div className="min-w-0">
-              <h1 className="text-2xl font-bold tracking-tight text-foreground">PerJaus</h1>
+              <h1 className="text-2xl font-bold tracking-tight text-foreground">Wally</h1>
               <p className="truncate text-sm text-muted-foreground">
                 {user?.user_metadata?.full_name ?? user?.email}
               </p>
@@ -143,7 +156,7 @@ export function Dashboard() {
         <MarqueeBar gastos={gastos} />
 
         <div className="grid gap-4 md:grid-cols-3">
-          <Card className="dashboard-card border-border bg-card transition-all duration-300 hover:border-yellow-500/30 hover:shadow-[0_0_20px_rgba(255,214,0,0.12)]">
+          <Card className="dashboard-card card-glow border-border bg-card">
             <CardHeader className="flex flex-row items-center justify-between pb-2">
               <CardTitle className="text-sm font-medium text-muted-foreground">Balance del mes</CardTitle>
               <Wallet className="h-4 w-4 text-muted-foreground" weight="bold" />
@@ -182,7 +195,7 @@ export function Dashboard() {
               </div>
             </CardContent>
           </Card>
-          <Card className="dashboard-card border-border bg-card transition-all duration-300 hover:border-yellow-500/30 hover:shadow-[0_0_20px_rgba(255,214,0,0.12)]">
+          <Card className="dashboard-card card-glow border-border bg-card">
             <CardHeader className="flex flex-row items-center justify-between pb-2">
               <CardTitle className="text-sm font-medium text-muted-foreground">Top categoría</CardTitle>
               <TrendingUp className="h-4 w-4 text-muted-foreground" />
@@ -202,7 +215,7 @@ export function Dashboard() {
               </p>
             </CardContent>
           </Card>
-          <Card className="dashboard-card border-border bg-card transition-all duration-300 hover:border-yellow-500/30 hover:shadow-[0_0_20px_rgba(255,214,0,0.12)]">
+          <Card className="dashboard-card card-glow border-border bg-card">
             <CardHeader className="flex flex-row items-center justify-between pb-2">
               <CardTitle className="text-sm font-medium text-muted-foreground">Transacciones</CardTitle>
               <Receipt className="h-4 w-4 text-muted-foreground" />
@@ -228,8 +241,8 @@ export function Dashboard() {
             </TabsTrigger>
           </TabsList>
           <TabsContent value="resumen" className="space-y-4">
-            <div className="grid gap-4 md:grid-cols-3">
-              <Card className="border-border bg-card transition-all duration-300 hover:border-yellow-500/30 hover:shadow-[0_0_20px_rgba(255,214,0,0.12)]">
+            <div ref={cardsRef} className="grid gap-4 md:grid-cols-2">
+              <Card className="dashboard-card-resumen card-glow border-border bg-card">
                 <CardHeader>
                   <CardTitle className="text-sm text-muted-foreground">Por categoría</CardTitle>
                 </CardHeader>
@@ -237,7 +250,7 @@ export function Dashboard() {
                   <DonutChart data={categorias} />
                 </CardContent>
               </Card>
-              <Card className="border-border bg-card transition-all duration-300 hover:border-yellow-500/30 hover:shadow-[0_0_20px_rgba(255,214,0,0.12)]">
+              <Card className="dashboard-card-resumen card-glow border-border bg-card">
                 <CardHeader>
                   <CardTitle className="text-sm text-muted-foreground">Evolución mensual</CardTitle>
                 </CardHeader>
@@ -245,7 +258,7 @@ export function Dashboard() {
                   <BarChart data={gastosPorMes} />
                 </CardContent>
               </Card>
-              <Card className="border-border bg-card transition-all duration-300 hover:border-yellow-500/30 hover:shadow-[0_0_20px_rgba(255,214,0,0.12)]">
+              <Card className="dashboard-card-resumen card-glow border-border bg-card">
                 <CardHeader className="flex flex-row items-center justify-between">
                   <CardTitle className="text-sm text-muted-foreground">Presupuesto vs real</CardTitle>
                   <BudgetSettings open={budgetOpen} onOpenChange={setBudgetOpen} onSaved={refetchPresupuestos} />
@@ -254,18 +267,41 @@ export function Dashboard() {
                   <BudgetProgress data={presupuestosConGasto} />
                 </CardContent>
               </Card>
+              <Card className="dashboard-card-resumen card-glow border-border bg-card">
+                <CardHeader>
+                  <CardTitle className="text-sm text-muted-foreground">Tendencia diaria</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <UltimosDiasChart ingresos={ingresos} gastos={gastos} />
+                </CardContent>
+              </Card>
             </div>
-            <Card className="border-border bg-card transition-all duration-300 hover:border-yellow-500/30 hover:shadow-[0_0_20px_rgba(255,214,0,0.12)]">
-              <CardHeader>
-                <CardTitle className="text-sm text-muted-foreground">Balance acumulado</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <BalanceChart gastosPorMes={gastosPorMes} ingresos={ingresos} gastos={gastos} />
-              </CardContent>
-            </Card>
-            <Card className="border-border bg-card transition-all duration-300 hover:border-yellow-500/30 hover:shadow-[0_0_20px_rgba(255,214,0,0.12)]">
+            <div className="grid gap-4 md:grid-cols-2">
+              <Card className="dashboard-card-resumen card-glow border-border bg-card">
+                <CardHeader>
+                  <CardTitle className="text-sm text-muted-foreground">Balance acumulado</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <BalanceChart gastosPorMes={gastosPorMes} ingresos={ingresos} gastos={gastos} />
+                </CardContent>
+              </Card>
+              <Card className="dashboard-card-resumen card-glow border-border bg-card">
+                <CardHeader>
+                  <CardTitle className="text-sm text-muted-foreground">Ingresos vs Gastos</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <IngresoVsGastoChart gastosPorMes={gastosPorMes} ingresos={ingresos} gastos={gastos} />
+                </CardContent>
+              </Card>
+            </div>
+            <Card className="dashboard-card-resumen card-glow border-border bg-card">
               <CardContent className="pt-6">
                 <MetasPanel />
+              </CardContent>
+            </Card>
+            <Card className="dashboard-card-resumen card-glow border-border bg-card">
+              <CardContent className="pt-6">
+                <CompromisosPanel />
               </CardContent>
             </Card>
           </TabsContent>

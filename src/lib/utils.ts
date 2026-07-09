@@ -15,9 +15,14 @@ export function formatCurrency(amount: number): string {
 
 export function formatDate(date: string | Date): string {
   let d: Date
-  if (typeof date === "string" && /^\d{4}-\d{2}-\d{2}$/.test(date)) {
-    const [y, m, day] = date.split("-").map(Number)
-    d = new Date(y, m - 1, day)
+  if (typeof date === "string") {
+    const datePart = date.slice(0, 10)
+    if (/^\d{4}-\d{2}-\d{2}$/.test(datePart)) {
+      const [y, m, day] = datePart.split("-").map(Number)
+      d = new Date(y, m - 1, day)
+    } else {
+      d = new Date(date)
+    }
   } else {
     d = new Date(date)
   }
@@ -27,4 +32,13 @@ export function formatDate(date: string | Date): string {
     month: "short",
     year: "numeric",
   }).format(d)
+}
+
+export function parseDateSafe(dateStr: string): Date {
+  const datePart = dateStr.slice(0, 10)
+  if (/^\d{4}-\d{2}-\d{2}$/.test(datePart)) {
+    const [y, m, day] = datePart.split("-").map(Number)
+    return new Date(y, m - 1, day)
+  }
+  return new Date(dateStr)
 }

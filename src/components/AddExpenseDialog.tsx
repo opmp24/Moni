@@ -7,6 +7,7 @@ import { supabase } from "@/lib/supabase"
 import { useAuth } from "@/lib/auth"
 import { useCategorias } from "@/hooks/useCategorias"
 import type { Categoria } from "@/types"
+import { DatePicker } from "@/components/ui/DatePicker"
 
 interface AddExpenseDialogProps {
   open?: boolean
@@ -131,12 +132,10 @@ export function AddExpenseDialog({ open: controlledOpen, onOpenChange, onSaved }
           </div>
           <div>
             <label htmlFor="fecha" className="text-sm font-medium text-card-foreground">Fecha</label>
-            <input
-              id="fecha"
-              type="date"
+            <DatePicker
               value={fecha}
-              onChange={(e) => setFecha(e.target.value)}
-              className="mt-1 flex h-9 w-full rounded-md border border-border bg-muted px-3 py-1 text-sm text-foreground focus:outline-none focus:ring-1 focus:ring-yellow-400"
+              onChange={setFecha}
+              className="mt-1 h-9 w-full"
             />
           </div>
           <div>

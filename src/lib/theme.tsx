@@ -16,7 +16,7 @@ function getSystemTheme(): "light" | "dark" {
 
 function getStoredTheme(): Theme | null {
   try {
-    const stored = localStorage.getItem("perjaus-theme")
+    const stored = localStorage.getItem("wally-theme")
     if (stored === "light" || stored === "dark" || stored === "system") return stored
   } catch {}
   return null
@@ -48,7 +48,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     applyTheme(resolved)
 
     try {
-      localStorage.setItem("perjaus-theme", theme)
+      localStorage.setItem("wally-theme", theme)
     } catch {}
 
     if (theme === "system") {

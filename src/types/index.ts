@@ -85,3 +85,16 @@ export interface DashboardKPIs {
   topCategoria: { categoria: Categoria; monto: number } | null
   transaccionesMes: number
 }
+
+export interface Compromiso {
+  id: string
+  user_id?: string
+  concepto: string
+  monto: number
+  categoria: Categoria
+  fecha_vencimiento: string
+  recurrente: boolean
+  pagado: boolean
+  gasto_id?: string
+  created_at: string
+}

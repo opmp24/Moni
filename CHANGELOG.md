@@ -1,4 +1,4 @@
-# Changelog — PerJaus
+# Changelog — Wally
 
 ## [Próximo] — 2026-06-06
 

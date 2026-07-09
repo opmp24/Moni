@@ -49,6 +49,13 @@ describe("formatDate", () => {
     expect(result).toContain("2026")
   })
 
+  it("formatea ISO UTC sin desfase horario", () => {
+    const result = formatDate("2026-07-01T00:00:00.000Z")
+    expect(result).toContain("jul")
+    expect(result).toContain("2026")
+    expect(result).toContain("1")
+  })
+
   it("lanza error con fecha inválida", () => {
     expect(() => formatDate("fecha-invalida")).toThrow()
   })

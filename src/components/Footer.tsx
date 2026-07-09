@@ -26,9 +26,9 @@ export function DashboardFooter({ totalGastosMes, totalIngresosMes, balance, use
           <div className="space-y-1 md:col-span-1">
             <div className="flex items-center gap-2">
               <div className="flex h-6 w-6 items-center justify-center rounded bg-yellow-400 text-[10px] font-bold text-zinc-950">
-                P
+                W
               </div>
-              <span className="text-sm font-semibold text-card-foreground">PerJaus</span>
+              <span className="text-sm font-semibold text-card-foreground">Wally</span>
             </div>
             <p className="text-[11px] text-muted-foreground">Control financiero personal</p>
           </div>
@@ -57,7 +57,7 @@ export function DashboardFooter({ totalGastosMes, totalIngresosMes, balance, use
       <div className="border-t border-border">
         <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-2 px-4 py-3 md:flex-row">
           <p className="text-[10px] text-zinc-700">
-            &copy; {new Date().getFullYear()} PerJaus
+            &copy; {new Date().getFullYear()} Wally
           </p>
           <p className="text-[10px] text-zinc-700">{userEmail ?? "v0.1.0"}</p>
         </div>
@@ -76,16 +76,16 @@ function LandingFooter() {
           <div className="space-y-3">
             <div className="flex items-center gap-2.5">
               <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-yellow-400 text-sm font-bold text-zinc-950">
-                P
+                W
               </div>
-              <span className="text-lg font-semibold tracking-tight">PerJaus</span>
+              <span className="text-lg font-semibold tracking-tight">Wally</span>
             </div>
             <p className="max-w-xs text-sm leading-relaxed text-muted-foreground">
               Control financiero personal simple y rapido. Registra tus gastos desde Telegram y visualiza tus habitos de consumo en tiempo real.
             </p>
             <div className="flex items-center gap-3 pt-1">
               <a
-                href="https://t.me/PerJausBot"
+                href="https://t.me/WallyBot"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex h-8 w-8 items-center justify-center rounded-lg bg-sky-500/10 text-sky-400 transition-colors hover:bg-sky-500/20"
@@ -134,7 +134,7 @@ function LandingFooter() {
               <li><a href="#how-it-works" className="text-sm text-muted-foreground transition-colors hover:text-yellow-400">Como funciona</a></li>
               <li>
                 <a
-                  href="https://t.me/PerJausBot"
+                  href="https://t.me/WallyBot"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-sm text-muted-foreground transition-colors hover:text-yellow-400"
@@ -162,7 +162,7 @@ function LandingFooter() {
       <div className="border-t border-border">
         <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-3 px-6 py-5 md:flex-row">
           <p className="text-xs text-muted-foreground">
-            &copy; {new Date().getFullYear()} PerJaus &mdash; Control financiero personal
+            &copy; {new Date().getFullYear()} Wally &mdash; Control financiero personal
           </p>
           <p className="text-xs text-muted-foreground">
             Hecho con <span className="text-yellow-400">♥</span> y codigo abierto

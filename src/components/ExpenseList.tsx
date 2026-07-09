@@ -1,5 +1,5 @@
 import { useState, useMemo, useCallback } from "react"
-import { Trash, X, CaretLeft, CaretRight, Check, Download, MagnifyingGlass, ArrowClockwise } from "@phosphor-icons/react"
+import { Trash, X, CaretLeft, CaretRight, Check, Download, MagnifyingGlass, ArrowClockwise, PencilSimple } from "@phosphor-icons/react"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import {
@@ -31,6 +31,39 @@ export function ExpenseList({ expenses }: ExpenseListProps) {
   const [montoMax, setMontoMax] = useState("")
   const [pagina, setPagina] = useState(1)
   const POR_PAGINA = 10
+
+  const [editingId, setEditingId] = useState<string | null>(null)
+  const [editConcepto, setEditConcepto] = useState("")
+  const [editMonto, setEditMonto] = useState("")
+  const [editFecha, setEditFecha] = useState("")
+  const [editTags, setEditTags] = useState("")
+  const [savingEdit, setSavingEdit] = useState(false)
+
+  const startEdit = (gasto: Gasto) => {
+    setEditingId(gasto.id)
+    setEditConcepto(gasto.concepto ?? "")
+    setEditMonto(String(gasto.monto))
+    setEditFecha(gasto.fecha.slice(0, 10))
+    setEditTags(gasto.tags?.join(", ") ?? "")
+  }
+
+  const cancelEdit = () => {
+    setEditingId(null)
+  }
+
+  const handleEditSave = async (id: string) => {
+    if (!supabase) return
+    setSavingEdit(true)
+    const tags = editTags.split(",").map(t => t.trim()).filter(Boolean)
+    await supabase.from("gastos").update({
+      concepto: editConcepto,
+      monto: Number(editMonto),
+      fecha: new Date(editFecha).toISOString(),
+      tags,
+    }).eq("id", id)
+    setSavingEdit(false)
+    setEditingId(null)
+  }
 
   const hayFiltros = filtroCategoria !== "todas" || fechaDesde || fechaHasta || busqueda || montoMin || montoMax
 
@@ -197,20 +230,52 @@ export function ExpenseList({ expenses }: ExpenseListProps) {
             <tbody>
               {paginados.map((gasto) => (
                 <tr key={gasto.id} className="border-b border-border last:border-0">
-                  <td className="py-3 pr-4 text-muted-foreground">{formatDate(gasto.fecha)}</td>
                   <td className="py-3 pr-4">
-                    <span className="flex items-center gap-1.5 font-medium text-card-foreground">
-                      {gasto.recurrente && <ArrowClockwise className="h-3 w-3 text-yellow-400" weight="bold" />}
-                      {gasto.concepto}
-                    </span>
-                    {gasto.tags && gasto.tags.length > 0 && (
-                      <div className="mt-0.5 flex flex-wrap gap-1">
-                        {gasto.tags.map((tag) => (
-                          <span key={tag} className="rounded bg-muted px-1.5 py-[1px] text-[9px] text-muted-foreground">
-                            {tag}
-                          </span>
-                        ))}
+                    {editingId === gasto.id ? (
+                      <input
+                        type="date"
+                        value={editFecha}
+                        onChange={(e) => setEditFecha(e.target.value)}
+                        className="h-7 w-[130px] rounded-md border border-border bg-muted px-2 text-xs text-card-foreground [color-scheme:var(--color-scheme)]"
+                      />
+                    ) : (
+                      <span className="text-muted-foreground">{formatDate(gasto.fecha)}</span>
+                    )}
+                  </td>
+                  <td className="py-3 pr-4">
+                    {editingId === gasto.id ? (
+                      <div className="space-y-1">
+                        <input
+                          type="text"
+                          value={editConcepto}
+                          onChange={(e) => setEditConcepto(e.target.value)}
+                          className="h-7 w-[160px] rounded-md border border-border bg-muted px-2 text-xs text-card-foreground"
+                          placeholder="Concepto"
+                        />
+                        <input
+                          type="text"
+                          value={editTags}
+                          onChange={(e) => setEditTags(e.target.value)}
+                          className="h-7 w-[160px] rounded-md border border-border bg-muted px-2 text-xs text-card-foreground"
+                          placeholder="Tags (coma separada)"
+                        />
                       </div>
+                    ) : (
+                      <>
+                        <span className="flex items-center gap-1.5 font-medium text-card-foreground">
+                          {gasto.recurrente && <ArrowClockwise className="h-3 w-3 text-yellow-400" weight="bold" />}
+                          {gasto.concepto}
+                        </span>
+                        {gasto.tags && gasto.tags.length > 0 && (
+                          <div className="mt-0.5 flex flex-wrap gap-1">
+                            {gasto.tags.map((tag) => (
+                              <span key={tag} className="rounded bg-muted px-1.5 py-[1px] text-[9px] text-muted-foreground">
+                                {tag}
+                              </span>
+                            ))}
+                          </div>
+                        )}
+                      </>
                     )}
                   </td>
                   <td className="py-3 pr-4">
@@ -268,23 +333,71 @@ export function ExpenseList({ expenses }: ExpenseListProps) {
                       </button>
                     )}
                   </td>
-                  <td className="py-3 pl-4 text-right font-semibold text-foreground">
-                    {formatCurrency(gasto.monto)}
+                  <td className="py-3 pl-4 text-right">
+                    {editingId === gasto.id ? (
+                      <input
+                        type="number"
+                        value={editMonto}
+                        onChange={(e) => setEditMonto(e.target.value)}
+                        className="h-7 w-[100px] rounded-md border border-border bg-muted px-2 text-right text-xs text-card-foreground [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none"
+                        step="0.01"
+                      />
+                    ) : (
+                      <span className="font-semibold text-foreground">{formatCurrency(gasto.monto)}</span>
+                    )}
                   </td>
                   <td className="py-3">
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="h-7 w-7 text-muted-foreground hover:text-red-400"
-                      onClick={() => handleDelete(gasto.id)}
-                      disabled={deleting === gasto.id}
-                    >
-                      {deleting === gasto.id ? (
-                        <span className="h-3 w-3 animate-spin rounded-full border border-zinc-500 border-t-transparent" />
+                    <div className="flex items-center gap-1">
+                      {editingId === gasto.id ? (
+                        <>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-7 w-7 text-emerald-400 hover:text-emerald-300"
+                            onClick={() => handleEditSave(gasto.id)}
+                            disabled={savingEdit}
+                          >
+                            {savingEdit ? (
+                              <span className="h-3 w-3 animate-spin rounded-full border border-zinc-500 border-t-transparent" />
+                            ) : (
+                              <Check className="h-3.5 w-3.5" weight="bold" />
+                            )}
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-7 w-7 text-muted-foreground hover:text-card-foreground"
+                            onClick={cancelEdit}
+                          >
+                            <X className="h-3.5 w-3.5" weight="bold" />
+                          </Button>
+                        </>
                       ) : (
-                        <Trash className="h-3.5 w-3.5" />
+                        <>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-7 w-7 text-muted-foreground hover:text-blue-400"
+                            onClick={() => startEdit(gasto)}
+                          >
+                            <PencilSimple className="h-3.5 w-3.5" />
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-7 w-7 text-muted-foreground hover:text-red-400"
+                            onClick={() => handleDelete(gasto.id)}
+                            disabled={deleting === gasto.id}
+                          >
+                            {deleting === gasto.id ? (
+                              <span className="h-3 w-3 animate-spin rounded-full border border-zinc-500 border-t-transparent" />
+                            ) : (
+                              <Trash className="h-3.5 w-3.5" />
+                            )}
+                          </Button>
+                        </>
                       )}
-                    </Button>
+                    </div>
                   </td>
                 </tr>
               ))}

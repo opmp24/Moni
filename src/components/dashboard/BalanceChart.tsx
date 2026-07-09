@@ -1,4 +1,6 @@
-import { useMemo } from "react"
+import { useMemo, useEffect, useRef } from "react"
+import gsap from "gsap"
+import { parseDateSafe } from "@/lib/utils"
 
 interface BalanceChartProps {
   gastosPorMes: { mes: string; monto: number }[]
@@ -7,6 +9,7 @@ interface BalanceChartProps {
 }
 
 export function BalanceChart({ gastosPorMes, ingresos, gastos }: BalanceChartProps) {
+  const svgRef = useRef<SVGSVGElement>(null)
   const data = useMemo(() => {
     const meses = ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"]
     const ahora = new Date()
@@ -17,13 +20,13 @@ export function BalanceChart({ gastosPorMes, ingresos, gastos }: BalanceChartPro
       const key = `${d.getFullYear()}-${d.getMonth()}`
       const ing = ingresos
         .filter((g) => {
-          const f = new Date(g.fecha)
+          const f = parseDateSafe(g.fecha)
           return `${f.getFullYear()}-${f.getMonth()}` === key
         })
         .reduce((s, g) => s + Number(g.monto), 0)
       const gst = gastos
         .filter((g) => {
-          const f = new Date(g.fecha)
+          const f = parseDateSafe(g.fecha)
           return `${f.getFullYear()}-${f.getMonth()}` === key
         })
         .reduce((s, g) => s + Number(g.monto), 0)
@@ -33,21 +36,34 @@ export function BalanceChart({ gastosPorMes, ingresos, gastos }: BalanceChartPro
     return result
   }, [gastosPorMes, ingresos, gastos])
 
+  useEffect(() => {
+    if (!svgRef.current || data.length === 0) return
+    const line = svgRef.current.querySelector<SVGPathElement>(".balance-line")
+    const dots = svgRef.current.querySelectorAll<SVGCircleElement>(".balance-dot")
+    if (line) {
+      gsap.set(line, { strokeDasharray: 1000, strokeDashoffset: 1000 })
+      gsap.to(line, { strokeDashoffset: 0, duration: 0.8, ease: "power2.out" })
+    }
+    gsap.set(dots, { scale: 0, transformOrigin: "center center" })
+    gsap.to(dots, { scale: 1, duration: 0.2, stagger: 0.06, delay: 0.3 })
+  }, [data])
+
   const maxVal = Math.max(...data.map((d) => Math.abs(d.balance)), 1)
   const w = 240
   const h = 80
 
   return (
     <div className="flex flex-col items-center">
-      <svg width="100%" height={h} viewBox={`0 0 ${w} ${h}`} preserveAspectRatio="none" className="overflow-visible">
+      <svg ref={svgRef} width="100%" height={h} viewBox={`0 0 ${w} ${h}`} preserveAspectRatio="none" className="overflow-visible">
         {data.map((d, i) => {
           const x = (i / (data.length - 1 || 1)) * w
           const y = h / 2 - (d.balance / maxVal) * (h / 2 * 0.85)
           return (
-            <circle key={d.label} cx={x} cy={y} r={3} className="fill-yellow-400" />
+            <circle key={d.label} cx={x} cy={y} r={3} className="balance-dot fill-yellow-400" />
           )
         })}
         <polyline
+          className="balance-line"
           points={data.map((d, i) => {
             const x = (i / (data.length - 1 || 1)) * w
             const y = h / 2 - (d.balance / maxVal) * (h / 2 * 0.85)

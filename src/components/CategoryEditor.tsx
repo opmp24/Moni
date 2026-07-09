@@ -81,7 +81,7 @@ export function CategoryEditor({ open: controlledOpen, onOpenChange }: CategoryE
   return (
     <>
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent className="border-border bg-background text-foreground sm:max-w-lg">
+        <DialogContent className="border-border bg-background text-foreground sm:max-w-xl">
           <DialogHeader>
             <DialogTitle className="text-foreground">Categorías</DialogTitle>
             <DialogDescription className="sr-only">
@@ -169,13 +169,15 @@ export function CategoryEditor({ open: controlledOpen, onOpenChange }: CategoryE
                 autoFocus
               />
             </div>
-            <div>
-              <label className="text-xs font-medium text-muted-foreground">Color</label>
-              <ColorPicker value={nuevaColor} onChange={setNuevaColor} small={false} />
-            </div>
-            <div>
-              <label className="text-xs font-medium text-muted-foreground">Icono</label>
-              <IconPicker value={nuevaIcono} onChange={setNuevaIcono} small={false} />
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="text-xs font-medium text-muted-foreground">Color</label>
+                <ColorPicker value={nuevaColor} onChange={setNuevaColor} small={false} />
+              </div>
+              <div>
+                <label className="text-xs font-medium text-muted-foreground">Icono</label>
+                <IconPicker value={nuevaIcono} onChange={setNuevaIcono} small={false} />
+              </div>
             </div>
             {error && <p className="text-xs text-red-400">{error}</p>}
             <div className="flex justify-end gap-2">

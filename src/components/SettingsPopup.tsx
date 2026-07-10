@@ -126,9 +126,9 @@ export function SettingsPopup({
               </div>
             ) : telegramLinked ? (
               <div className="space-y-4">
-                <div className="flex items-center gap-2 rounded-lg border border-emerald-800 bg-emerald-950/30 px-4 py-3 text-sm">
-                  <CheckCircle className="h-5 w-5 text-emerald-400" weight="fill" />
-                  <span className="text-emerald-300 font-medium">Telegram conectado</span>
+                <div className="flex items-center gap-2 rounded-lg border border-emerald-300 dark:border-emerald-800 bg-emerald-50 dark:bg-emerald-950/30 px-4 py-3 text-sm">
+                  <CheckCircle className="h-5 w-5 text-emerald-500 dark:text-emerald-400" weight="fill" />
+                  <span className="text-emerald-600 dark:text-emerald-300 font-medium">Telegram conectado</span>
                 </div>
                 <Button
                   variant="outline"

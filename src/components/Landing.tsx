@@ -80,8 +80,8 @@ export function Landing() {
     requestAnimationFrame(raf)
 
     lenis.on("scroll", (e: { scroll: number }) => {
-      if (forestRef.current) forestRef.current.style.transform = `translateY(${-e.scroll * 0.08}px)`
-      if (houseRef.current) houseRef.current.style.transform = `translateY(${-e.scroll * 0.25}px)`
+      if (forestRef.current) forestRef.current.style.transform = `scale(${1.08 - e.scroll * 0.00002})`
+      if (houseRef.current) houseRef.current.style.transform = `scale(${1 + e.scroll * 0.00001})`
     })
 
     return () => lenis.destroy()
@@ -107,14 +107,14 @@ export function Landing() {
 
       <div
         ref={forestRef}
-        className="fixed inset-0 bg-cover bg-center pointer-events-none will-change-transform"
-        style={{ backgroundImage: "url(https://images.unsplash.com/photo-1736135203423-1edbd7303306?fm=jpg&q=60&w=2400&auto=format&fit=crop)", opacity: 0.2 }}
+        className="fixed inset-0 bg-cover bg-center bg-no-repeat pointer-events-none will-change-transform origin-center"
+        style={{ backgroundImage: "url(/images/paisaje.avif)", opacity: 0.7 }}
       />
 
       <div
         ref={houseRef}
-        className="fixed inset-0 bg-cover bg-center pointer-events-none will-change-transform"
-        style={{ backgroundImage: "url(https://images.unsplash.com/photo-1772400616369-48460c169481?fm=jpg&q=60&w=2400&auto=format&fit=crop)", opacity: 0.15 }}
+        className="fixed inset-0 bg-bottom bg-no-repeat pointer-events-none will-change-transform origin-bottom"
+        style={{ backgroundImage: "url(/images/casa_solo.jpg)", backgroundSize: "50%", backgroundPosition: "center calc(100% + 100px)"}}
       />
 
       <header className="relative z-10 mx-auto flex max-w-6xl items-center justify-between px-6 py-5">
@@ -155,10 +155,6 @@ export function Landing() {
               animate={mounted ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.7, ease: "easeOut" }}
             >
-              <div className="mb-4 inline-flex items-center gap-1.5 rounded-full border border-border bg-card px-3 py-1 text-xs text-muted-foreground">
-                <span className="h-1.5 w-1.5 rounded-full bg-yellow-400" />
-                Control financiero personal
-              </div>
               <h1 className="text-4xl font-bold leading-tight tracking-tight md:text-5xl lg:text-6xl">
                 Tus finanzas en{" "}
                 <span className="text-yellow-400">un solo lugar</span>
@@ -560,9 +556,9 @@ function DashboardPreview() {
           <p className="text-xs text-muted-foreground">Este mes</p>
           <p className="text-xl font-bold">$ <span ref={amountRef}>0</span></p>
         </div>
-        <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-yellow-400/10 text-yellow-400">
+        {/* <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-yellow-400/10 text-yellow-400">
           <Wallet className="h-4 w-4" />
-        </div>
+        </div> */}
       </div>
       <div className="mb-4 grid grid-cols-2 gap-3">
         <div className="rounded-xl border border-border bg-card p-3">

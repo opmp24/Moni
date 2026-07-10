@@ -4,28 +4,29 @@ import { Text3D, Center } from "@react-three/drei"
 import * as THREE from "three"
 
 function DollarMesh() {
-  const meshRef = useRef<THREE.Mesh>(null!)
+  const groupRef = useRef<THREE.Group>(null!)
   useFrame((_, delta) => {
-    meshRef.current.rotation.y += delta * 0.5
-    meshRef.current.rotation.x = Math.sin(Date.now() * 0.001) * 0.1
+    groupRef.current.rotation.y += delta * 0.5
+    groupRef.current.rotation.x = Math.sin(Date.now() * 0.001) * 0.1
   })
   return (
-    <Center>
-      <Text3D
-        ref={meshRef}
-        font="https://threejs.org/examples/fonts/helvetiker_bold.typeface.json"
-        size={2.5}
-        height={0.4}
-        curveSegments={12}
-        bevelEnabled
-        bevelThickness={0.05}
-        bevelSize={0.02}
-        bevelSegments={5}
-      >
-        {"$"}
-        <meshStandardMaterial color="#FFD600" metalness={0.6} roughness={0.2} />
-      </Text3D>
-    </Center>
+    <group ref={groupRef}>
+      <Center>
+        <Text3D
+          font="https://threejs.org/examples/fonts/helvetiker_bold.typeface.json"
+          size={2.5}
+          height={0.4}
+          curveSegments={12}
+          bevelEnabled
+          bevelThickness={0.05}
+          bevelSize={0.02}
+          bevelSegments={5}
+        >
+          {"$"}
+          <meshStandardMaterial color="#FFD600" metalness={0.6} roughness={0.2} />
+        </Text3D>
+      </Center>
+    </group>
   )
 }
 

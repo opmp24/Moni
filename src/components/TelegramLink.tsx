@@ -66,9 +66,9 @@ export function TelegramLink() {
 
   if (linked) {
     return (
-      <div className="flex items-center gap-2 rounded-lg border border-emerald-800 bg-emerald-950/30 px-4 py-2.5 text-sm">
-        <CheckCircle className="h-4 w-4 text-emerald-400" weight="fill" />
-        <span className="text-emerald-300">Telegram conectado</span>
+      <div className="flex items-center gap-2 rounded-lg border border-emerald-300 dark:border-emerald-800 bg-emerald-50 dark:bg-emerald-950/30 px-4 py-2.5 text-sm">
+        <CheckCircle className="h-4 w-4 text-emerald-500 dark:text-emerald-400" weight="fill" />
+        <span className="text-emerald-600 dark:text-emerald-300">Telegram conectado</span>
       </div>
     )
   }
